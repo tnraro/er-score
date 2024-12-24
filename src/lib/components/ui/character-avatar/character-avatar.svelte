@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_STATIC_URL } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
   import { globalData } from "$lib/global-state.svelte";
   import type { HTMLImgAttributes } from "svelte/elements";
   import type { AvatarVariants } from "../avatar/avatar";
@@ -16,7 +16,7 @@
   const { characters } = globalData();
 
   let src = $derived(
-    `${PUBLIC_STATIC_URL}/image/character/portrait/${characters.get(characterId)?.name}_S${skin?.toString().padStart(3, "0") ?? "000"}.webp`,
+    `${env.PUBLIC_STATIC_URL}/image/character/portrait/${characters.get(characterId)?.name}_S${skin?.toString().padStart(3, "0") ?? "000"}.webp`,
   );
 </script>
 
