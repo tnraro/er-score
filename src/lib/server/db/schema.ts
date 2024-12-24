@@ -1,25 +1,34 @@
-import { index, int, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  boolean,
+  index,
+  integer,
+  pgTable,
+  primaryKey,
+  real,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
-export const users = sqliteTable(
+export const users = pgTable(
   "users",
   {
-    id: int("id").primaryKey().notNull(),
+    id: integer("id").primaryKey().notNull(),
     name: text("name").notNull(),
   },
   (t) => ({ name: index("name").on(t.name) }),
 );
 
-export const matches = sqliteTable(
+export const matches = pgTable(
   "matches",
   {
-    id: int("id").primaryKey().notNull(),
-    seasonId: int("season_id").notNull(),
+    id: integer("id").primaryKey().notNull(),
+    seasonId: integer("season_id").notNull(),
     serverName: text("server_name").notNull(),
-    mode: int("mode").notNull(),
-    size: int("size").notNull(),
-    teamSize: int("team_size").notNull(),
-    startedAt: int("started_at", { mode: "timestamp_ms" }).notNull(),
-    totalTime: int("total_time").notNull(),
+    mode: integer("mode").notNull(),
+    size: integer("size").notNull(),
+    teamSize: integer("team_size").notNull(),
+    startedAt: timestamp("started_at", { mode: "date", withTimezone: true }).notNull(),
+    totalTime: integer("total_time").notNull(),
   },
   (t) => ({
     seasonId: index("seasonId").on(t.seasonId),
@@ -27,52 +36,52 @@ export const matches = sqliteTable(
   }),
 );
 
-export const matchUserResults = sqliteTable(
+export const matchUserResults = pgTable(
   "match_user_results",
   {
-    matchId: int("match_id")
+    matchId: integer("match_id")
       .notNull()
       .references(() => matches.id, { onDelete: "cascade" }),
-    userId: int("user_id")
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     username: text("username").notNull(),
-    mode: int("mode").notNull(),
+    mode: integer("mode").notNull(),
 
-    team: int("team").notNull(),
-    characterId: int("character_id").notNull(),
-    skin: int("skin").notNull(),
-    rank: int("rank").notNull(),
+    team: integer("team").notNull(),
+    characterId: integer("character_id").notNull(),
+    skin: integer("skin").notNull(),
+    rank: integer("rank").notNull(),
 
     score: real("score").notNull(),
-    k: int("k").notNull(),
-    a: int("a").notNull(),
-    d: int("d").notNull(),
+    k: integer("k").notNull(),
+    a: integer("a").notNull(),
+    d: integer("d").notNull(),
 
-    playTime: int("play_time").notNull(),
-    characterLevel: int("character_level").notNull(),
-    bestWeapon: int("best_weapon").notNull(),
-    bestWeaponLevel: int("best_weapon_level").notNull(),
-    giveUp: int("give_up", { mode: "boolean" }).notNull(),
+    playTime: integer("play_time").notNull(),
+    characterLevel: integer("character_level").notNull(),
+    bestWeapon: integer("best_weapon").notNull(),
+    bestWeaponLevel: integer("best_weapon_level").notNull(),
+    giveUp: boolean("give_up").notNull(),
 
-    e0: int("e0"),
-    e1: int("e1"),
-    e2: int("e2"),
-    e3: int("e3"),
-    e4: int("e4"),
+    e0: integer("e0"),
+    e1: integer("e1"),
+    e2: integer("e2"),
+    e3: integer("e3"),
+    e4: integer("e4"),
 
-    damageToPlayer: int("damage").notNull(),
-    damagedByPlayer: int("damaged").notNull(),
-    heal: int("heal").notNull(),
-    damageToMonster: int("damage_to_monster").notNull(),
-    killedMonster: int("killed_monster").notNull(),
+    damageToPlayer: integer("damage").notNull(),
+    damagedByPlayer: integer("damaged").notNull(),
+    heal: integer("heal").notNull(),
+    damageToMonster: integer("damage_to_monster").notNull(),
+    killedMonster: integer("killed_monster").notNull(),
 
-    ccTime: int("cc_time").notNull(),
-    clutchs: int("clutchs").notNull(),
-    usedSecurityConsoles: int("used_security_consoles").notNull(),
-    usedEmpDrones: int("used_emp_drones").notNull(),
-    usedCredits: int("used_credits").notNull(),
-    terminatedTeams: int("terminated_teams").notNull(),
+    ccTime: real("cc_time").notNull(),
+    clutchs: integer("clutchs").notNull(),
+    usedSecurityConsoles: integer("used_security_consoles").notNull(),
+    usedEmpDrones: integer("used_emp_drones").notNull(),
+    usedCredits: integer("used_credits").notNull(),
+    terminatedTeams: integer("terminated_teams").notNull(),
   },
   (t) => ({
     id: primaryKey({

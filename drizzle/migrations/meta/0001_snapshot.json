@@ -1,6 +1,6 @@
 {
-  "id": "a8cf6c92-fd3a-4c89-9781-0763ae00879d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8119b5c8-1251-4cb9-8d68-08dafb55b614",
+  "prevId": "a8cf6c92-fd3a-4c89-9781-0763ae00879d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -172,7 +172,7 @@
         },
         "cc_time": {
           "name": "cc_time",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
         },

@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import type { drizzle } from "drizzle-orm/d1";
+import type { drizzle } from "drizzle-orm/postgres-js";
 import { matches, matchUserResults, users } from "./schema";
 
 export type Database = ReturnType<typeof drizzle>;
@@ -11,16 +11,21 @@ export async function selectUserIdByName(db: Database, name: string): Promise<nu
     })
     .from(users)
     .where(eq(users.name, name))
-    .get();
-  return result?.id;
+    .limit(1);
+  return result.at(0)?.id;
 }
 
 export async function insertUser(db: Database, user: (typeof users.$inferInsert)[]) {
-  return await db.insert(users).values(user).onConflictDoNothing();
+  const now = performance.now();
+  await db.insert(users).values(user).onConflictDoNothing();
+  console.log(`insert user ${user[0].name}: ${(performance.now() - now).toPrecision(4)}ms`);
 }
 
 export async function selectMatch(db: Database, matchId: number) {
-  return await db.select().from(matches).where(eq(matches.id, matchId)).get();
+  const now = performance.now();
+  const x = (await db.select().from(matches).where(eq(matches.id, matchId)).limit(1)).at(0);
+  console.log(`match ${matchId}: ${(performance.now() - now).toPrecision(4)}ms`);
+  return x;
 }
 
 export async function insertMatch(db: Database, match: typeof matches.$inferInsert) {

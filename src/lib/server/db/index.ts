@@ -79,8 +79,8 @@ export function useDb(db: Database) {
           .select({ myTeam: matchUserResults.team })
           .from(matchUserResults)
           .where(and(eq(matchUserResults.matchId, match.id), eq(matchUserResults.userId, userId)))
-          .get();
-        return result?.myTeam;
+          .limit(1);
+        return result.at(0)?.myTeam;
       }
     },
   };
