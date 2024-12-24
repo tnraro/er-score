@@ -1,21 +1,20 @@
 import { env } from "$env/dynamic/private";
-import { useCache } from "$lib/cache";
 import type { UserGamesErResponse, UserNicknameErResponse } from "./types.gen";
 
 export function reqGames(id: number) {
-  return useCache(`/v1/games/${id}`, () => req<UserGamesErResponse>(`/v1/games/${id}`));
+  return req<UserGamesErResponse>(`/v1/games/${id}`);
 }
 
 export function reqUserNickname(nickname: string) {
   const url = new URL("/v1/user/nickname", env.API_HOST);
   url.searchParams.append("query", nickname);
-  return useCache(`/v1/user/${nickname}`, () => req<UserNicknameErResponse>(url));
+  return req<UserNicknameErResponse>(url);
 }
 
 export function reqUserGames(userNum: number, next?: number) {
   const url = new URL(`/v1/user/games/${userNum}`, env.API_HOST);
   if (next != null) url.searchParams.append("next", next.toString());
-  return useCache(`/v1/user/games/${userNum}`, () => req<UserGamesErResponse>(url));
+  return req<UserGamesErResponse>(url);
 }
 
 export async function req<T extends ErResponse>(path: string | URL): Promise<T> {
