@@ -5,18 +5,17 @@ export async function load({ params: { username }, locals: { db } }) {
     const userId = await db.getUserIdByName(username);
     const matchIds = await db.getMatchIdsByUserId(userId);
 
-    const matches = await Promise.all(
-      matchIds.map(async (matchId) => {
-        const match = await db.getMatch(matchId);
-        await db.syncMatchUserResults(match.id, match.size);
-        const results = await db.getMatchUserResultSummaries(match, userId);
+    const matches = [];
+    for (const matchId of matchIds) {
+      const match = await db.getMatch(matchId);
+      await db.syncMatchUserResults(match.id, match.size);
+      const results = await db.getMatchUserResultSummaries(match, userId);
 
-        return {
-          ...match,
-          results,
-        };
-      }),
-    );
+      matches.push({
+        ...match,
+        results,
+      });
+    }
 
     return {
       username,
