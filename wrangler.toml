@@ -1,0 +1,5 @@
+[[d1_databases]]
+binding = "DB"
+database_name = "er-score"
+database_id = "e79d5a39-8364-479d-9e7a-93c6168c7a70"
+migrations_dir = "drizzle/migrations"
