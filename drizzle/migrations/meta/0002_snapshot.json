@@ -213,12 +213,8 @@
           "name": "match_user_results_match_id_matches_id_fk",
           "tableFrom": "match_user_results",
           "tableTo": "matches",
-          "columnsFrom": [
-            "match_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["match_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -226,12 +222,8 @@
           "name": "match_user_results_user_id_users_id_fk",
           "tableFrom": "match_user_results",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -239,10 +231,7 @@
       "compositePrimaryKeys": {
         "match_user_results_match_id_user_id_pk": {
           "name": "match_user_results_match_id_user_id_pk",
-          "columns": [
-            "match_id",
-            "user_id"
-          ]
+          "columns": ["match_id", "user_id"]
         }
       },
       "uniqueConstraints": {}

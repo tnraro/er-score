@@ -1,12 +1,11 @@
 import { calcScore } from "$lib/er-score";
-import { and, desc, eq } from "drizzle-orm";
 import { reqGames, reqUserGames, reqUserNickname } from "../api/req";
 import type { UserGame } from "../api/types.gen";
 import {
-  insertMatch,
+  insertMatches,
   insertMatchUserResult,
   insertUser,
-  selectMatch,
+  selectLatestMatchSummaries,
   selectUserIdByName,
   type Database,
 } from "./model";
@@ -15,6 +14,45 @@ import { matches, matchUserResults } from "./schema";
 export type Db = ReturnType<typeof useDb>;
 export function useDb(db: Database) {
   return {
+    async getLatestMatchSummaries(userId: number) {
+      return await selectLatestMatchSummaries(db, userId);
+    },
+    async syncMatches(
+      userId: number,
+      matches: { id: number; teamSize: number; results: { userId: number }[] }[],
+    ) {
+      const res = await reqUserGames(userId);
+      const matchMap = new Map(matches.map((m) => [m.id, m]));
+      const matchUserResultSet = new Set(
+        matches.flatMap((m) => m.results.map((r) => `${m.id}:${r.userId}`)),
+      );
+      const mayNewUsers = [];
+      const newMatches = [];
+      const newMatchUserResults = [];
+      for (const match of res.userGames.map(userGameToMatch)) {
+        const mm = matchMap.get(match.id);
+        if (mm == null) {
+          newMatches.push(match);
+          const res = await reqGames(match.id);
+          const murs = res.userGames.map(userGameToMatchUserResult);
+          mayNewUsers.push(...murs.map((mur) => ({ id: mur.userId, name: mur.username })));
+          newMatchUserResults.push(...murs);
+        } else if (mm.results.length !== mm.teamSize) {
+          const res = await reqGames(match.id);
+          const murs = res.userGames.map(userGameToMatchUserResult);
+
+          const xs = murs.filter((ug) => !matchUserResultSet.has(`${ug.matchId}:${ug.userId}`));
+          mayNewUsers.push(...xs.map((mur) => ({ id: mur.userId, name: mur.username })));
+          newMatchUserResults.push(...xs);
+        }
+      }
+      if (mayNewUsers.length > 0) await insertUser(db, mayNewUsers);
+      if (newMatches.length > 0) await insertMatches(db, newMatches);
+      if (newMatchUserResults.length > 0) await insertMatchUserResult(db, newMatchUserResults);
+      return {
+        changed: newMatches.length > 0 || newMatchUserResults.length > 0,
+      };
+    },
     async getUserIdByName(name: string) {
       {
         const userId = await selectUserIdByName(db, name);
@@ -24,64 +62,6 @@ export function useDb(db: Database) {
       const userId = res.user.userNum;
       await insertUser(db, [{ id: userId, name }]);
       return userId;
-    },
-    async getMatchIdsByUserId(userId: number) {
-      const res = await reqUserGames(userId);
-      return res.userGames.map((game) => game.gameId);
-    },
-    async getMatch(matchId: number) {
-      const match = await selectMatch(db, matchId);
-      if (match != null) return match;
-      const res = await reqGames(matchId);
-      const result = userGameToMatch(res.userGames[0]);
-      await insertMatch(db, result);
-      return result as NonNullable<typeof match>;
-    },
-    async syncMatchUserResults(matchId: number, matchSize: number) {
-      const x = await db
-        .select({ userId: matchUserResults.userId })
-        .from(matchUserResults)
-        .where(eq(matchUserResults.matchId, matchId));
-      if (x.length === matchSize) return;
-      const res = await reqGames(matchId);
-      await insertUser(
-        db,
-        res.userGames.map((x) => ({ id: x.userNum, name: x.nickname })),
-      );
-      await insertMatchUserResult(db, res.userGames.map(userGameToMatchUserResult));
-    },
-    async getMatchUserResultSummaries(match: { id: number; size: number }, userId: number) {
-      const myTeam = await getMyTeam(userId);
-      if (myTeam == null) throw new Response("", { status: 404 });
-      const results = await db
-        .select({
-          matchId: matchUserResults.matchId,
-          userId: matchUserResults.userId,
-          rank: matchUserResults.rank,
-          username: matchUserResults.username,
-          mode: matchUserResults.mode,
-          team: matchUserResults.team,
-          characterId: matchUserResults.characterId,
-          skin: matchUserResults.skin,
-          score: matchUserResults.score,
-          k: matchUserResults.k,
-          a: matchUserResults.a,
-          d: matchUserResults.d,
-          giveUp: matchUserResults.giveUp,
-        })
-        .from(matchUserResults)
-        .where(and(eq(matchUserResults.matchId, match.id), eq(matchUserResults.team, myTeam)))
-        .orderBy(desc(matchUserResults.score));
-      return results;
-
-      async function getMyTeam(userId: number) {
-        const result = await db
-          .select({ myTeam: matchUserResults.team })
-          .from(matchUserResults)
-          .where(and(eq(matchUserResults.matchId, match.id), eq(matchUserResults.userId, userId)))
-          .limit(1);
-        return result.at(0)?.myTeam;
-      }
     },
   };
 

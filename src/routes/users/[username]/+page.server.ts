@@ -2,24 +2,18 @@ import { error } from "@sveltejs/kit";
 
 export async function load({ params: { username }, locals: { db } }) {
   try {
+    const now = performance.now();
     const userId = await db.getUserIdByName(username);
-    const matchIds = await db.getMatchIdsByUserId(userId);
-
-    const matches = [];
-    for (const matchId of matchIds) {
-      const match = await db.getMatch(matchId);
-      await db.syncMatchUserResults(match.id, match.size);
-      const results = await db.getMatchUserResultSummaries(match, userId);
-
-      matches.push({
-        ...match,
-        results,
-      });
+    let matchSummaries = await db.getLatestMatchSummaries(userId);
+    const { changed } = await db.syncMatches(userId, matchSummaries);
+    if (changed) {
+      matchSummaries = await db.getLatestMatchSummaries(userId);
     }
+    console.info(`/users/${username}: ${(performance.now() - now).toPrecision(4)}ms`);
 
     return {
       username,
-      matches,
+      matches: matchSummaries,
     };
   } catch (e) {
     if (e instanceof Response) {

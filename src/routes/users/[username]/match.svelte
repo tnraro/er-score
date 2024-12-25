@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Button from "$lib/components/ui/button/button.svelte";
   import Kad from "$lib/components/ui/kad/kad.svelte";
   import { Lmode } from "$lib/i18n/mode";
   import { cn } from "$lib/utils/cn";
@@ -12,6 +11,8 @@
   let { me, results, mode, id, startedAt, totalTime }: Props = $props();
 
   const { base } = recordVariants();
+
+  let sortedResults = $derived(results.slice().sort((a, b) => b.score - a.score));
 
   let endedAt = $derived(new Date(startedAt.getTime() + totalTime));
 
@@ -43,7 +44,7 @@
       <div class="w-10 text-center text-sm font-bold">점수</div>
       <Kad class="font-bold" k="K" a="A" d="D"></Kad>
     </div>
-    {#each results as result (result.userId)}
+    {#each sortedResults as result (result.userId)}
       <MatchUserResult {...result} highlight={result.username === me} />
     {/each}
   </div>
