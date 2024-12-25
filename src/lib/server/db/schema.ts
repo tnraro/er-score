@@ -1,3 +1,4 @@
+import { desc } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -31,8 +32,9 @@ export const matches = pgTable(
     totalTime: integer("total_time").notNull(),
   },
   (t) => ({
-    seasonId: index("seasonId").on(t.seasonId),
+    seasonId: index("season_id").on(t.seasonId),
     mode: index("mode").on(t.mode),
+    startedAt: index("started_at").on(desc(t.startedAt)),
   }),
 );
 
@@ -87,5 +89,6 @@ export const matchUserResults = pgTable(
     id: primaryKey({
       columns: [t.matchId, t.userId],
     }),
+    matchId: index("match_id").on(desc(t.matchId)),
   }),
 );
