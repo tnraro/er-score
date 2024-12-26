@@ -82,6 +82,7 @@ export async function selectLatestMatchSummaries(db: Database, userId: number) {
           | "team"
           | "characterId"
           | "skin"
+          | "preMadeTeam"
           | "rank"
           | "score"
           | "k"
@@ -96,6 +97,7 @@ export async function selectLatestMatchSummaries(db: Database, userId: number) {
         , 'team', ${matchUserResults.team}
         , 'characterId', ${matchUserResults.characterId}
         , 'skin', ${matchUserResults.skin}
+        , 'preMadeTeam', ${matchUserResults.preMadeTeam}
         , 'rank', ${matchUserResults.rank}
         , 'score', ${matchUserResults.score}
         , 'k', ${matchUserResults.k}

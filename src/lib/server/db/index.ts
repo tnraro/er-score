@@ -87,8 +87,9 @@ export function useDb(db: Database) {
       team: game.teamNumber,
       characterId: game.characterNum,
       skin: game.skinCode % 1000,
-      rank: game.gameRank,
+      preMadeTeam: game.preMade,
 
+      rank: game.gameRank,
       score: calcScore(game),
       k: game.playerKill,
       a: game.playerAssistant,

@@ -53,8 +53,9 @@ export const matchUserResults = pgTable(
     team: integer("team").notNull(),
     characterId: integer("character_id").notNull(),
     skin: integer("skin").notNull(),
-    rank: integer("rank").notNull(),
+    preMadeTeam: integer("pre_made_team"),
 
+    rank: integer("rank").notNull(),
     score: real("score").notNull(),
     k: integer("k").notNull(),
     a: integer("a").notNull(),
