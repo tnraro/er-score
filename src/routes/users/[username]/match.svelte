@@ -1,6 +1,7 @@
 <script lang="ts">
   import Kad from "$lib/components/ui/kad/kad.svelte";
   import { Lmode } from "$lib/i18n/mode";
+  import { Lrank } from "$lib/i18n/rank";
   import { cn } from "$lib/utils/cn";
   import { formatRelativeTime } from "$lib/utils/format-relative-time";
   import type { PageData } from "./$types";
@@ -38,7 +39,7 @@
   </div>
   <div>
     <div class={cn(base(), "select-none hover:bg-transparent")}>
-      <div class="w-8 text-center text-sm font-bold">순위</div>
+      <div class="w-8 text-center text-sm font-bold">{Lrank(mode)}</div>
       <div class="w-8 text-center text-sm font-bold"></div>
       <div class="w-32 text-center text-sm font-bold">이름</div>
       <div class="w-10 text-center text-sm font-bold">점수</div>
