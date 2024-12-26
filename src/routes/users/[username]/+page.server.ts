@@ -1,13 +1,13 @@
 import { error } from "@sveltejs/kit";
 
-export async function load({ params: { username }, locals: { db } }) {
+export async function load({ params: { username }, locals: { query } }) {
   try {
     const now = performance.now();
-    const userId = await db.getUserIdByName(username);
-    let matchSummaries = await db.getLatestMatchSummaries(userId);
-    const { changed } = await db.syncMatches(userId, matchSummaries);
+    const userId = await query.userId.get(username);
+    let matchSummaries = await query.latestMatchSummaries.get(userId);
+    const { changed } = await query.latestMatchSummaries.sync(userId, matchSummaries);
     if (changed) {
-      matchSummaries = await db.getLatestMatchSummaries(userId);
+      matchSummaries = await query.latestMatchSummaries.get(userId);
     }
     console.info(`/users/${username}: ${(performance.now() - now).toPrecision(4)}ms`);
 
