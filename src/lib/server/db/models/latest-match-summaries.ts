@@ -4,7 +4,7 @@ import { matches, matchUserResults } from "../schema";
 
 export const latestMatchSummariesModel = createModel((db) => {
   return {
-    async select(userId: number) {
+    async select(userId: number, n = 12) {
       const now = performance.now();
       const fm = db.$with("filtered_matches").as(
         db
@@ -24,7 +24,7 @@ export const latestMatchSummariesModel = createModel((db) => {
             and(eq(matches.id, matchUserResults.matchId), eq(matchUserResults.userId, userId)),
           )
           .orderBy(desc(matches.startedAt))
-          .limit(10),
+          .limit(n),
       );
       const res = await db
         .with(fm)
