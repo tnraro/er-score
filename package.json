@@ -15,7 +15,9 @@
     "db:apply-local": "wrangler d1 execute er-score --local --file=$(find drizzle/migrations -type f -name '*.sql' -print0 | xargs -0 ls -t | head -1)",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "test:unit": "vitest",
+    "test": "npm run test:unit -- --run"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241218.0",
@@ -39,6 +41,7 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^5.4.11",
+    "vitest": "^2.0.4",
     "wrangler": "^3.99.0"
   },
   "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf",
