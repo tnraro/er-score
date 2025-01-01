@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LoadingProgress from "$lib/components/ui/loading-progress/loading-progress.svelte";
   import { setGlobalData } from "$lib/global-state.svelte";
   import "../app.css";
   let { children, data } = $props();
@@ -10,4 +11,5 @@
   }));
 </script>
 
+<LoadingProgress />
 {@render children()}
