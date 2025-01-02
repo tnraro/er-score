@@ -2,11 +2,12 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export type ButtonVariants = VariantProps<typeof button>;
 export const button = tv({
-  base: "select-none",
+  base: "select-none font-medium inline-flex justify-center items-center gap-x-1 disabled:cursor-not-allowed",
   variants: {
     variant: {
-      primary: "bg-zinc-900 text-white active:bg-zinc-800 shadow-sm",
-      secondary: "bg-zinc-100 active:bg-zinc-200",
+      primary:
+        "bg-zinc-900 text-white active:bg-zinc-800 shadow-sm disabled:bg-zinc-300 disabled:text-zinc-500",
+      secondary: "bg-zinc-100 active:bg-zinc-200 disabled:bg-zinc-100 disabled:text-zinc-500",
     },
     size: {
       xs: "h-4 px-1 text-xs",
