@@ -1,4 +1,4 @@
-import { desc } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -16,7 +16,7 @@ export const users = pgTable(
     id: integer("id").primaryKey().notNull(),
     name: text("name").notNull(),
   },
-  (t) => ({ name: index("name").on(t.name) }),
+  (t) => ({ name: index("name").on(sql`(lower(${t.name}))`) }),
 );
 
 export const matches = pgTable(

@@ -4,16 +4,16 @@ export async function load({ params: { username }, locals: { query }, depends })
   try {
     depends(`/users/${username}`);
     const now = performance.now();
-    const userId = await query.userId.get(username);
-    let matchSummaries = await query.latestMatchSummaries.get(userId);
-    const { changed } = await query.latestMatchSummaries.sync(userId, matchSummaries);
+    const user = await query.userId.get(username);
+    let matchSummaries = await query.latestMatchSummaries.get(user.id);
+    const { changed } = await query.latestMatchSummaries.sync(user.id, matchSummaries);
     if (changed) {
-      matchSummaries = await query.latestMatchSummaries.get(userId);
+      matchSummaries = await query.latestMatchSummaries.get(user.id);
     }
     console.info(`/users/${username}: ${(performance.now() - now).toPrecision(4)}ms`);
 
     return {
-      username,
+      user,
       matches: matchSummaries,
     };
   } catch (e) {

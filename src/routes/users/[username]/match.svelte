@@ -8,7 +8,7 @@
   import MatchUserResult from "./match-user-result.svelte";
   import { recordVariants } from "./variants";
 
-  type Props = { me: string } & PageData["matches"][0];
+  type Props = { me: number } & PageData["matches"][0];
   let { me, results, mode, id, startedAt, totalTime }: Props = $props();
 
   const { base } = recordVariants();
@@ -46,7 +46,7 @@
       <Kad class="font-bold" k="K" a="A" d="D"></Kad>
     </div>
     {#each sortedResults as result (result.userId)}
-      <MatchUserResult {...result} highlight={result.username === me} />
+      <MatchUserResult {...result} highlight={result.userId === me} />
     {/each}
   </div>
   <!-- <div class="flex-1"></div>
