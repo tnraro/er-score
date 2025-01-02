@@ -19,6 +19,13 @@ class State {
   get show() {
     return this.#t <= 1 && this.#t > 0;
   }
+  async do(fn: () => Promise<void>) {
+    if (this.isStarted) return;
+    const p = fn();
+    this.start();
+    await p;
+    this.done();
+  }
   start() {
     if (this.isStarted) return;
     this.#animate("start");
