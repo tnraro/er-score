@@ -1,7 +1,8 @@
 import { error } from "@sveltejs/kit";
 
-export async function load({ params: { username }, locals: { query } }) {
+export async function load({ params: { username }, locals: { query }, depends }) {
   try {
+    depends(`/users/${username}`);
     const now = performance.now();
     const userId = await query.userId.get(username);
     let matchSummaries = await query.latestMatchSummaries.get(userId);
