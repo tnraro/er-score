@@ -1,4 +1,4 @@
-<script module>
+<script lang="ts" module>
   import { getContext } from "svelte";
   import { tv, type VariantProps } from "tailwind-variants";
 

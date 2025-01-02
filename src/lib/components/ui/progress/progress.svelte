@@ -1,4 +1,4 @@
-<script module>
+<script lang="ts" module>
   import { clamp, lerp } from "$lib/utils/math";
   import { setContext, type Snippet } from "svelte";
   import { tv, type VariantProps } from "tailwind-variants";
