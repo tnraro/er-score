@@ -16,7 +16,7 @@
 </script>
 
 <Progress
-  class={cn("absolute top-0 overflow-visible transition-opacity", ls.show || "opacity-0")}
+  class={cn("fixed top-0 overflow-visible transition-opacity", ls.show || "opacity-0")}
   value={ls.t}
   min={0}
   max={1}
