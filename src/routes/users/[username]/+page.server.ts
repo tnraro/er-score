@@ -6,14 +6,9 @@ export async function load({ params: { username }, locals: { query }, depends })
     const now = performance.now();
     const user = await query.user.get(username);
     let matchSummaries = await query.latestMatchSummaries.get(user.id);
-    if (matchSummaries.length === 0) {
-      await query.matches.sync(user.id, 10);
+    const { changed } = await query.latestMatchSummaries.sync(user.id, matchSummaries);
+    if (changed) {
       matchSummaries = await query.latestMatchSummaries.get(user.id);
-    } else {
-      const { changed } = await query.latestMatchSummaries.sync(user.id, matchSummaries);
-      if (changed) {
-        matchSummaries = await query.latestMatchSummaries.get(user.id);
-      }
     }
     const stats = await query.stats.get(user.id);
     console.info(`/users/${username}: ${(performance.now() - now).toPrecision(4)}ms`);

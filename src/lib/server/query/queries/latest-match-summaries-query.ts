@@ -5,13 +5,13 @@ import { createQuery } from "../query";
 export const latestMatchSummariesQuery = createQuery((db) => {
   return {
     get(userId: number) {
-      return db.latestMatchSummaries.select(userId);
+      return db.latestMatchSummaries.select(userId, 12);
     },
     async sync(
       userId: number,
       prevMatches: { id: number; teamSize: number; records: { userId: number }[] }[],
     ) {
-      const matches = await getMatches(userId, 2);
+      const matches = await getMatches(userId);
       const matchMap = new Map(prevMatches.map((m) => [m.id, m]));
       const userRecordSet = new Set(
         prevMatches.flatMap((m) => m.records.map((r) => `${m.id}:${r.userId}`)),
