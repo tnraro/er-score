@@ -24,6 +24,19 @@
     <Button class="mx-auto flex" onclick={update} disabled={ls.show}>
       전적 갱신 <kbd class="font-[unset] before:content-['['] after:content-[']']">F5</kbd>
     </Button>
+    {#if import.meta.env.DEV}
+      <Button
+        class="mx-auto flex"
+        onclick={() =>
+          ls.do(async () => {
+            await fetch(`/users/${encodeURIComponent(page.params.username)}`, { method: "POST" });
+            await invalidate(`/users/${page.params.username}`);
+          })}
+        disabled={ls.show}
+      >
+        강제 갱신
+      </Button>
+    {/if}
   </div>
   <div class="flex flex-wrap justify-center gap-x-2 gap-y-4">
     {#each data.matches as match (match.id)}
