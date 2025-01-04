@@ -5,17 +5,19 @@
   import { cn } from "$lib/utils/cn";
   import { formatRelativeTime } from "$lib/utils/format-relative-time";
   import type { PageData } from "./$types";
-  import MatchUserResult from "./match-user-result.svelte";
+  import UserRecord from "./user-record.svelte";
   import { recordVariants } from "./variants";
 
   type Props = { me: number } & PageData["matches"][0];
-  let { me, results, mode, id, startedAt, totalTime }: Props = $props();
+  let { me, records, mode, id, startedAt }: Props = $props();
 
   const { base } = recordVariants();
 
-  let sortedResults = $derived(results.slice().sort((a, b) => b.score - a.score));
+  let sortedRecords = $derived(records.slice().sort((a, b) => b.score - a.score));
 
-  let endedAt = $derived(new Date(startedAt.getTime() + totalTime));
+  let myRecord = $derived(records.find((record) => record.userId === me)!);
+
+  let endedAt = $derived(new Date(startedAt.getTime() + myRecord.data.totalTime));
 
   let time = $derived(formatRelativeTime(endedAt, "ko"));
 
@@ -45,8 +47,8 @@
       <div class="w-10 text-center text-sm font-bold">점수</div>
       <Kad class="font-bold" k="K" a="A" d="D"></Kad>
     </div>
-    {#each sortedResults as result (result.userId)}
-      <MatchUserResult {...result} highlight={result.userId === me} />
+    {#each sortedRecords as result (result.userId)}
+      <UserRecord {...result} {mode} highlight={result.userId === me} />
     {/each}
   </div>
   <!-- <div class="flex-1"></div>

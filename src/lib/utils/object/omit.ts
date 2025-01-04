@@ -1,4 +1,5 @@
-export function omit<T extends Record<string, unknown>, K extends keyof T>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function omit<T extends Record<string, any>, K extends keyof T>(
   item: T,
   keys: K[],
 ): Omit<T, K> {

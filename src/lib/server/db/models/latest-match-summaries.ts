@@ -1,6 +1,6 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { createModel } from "../model";
-import { matches, matchUserResults } from "../schema";
+import { matches, userRecords } from "../schema";
 
 export const latestMatchSummariesModel = createModel((db) => {
   return {
@@ -15,17 +15,17 @@ export const latestMatchSummariesModel = createModel((db) => {
             size: matches.size,
             teamSize: matches.teamSize,
             startedAt: matches.startedAt,
-            totalTime: matches.totalTime,
-            team: matchUserResults.team,
+            team: userRecords.team,
           })
           .from(matches)
           .innerJoin(
-            matchUserResults,
-            and(eq(matches.id, matchUserResults.matchId), eq(matchUserResults.userId, userId)),
+            userRecords,
+            and(eq(userRecords.userId, userId), eq(matches.id, userRecords.matchId)),
           )
           .orderBy(desc(matches.startedAt))
           .limit(n),
       );
+
       const res = await db
         .with(fm)
         .select({
@@ -35,56 +35,23 @@ export const latestMatchSummariesModel = createModel((db) => {
           size: fm.size,
           teamSize: fm.teamSize,
           startedAt: fm.startedAt,
-          totalTime: fm.totalTime,
-          results: sql<
+          records: sql<
             Pick<
-              typeof matchUserResults.$inferSelect,
-              | "userId"
-              | "username"
-              | "mode"
-              | "team"
-              | "characterId"
-              | "skin"
-              | "preMadeTeam"
-              | "rank"
-              | "score"
-              | "k"
-              | "a"
-              | "d"
-              | "giveUp"
+              typeof userRecords.$inferSelect,
+              "userId" | "score" | "team" | "rank" | "damageToPlayer" | "data"
             >[]
           >`json_agg(json_build_object(
-              'userId', ${matchUserResults.userId}
-            , 'username', ${matchUserResults.username}
-            , 'mode', ${matchUserResults.mode}
-            , 'team', ${matchUserResults.team}
-            , 'characterId', ${matchUserResults.characterId}
-            , 'skin', ${matchUserResults.skin}
-            , 'preMadeTeam', ${matchUserResults.preMadeTeam}
-            , 'rank', ${matchUserResults.rank}
-            , 'score', ${matchUserResults.score}
-            , 'k', ${matchUserResults.k}
-            , 'a', ${matchUserResults.a}
-            , 'd', ${matchUserResults.d}
-            , 'giveUp', ${matchUserResults.giveUp}
+              'userId', ${userRecords.userId}
+            , 'score', ${userRecords.score}
+            , 'team', ${userRecords.team}
+            , 'rank', ${userRecords.rank}
+            , 'damageToPlayer', ${userRecords.damageToPlayer}
+            , 'data', ${userRecords.data}
           ))`,
         })
         .from(fm)
-        .leftJoin(
-          matchUserResults,
-          and(eq(fm.id, matchUserResults.matchId), eq(fm.team, matchUserResults.team)),
-        )
-        .groupBy(
-          fm.id,
-          fm.seasonId,
-          fm.mode,
-          fm.size,
-          fm.teamSize,
-          fm.startedAt,
-          fm.totalTime,
-          fm.team,
-          matchUserResults.team,
-        )
+        .leftJoin(userRecords, and(eq(fm.id, userRecords.matchId), eq(fm.team, userRecords.team)))
+        .groupBy(fm.id, fm.seasonId, fm.mode, fm.size, fm.teamSize, fm.startedAt)
         .orderBy(desc(fm.startedAt));
       console.log(`latest matches ${userId}: ${(performance.now() - now).toPrecision(4)}ms`);
       return res;

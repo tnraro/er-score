@@ -19,7 +19,7 @@
 </div>
 
 <main class="container mx-auto space-y-8">
-  <Stats matches={data.matches} username={data.user.name} />
+  <Stats stats={data.stats} username={data.user.name} />
   <div>
     <Button class="mx-auto flex" onclick={update} disabled={ls.show}>
       전적 갱신 <kbd class="font-[unset] before:content-['['] after:content-[']']">F5</kbd>

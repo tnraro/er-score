@@ -1,5 +1,5 @@
-import { reqGames, reqUserGames } from "../../api/req";
-import { userGameToMatch, userGameToMatchUserResult } from "../../db/utils";
+import { getMatches } from "$lib/server/api/get/matches";
+import { getUserRecords } from "$lib/server/api/get/user-records";
 import { createQuery } from "../query";
 
 export const latestMatchSummariesQuery = createQuery((db) => {
@@ -9,38 +9,36 @@ export const latestMatchSummariesQuery = createQuery((db) => {
     },
     async sync(
       userId: number,
-      matches: { id: number; teamSize: number; results: { userId: number }[] }[],
+      prevMatches: { id: number; teamSize: number; records: { userId: number }[] }[],
     ) {
-      const res = await reqUserGames(userId);
-      const matchMap = new Map(matches.map((m) => [m.id, m]));
-      const matchUserResultSet = new Set(
-        matches.flatMap((m) => m.results.map((r) => `${m.id}:${r.userId}`)),
+      const matches = await getMatches(userId, 2);
+      const matchMap = new Map(prevMatches.map((m) => [m.id, m]));
+      const userRecordSet = new Set(
+        prevMatches.flatMap((m) => m.records.map((r) => `${m.id}:${r.userId}`)),
       );
       const mayNewUsers = [];
       const newMatches = [];
-      const newMatchUserResults = [];
-      for (const match of res.userGames.map(userGameToMatch)) {
+      const newUserRecords = [];
+      for (const match of matches) {
         const mm = matchMap.get(match.id);
         if (mm == null) {
           newMatches.push(match);
-          const res = await reqGames(match.id);
-          const murs = res.userGames.map(userGameToMatchUserResult);
-          mayNewUsers.push(...murs.map((mur) => ({ id: mur.userId, name: mur.username })));
-          newMatchUserResults.push(...murs);
-        } else if (mm.results.length !== mm.teamSize) {
-          const res = await reqGames(match.id);
-          const murs = res.userGames.map(userGameToMatchUserResult);
+          const userRecords = await getUserRecords(match.id);
+          mayNewUsers.push(...userRecords.map((ur) => ({ id: ur.userId, name: ur.data.nickname })));
+          newUserRecords.push(...userRecords);
+        } else if (mm.records.length !== mm.teamSize) {
+          const userRecords = await getUserRecords(match.id);
 
-          const xs = murs.filter((ug) => !matchUserResultSet.has(`${ug.matchId}:${ug.userId}`));
-          mayNewUsers.push(...xs.map((mur) => ({ id: mur.userId, name: mur.username })));
-          newMatchUserResults.push(...xs);
+          const xs = userRecords.filter((ug) => !userRecordSet.has(`${ug.matchId}:${ug.userId}`));
+          mayNewUsers.push(...xs.map((ur) => ({ id: ur.userId, name: ur.data.nickname })));
+          newUserRecords.push(...xs);
         }
       }
       if (mayNewUsers.length > 0) await db.users.insert(mayNewUsers);
       if (newMatches.length > 0) await db.matches.insert(newMatches);
-      if (newMatchUserResults.length > 0) await db.matchUserResults.insert(newMatchUserResults);
+      if (newUserRecords.length > 0) await db.userRecords.insert(newUserRecords);
       return {
-        changed: newMatches.length > 0 || newMatchUserResults.length > 0,
+        changed: newMatches.length > 0 || newUserRecords.length > 0,
       };
     },
   };

@@ -1,1 +1,0 @@
-ALTER TABLE "match_user_results" ALTER COLUMN "cc_time" SET DATA TYPE real;

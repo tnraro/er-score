@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "match_id" ON "match_user_results" USING btree ("match_id" desc);

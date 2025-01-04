@@ -1,7 +1,8 @@
 import { createDb } from "./client";
 import { latestMatchSummariesModel } from "./models/latest-match-summaries";
-import { matchUserResultsModel } from "./models/match-user-results";
 import { matchesModel } from "./models/matches";
+import { statsModel } from "./models/stats";
+import { userRecordsModel } from "./models/user-records";
 import { usersModel } from "./models/users";
 
 export type Db = ReturnType<typeof useDb>;
@@ -10,8 +11,9 @@ export function useDb() {
   return {
     raw: db,
     users: usersModel(db),
+    stats: statsModel(db),
     matches: matchesModel(db),
-    matchUserResults: matchUserResultsModel(db),
+    userRecords: userRecordsModel(db),
     latestMatchSummaries: latestMatchSummariesModel(db),
   };
 }
