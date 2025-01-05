@@ -1,3 +1,4 @@
+import { measureTime } from "$lib/utils/time";
 import { eq, sql } from "drizzle-orm";
 import { createModel } from "../model";
 import { users } from "../schema";
@@ -17,16 +18,8 @@ export const usersModel = createModel((db) => {
       return result.at(0);
     },
     async insert(user: (typeof users.$inferInsert)[]) {
-      const now = performance.now();
-      await db
-        .insert(users)
-        .values(user)
-        .onConflictDoUpdate({
-          target: users.id,
-          set: { name: sql`excluded.name` },
-        });
-      console.log(
-        `insert user ${user.map((x) => x.name).join(", ")}: ${(performance.now() - now).toPrecision(4)}ms`,
+      return await measureTime(`insert ${user.length} users`, () =>
+        db.insert(users).values(user).onConflictDoNothing(),
       );
     },
     async update(userId: number) {

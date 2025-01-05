@@ -5,7 +5,6 @@ import { matches, userRecords } from "../schema";
 export const latestMatchSummariesModel = createModel((db) => {
   return {
     async select(userId: number, n = 12) {
-      const now = performance.now();
       const fm = db.$with("filtered_matches").as(
         db
           .select({
@@ -53,7 +52,6 @@ export const latestMatchSummariesModel = createModel((db) => {
         .leftJoin(userRecords, and(eq(fm.id, userRecords.matchId), eq(fm.team, userRecords.team)))
         .groupBy(fm.id, fm.seasonId, fm.mode, fm.size, fm.teamSize, fm.startedAt)
         .orderBy(desc(fm.startedAt));
-      console.log(`latest matches ${userId}: ${(performance.now() - now).toPrecision(4)}ms`);
       return res;
     },
   };
