@@ -10,7 +10,10 @@ export const userQuery = createQuery((db) => {
       }
       const user = await getUser(username);
       await db.users.insert([user]);
-      return user;
+      return {
+        ...user,
+        updatedAt: null,
+      };
     },
   };
 });

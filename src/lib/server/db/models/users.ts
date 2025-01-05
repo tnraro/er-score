@@ -9,6 +9,7 @@ export const usersModel = createModel((db) => {
         .select({
           id: users.id,
           name: users.name,
+          updatedAt: users.updatedAt,
         })
         .from(users)
         .where(eq(sql`lower(${users.name})`, name.toLowerCase()))
@@ -17,10 +18,24 @@ export const usersModel = createModel((db) => {
     },
     async insert(user: (typeof users.$inferInsert)[]) {
       const now = performance.now();
-      await db.insert(users).values(user).onConflictDoNothing();
+      await db
+        .insert(users)
+        .values(user)
+        .onConflictDoUpdate({
+          target: users.id,
+          set: { name: sql`excluded.name` },
+        });
       console.log(
         `insert user ${user.map((x) => x.name).join(", ")}: ${(performance.now() - now).toPrecision(4)}ms`,
       );
+    },
+    async update(userId: number) {
+      await db
+        .update(users)
+        .set({
+          updatedAt: sql`current_timestamp`,
+        })
+        .where(eq(users.id, userId));
     },
   };
 });

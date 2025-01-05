@@ -16,8 +16,9 @@ export const users = pgTable(
   {
     id: integer("id").primaryKey().notNull(),
     name: text("name").notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }),
   },
-  (t) => ({ name: index("name").on(sql`(lower(${t.name}))`) }),
+  (t) => [index("users__name").on(sql`(lower(${t.name}))`)],
 );
 
 export const matches = pgTable(
@@ -32,11 +33,11 @@ export const matches = pgTable(
     startedAt: timestamp("started_at", { mode: "date", withTimezone: true }).notNull(),
     size: integer("size").notNull(),
   },
-  (t) => ({
-    seasonId: index("season_id").on(t.seasonId),
-    mode: index("mode").on(t.mode),
-    startedAt: index("started_at").on(desc(t.startedAt)),
-  }),
+  (t) => [
+    index("matches__season_id").on(t.seasonId),
+    index("matches__mode").on(t.mode),
+    index("matches__started_at").on(desc(t.startedAt)),
+  ],
 );
 
 export const userRecords = pgTable(
@@ -54,11 +55,11 @@ export const userRecords = pgTable(
     damageToPlayer: integer("damage_to_player").notNull(),
     data: jsonb("data").$type<UserRecord["data"]>().notNull(),
   },
-  (t) => ({
-    id: primaryKey({
+  (t) => [
+    primaryKey({
       columns: [t.matchId, t.userId],
     }),
-    matchId: index("match_id").on(t.matchId),
-    userId: index("user_id").on(t.userId),
-  }),
+    index("user_records__match_id").on(t.matchId),
+    index("user_records__user_id").on(t.userId),
+  ],
 );

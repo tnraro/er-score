@@ -1,11 +1,19 @@
 import { error } from "@sveltejs/kit";
 
-export async function load({ params: { username }, locals: { query }, depends }) {
+export async function load({ params: { username }, locals: { query, db }, depends }) {
   try {
     depends(`/users/${username}`);
     const now = performance.now();
     const user = await query.user.get(username);
     let matchSummaries = await query.latestMatchSummaries.get(user.id);
+    if (
+      matchSummaries.length === 0 ||
+      user.updatedAt == null ||
+      Date.now() - user.updatedAt.getTime() > 14 * 86400000 /** 14 days */
+    ) {
+      await query.matches.sync(user.id, 10);
+      await db.users.update(user.id);
+    }
     const { changed } = await query.latestMatchSummaries.sync(user.id, matchSummaries);
     if (changed) {
       matchSummaries = await query.latestMatchSummaries.get(user.id);
