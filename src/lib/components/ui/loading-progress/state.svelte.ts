@@ -1,5 +1,5 @@
 import { clamp } from "$lib/utils/math";
-import { sleep } from "$lib/utils/time";
+import { sleep } from "$lib/utils/time/sleep";
 
 class State {
   #options = {

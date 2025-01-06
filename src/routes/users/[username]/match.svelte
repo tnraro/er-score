@@ -8,7 +8,7 @@
   import { Lmode } from "$lib/i18n/mode";
   import { Lrank } from "$lib/i18n/rank";
   import { makeArray } from "$lib/utils/array/make-array";
-  import { formatRelativeTime } from "$lib/utils/format-relative-time";
+  import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "./$types";
 
   type Props = { me: number } & PageData["matches"][0];

@@ -1,4 +1,4 @@
-import { measureTime } from "$lib/utils/time";
+import { measureTime } from "$lib/utils/time/measureTime";
 import { eq, sql } from "drizzle-orm";
 import { createModel } from "../model";
 import { users } from "../schema";

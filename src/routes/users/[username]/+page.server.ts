@@ -1,4 +1,4 @@
-import { measureTime } from "$lib/utils/time";
+import { measureTime } from "$lib/utils/time/measureTime";
 import { error } from "@sveltejs/kit";
 
 export async function load({ params: { username }, locals: { query, db }, depends }) {
