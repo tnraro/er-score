@@ -5,7 +5,7 @@ export function formatRelativeTime(
 ): string {
   const time = typeof date === "number" ? date : date.getTime();
   const deltaSeconds = Math.trunc((time - Date.now()) / 1000);
-  const cutoffs = [60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365, Number.POSITIVE_INFINITY];
+  const cutoffs = [60, 3600, 86400, 7 * 86400, 30 * 86400, 365 * 86400, Number.POSITIVE_INFINITY];
   const units: Intl.RelativeTimeFormatUnit[] = [
     "second",
     "minute",
@@ -14,11 +14,10 @@ export function formatRelativeTime(
     "week",
     "month",
     "year",
-    "year",
   ];
 
   const unitIndex = cutoffs.findIndex((cutoff) => cutoff > Math.abs(deltaSeconds));
-  const divider = unitIndex ? cutoffs[unitIndex - 1] : 1;
+  const divider = unitIndex !== 0 ? cutoffs[unitIndex - 1] : 1;
   const rtf = new Intl.RelativeTimeFormat(lang, options);
-  return rtf.format(Math.floor(deltaSeconds / divider), units[unitIndex]);
+  return rtf.format(Math.trunc(deltaSeconds / divider), units[unitIndex]);
 }
