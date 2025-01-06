@@ -20,6 +20,8 @@
     return stat?.mostPlayedCharacterId;
   });
 
+  let playedMatches = $derived(stats.reduce((a, x) => a + x.count, 0));
+
   function formatSd(stat: (typeof stats)[0]) {
     if (stat.count < 3 || stat.scoreSd == null) return "표본 부족";
     if (stat.scoreSd > 1) return "기복 큼";
@@ -34,7 +36,12 @@
     <h1 class="font-extrabold">{username}</h1>
   </div>
   <div>
-    <h2 class="text-sm text-zinc-500">최근 14일간</h2>
+    <h2 class="text-sm text-zinc-500">
+      최근 14일간
+      {#if playedMatches >= 100}
+        (최대 100경기)
+      {/if}
+    </h2>
     <table class="border-separate border-spacing-x-4">
       <thead class="select-none">
         <tr class="text-sm">
