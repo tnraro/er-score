@@ -1,8 +1,30 @@
-<script lang="ts">
+<script lang="ts" module>
   import { MatchingMode } from "$lib/er-score";
-  import { cn } from "$lib/utils/cn";
-  import { rank, type RankVariants } from "./rank";
+  import { tv, type VariantProps } from "tailwind-variants";
 
+  export type RankVariants = VariantProps<typeof style>;
+  export const style = tv({
+    base: "w-8 text-right text-sm",
+    variants: {
+      variant: {
+        best: "text-yellow-500",
+        high: "text-blue-500",
+        md: "",
+        low: "text-zinc-400",
+      },
+      align: {
+        right: "text-right",
+        center: "text-center",
+      },
+    },
+    defaultVariants: {
+      variant: "low",
+      align: "right",
+    },
+  });
+</script>
+
+<script lang="ts">
   type Props = { rank: number; mode: MatchingMode; class?: string } & RankVariants;
   let { rank: value, mode, class: className }: Props = $props();
 
@@ -37,14 +59,6 @@
   });
 </script>
 
-<div
-  class={cn(
-    rank({
-      variant,
-      align,
-    }),
-    className,
-  )}
->
+<div class={style({ variant, align, className })}>
   {text}
 </div>

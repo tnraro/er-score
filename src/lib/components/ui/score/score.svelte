@@ -1,14 +1,36 @@
-<script lang="ts">
-  import { cn } from "$lib/utils/cn";
-  import { score } from "./score";
+<script lang="ts" module>
+  import { tv, type VariantProps } from "tailwind-variants";
 
+  export type ScoreVariants = VariantProps<typeof style>;
+  export const style = tv({
+    base: "w-10 inline-flex items-center justify-center rounded-full px-1 text-center font-extrabold",
+    variants: {
+      score: {
+        [1]: "bg-green-200/50 text-green-900",
+        [0]: "bg-zinc-200/50 text-zinc-900",
+        [-1]: "bg-red-200/50 text-red-900",
+      },
+    },
+    defaultVariants: {
+      score: 0,
+    },
+  });
+</script>
+
+<script lang="ts">
   interface Props {
     score: number;
     class?: string;
   }
   let { score: value, class: className, ...rest }: Props = $props();
+
+  function score() {
+    if (value >= 0.95) return 1;
+    if (value < 0) return -1;
+    return 0;
+  }
 </script>
 
-<div class={cn(score({ score: value >= 0.95 ? 1 : value < 0 ? -1 : 0 }), className)} {...rest}>
+<div class={style({ score: score(), className })} {...rest}>
   {value.toFixed(1)}
 </div>

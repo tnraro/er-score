@@ -1,15 +1,13 @@
 <script lang="ts">
   import { env } from "$env/dynamic/public";
   import { globalData } from "$lib/global-state.svelte";
-  import type { HTMLImgAttributes } from "svelte/elements";
-  import type { AvatarVariants } from "../avatar/avatar";
+  import type { ComponentProps } from "svelte";
   import Avatar from "../avatar/avatar.svelte";
 
   type Props = {
     characterId: number;
     skin?: number;
-  } & AvatarVariants &
-    HTMLImgAttributes;
+  } & ComponentProps<typeof Avatar>;
 
   let { characterId, skin: skin, src: _src, ...rest }: Props = $props();
 

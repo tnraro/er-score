@@ -1,10 +1,37 @@
-<script lang="ts">
-  import { cn } from "$lib/utils/cn";
+<script lang="ts" module>
+  import { clsx } from "clsx";
   import type { HTMLImgAttributes } from "svelte/elements";
-  import { avatar, type AvatarVariants } from "./avatar";
+  import { tv, type VariantProps } from "tailwind-variants";
 
-  type Props = AvatarVariants & HTMLImgAttributes;
+  const style = tv({
+    base: "select-none overflow-hidden object-cover",
+    variants: {
+      size: {
+        xs: "w-4 h-4",
+        sm: "w-6 h-6",
+        md: "w-8 h-8",
+        lg: "w-10 h-10",
+        xl: "w-12 h-12",
+      },
+      rounded: {
+        none: "",
+        sm: "rounded-sm",
+        md: "rounded-md",
+        lg: "rounded-lg",
+        xl: "rounded-xl",
+        full: "rounded-full",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      rounded: "full",
+    },
+  });
+</script>
+
+<script lang="ts">
+  type Props = VariantProps<typeof style> & HTMLImgAttributes;
   let { size, rounded, class: className, children, ...rest }: Props = $props();
 </script>
 
-<img class={cn(avatar({ size, rounded }), className)} {...rest} />
+<img class={style({ size, rounded, class: clsx(className) })} {...rest} />
