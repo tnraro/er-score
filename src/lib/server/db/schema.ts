@@ -1,4 +1,4 @@
-import { desc, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -36,7 +36,7 @@ export const matches = pgTable(
   (t) => [
     index("matches__season_id").on(t.seasonId),
     index("matches__mode").on(t.mode),
-    index("matches__started_at").on(desc(t.startedAt)),
+    index("matches__started_at").on(t.startedAt),
   ],
 );
 
