@@ -1,4 +1,4 @@
-import type { drizzle } from "drizzle-orm/postgres-js";
+import type { drizzle } from "drizzle-orm/node-postgres";
 
 export type Database = ReturnType<typeof drizzle>;
 
