@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import { measureTime } from "$lib/utils/time/measureTime";
 import type { UserGamesErResponse, UserNicknameErResponse } from "./types.gen";
 
 export function reqGames(id: number) {
@@ -19,23 +20,24 @@ export function reqUserGames(userNum: number, next?: number) {
 
 export async function req<T extends ErResponse>(path: string | URL): Promise<T> {
   const url = new URL(path, env.API_HOST);
-  console.info("req:", url.href);
-  const res = await fetch(url, {
-    headers: {
-      accept: "application/json",
-      "x-api-key": env.API_KEY,
-    },
-  });
-  if (!res.ok) throw res;
-  const body = await res.json();
-  if (!isErResponse(body)) throw body;
-  if (body.code >= 400)
-    throw new Response(JSON.stringify(body), {
-      ...res,
-      status: body.code,
-      statusText: body.message,
+  return await measureTime(`req: ${url.pathname}`, async () => {
+    const res = await fetch(url, {
+      headers: {
+        accept: "application/json",
+        "x-api-key": env.API_KEY,
+      },
     });
-  return body as T;
+    if (!res.ok) throw res;
+    const body = await res.json();
+    if (!isErResponse(body)) throw body;
+    if (body.code >= 400)
+      throw new Response(JSON.stringify(body), {
+        ...res,
+        status: body.code,
+        statusText: body.message,
+      });
+    return body as T;
+  });
 }
 
 export interface ErResponse {
