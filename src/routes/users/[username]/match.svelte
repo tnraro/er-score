@@ -18,7 +18,7 @@
 
   let myRecord = $derived(records.find((record) => record.userId === me)!);
 
-  let endedAt = $derived(new Date(startedAt.getTime() + myRecord.data.totalTime));
+  let endedAt = $derived(new Date(startedAt.getTime() + myRecord.totalTime));
 
   let time = $derived(formatRelativeTime(endedAt, "ko"));
 
@@ -51,20 +51,16 @@
     {#each sortedRecords as result (result.userId)}
       <UserRecord highlight={result.userId === me}>
         <Rank rank={result.rank} {mode} />
-        <CharacterAvatar
-          rounded="md"
-          characterId={result.data.characterId}
-          skin={result.data.skin}
-        />
+        <CharacterAvatar rounded="md" characterId={result.characterId} skin={result.skin} />
         <div class="flex w-32 items-center gap-x-2">
-          <PreMadeTeam preMadeTeam={result.data.preMade} />
+          <PreMadeTeam preMadeTeam={result.preMade} />
           <a
             class="overflow-hidden text-ellipsis whitespace-nowrap break-keep hover:text-blue-500 hover:underline"
-            href="/users/{encodeURIComponent(result.data.nickname)}">{result.data.nickname}</a
+            href="/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
           >
         </div>
         <Score score={result.score} />
-        <Kad k={result.data.k} a={result.data.a} d={result.data.d} />
+        <Kad k={result.k} a={result.a} d={result.d} />
       </UserRecord>
     {/each}
     {#if records.length < teamSize}

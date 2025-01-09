@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { SQL, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -6,6 +6,7 @@ import {
   pgTable,
   primaryKey,
   real,
+  smallint,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -54,6 +55,30 @@ export const userRecords = pgTable(
     rank: integer("rank").notNull(),
     damageToPlayer: integer("damage_to_player").notNull(),
     data: jsonb("data").$type<UserRecord["data"]>().notNull(),
+    nickname: text("nickname")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`${userRecords.data}->>'nickname'`),
+    totalTime: integer("total_time")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'totalTime')::integer`),
+    characterId: smallint("character_id")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'characterId')::smallint`),
+    skin: smallint("skin")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'skin')::smallint`),
+    preMade: smallint("pre_made")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'preMade')::smallint`),
+    k: integer("k")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'k')::integer`),
+    a: integer("a")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'a')::integer`),
+    d: integer("d")
+      .notNull()
+      .generatedAlwaysAs((): SQL => sql`(${userRecords.data}->'d')::integer`),
   },
   (t) => [
     primaryKey({
