@@ -1,49 +1,51 @@
-import { and, avg, between, count, desc, eq, sql } from "drizzle-orm";
+import { avg, count, desc, eq, gte, sql } from "drizzle-orm";
 import { createModel } from "../model";
 import { matches, userRecords } from "../schema";
 
 export const statsModel = createModel((db) => {
   return {
     select(userId: number) {
-      const r = db.$with("records").as(
+      const tur = db.$with("target_user_records").as(
         db
           .select({
-            mode: matches.mode,
+            matchId: userRecords.matchId,
             score: userRecords.score,
             rank: userRecords.rank,
             damageToPlayer: userRecords.damageToPlayer,
-            characterId: sql`${userRecords.data}->'characterId'`.as("character_id"),
+            characterId: userRecords.characterId,
           })
           .from(userRecords)
-          .leftJoin(matches, eq(userRecords.matchId, matches.id))
-          .where(
-            and(
-              eq(userRecords.userId, userId),
-              between(
-                matches.startedAt,
-                sql`current_timestamp - interval '14 days'`,
-                sql`current_timestamp`,
-              ),
-            ),
-          )
-          .orderBy(desc(matches.startedAt))
+          .where(eq(userRecords.userId, userId))
+          .orderBy(desc(userRecords.matchId))
           .limit(100),
       );
+      const tr = db.$with("target_records").as(
+        db
+          .with(tur)
+          .select({
+            mode: matches.mode,
+            score: tur.score,
+            rank: tur.rank,
+            damageToPlayer: tur.damageToPlayer,
+            characterId: tur.characterId,
+          })
+          .from(tur)
+          .leftJoin(matches, eq(tur.matchId, matches.id))
+          .where(gte(matches.startedAt, sql`current_timestamp - interval '14 days'`)),
+      );
       return db
-        .with(r)
+        .with(tr)
         .select({
-          mode: r.mode,
-          count: count(r.mode),
-          scoreAvg: avg(r.score),
-          scoreSd: sql<string | null>`stddev(${r.score})`,
-          rankAvg: avg(r.rank),
-          rankSd: sql<string | null>`stddev(${r.rank})`,
-          damageToPlayerAvg: avg(r.damageToPlayer),
-          damageToPlayerSd: sql<string | null>`stddev(${r.damageToPlayer})`,
-          mostPlayedCharacterId: sql<number>`mode() within group(order by ${r.characterId})`,
+          mode: tr.mode,
+          count: count(tr.mode),
+          scoreAvg: avg(tr.score),
+          scoreSd: sql<string | null>`stddev(${tr.score})`,
+          rankAvg: avg(tr.rank),
+          damageToPlayerAvg: avg(tr.damageToPlayer),
+          mostPlayedCharacterId: sql<number>`mode() within group(order by ${tr.characterId})`,
         })
-        .from(r)
-        .groupBy(r.mode);
+        .from(tr)
+        .groupBy(tr.mode);
     },
   };
 });
