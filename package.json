@@ -21,10 +21,10 @@
     "test": "npm run test:unit -- --run"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241230.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
     "@eslint/compat": "^1.2.4",
     "@sveltejs/adapter-cloudflare": "^5.0.0",
-    "@sveltejs/kit": "^2.15.1",
+    "@sveltejs/kit": "^2.15.2",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@vitest/coverage-v8": "^2.1.8",
     "autoprefixer": "^10.4.20",
@@ -37,14 +37,14 @@
     "prettier-plugin-svelte": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "quicktype-core": "^23.0.170",
-    "svelte": "^5.16.3",
-    "svelte-check": "^4.1.1",
+    "svelte": "^5.17.3",
+    "svelte-check": "^4.1.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.19.1",
     "vite": "^6.0.7",
     "vitest": "^2.1.8",
-    "wrangler": "^3.99.0"
+    "wrangler": "^3.101.0"
   },
   "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a",
   "dependencies": {
