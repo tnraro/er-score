@@ -1,6 +1,7 @@
 <script lang="ts">
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
-  import Kad from "$lib/components/ui/kad/kad.svelte";
+  import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
+  import Numeric from "$lib/components/ui/numeric/numeric.svelte";
   import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
   import Rank from "$lib/components/ui/rank/rank.svelte";
   import Score from "$lib/components/ui/score/score.svelte";
@@ -46,7 +47,13 @@
       <div class="w-8 text-center text-sm font-bold"></div>
       <div class="w-32 text-center text-sm font-bold">이름</div>
       <div class="w-10 text-center text-sm font-bold">점수</div>
-      <Kad class="font-bold" k="K" a="A" d="D"></Kad>
+      <div class="flex gap-x-2 text-sm">
+        <Numeric bold>K</Numeric>
+        <Delimiter />
+        <Numeric bold>D</Numeric>
+        <Delimiter />
+        <Numeric bold>A</Numeric>
+      </div>
     </UserRecord>
     {#each sortedRecords as result (result.userId)}
       <UserRecord highlight={result.userId === me}>
@@ -60,7 +67,13 @@
           >
         </div>
         <Score score={result.score} />
-        <Kad k={result.k} a={result.a} d={result.d} />
+        <div class="flex gap-x-2 text-sm">
+          <Numeric>{result.k}</Numeric>
+          <Delimiter />
+          <Numeric>{result.d}</Numeric>
+          <Delimiter />
+          <Numeric>{result.a}</Numeric>
+        </div>
       </UserRecord>
     {/each}
     {#if records.length < teamSize}
