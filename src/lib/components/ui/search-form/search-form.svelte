@@ -4,7 +4,7 @@
   import Input from "$lib/components/ui/input/input.svelte";
 
   interface Props {
-    username?: String;
+    username?: string | null | undefined;
   }
   let { username }: Props = $props();
 </script>

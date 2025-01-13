@@ -27,7 +27,7 @@
   </div>
   <div class="flex flex-wrap justify-center gap-x-2 gap-y-4">
     {#each data.matches as match (match.id)}
-      <Match {...match} me={data.user.id} />
+      <Match {...match} me={data.user} />
     {/each}
   </div>
 </main>

@@ -5,9 +5,11 @@
   let { children, data } = $props();
 
   let characters = $derived(new Map(data.staticData.characters.map((c) => [c.code, c])));
+  let items = $derived(new Map(data.staticData.items.map((c) => [c.code, c])));
 
   setGlobalData(() => ({
     characters,
+    items,
   }));
 </script>
 

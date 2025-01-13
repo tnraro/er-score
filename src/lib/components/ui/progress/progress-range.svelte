@@ -10,6 +10,7 @@
         blue: "bg-blue-500",
         zinc: "bg-zinc-900",
         yellow: "bg-yellow-500",
+        green: "bg-green-500",
       },
     },
     defaultVariants: {

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import Button from "$lib/components/ui/button/button.svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
@@ -12,12 +14,12 @@
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "./$types";
 
-  type Props = { me: number } & PageData["matches"][0];
+  type Props = { me: { id: number; name: string } } & PageData["matches"][0];
   let { me, records, mode, teamSize, id, startedAt }: Props = $props();
 
   let sortedRecords = $derived(records.slice().sort((a, b) => b.score - a.score));
 
-  let myRecord = $derived(records.find((record) => record.userId === me)!);
+  let myRecord = $derived(records.find((record) => record.userId === me.id)!);
 
   let endedAt = $derived(new Date(startedAt.getTime() + myRecord.totalTime));
 
@@ -56,7 +58,7 @@
       </div>
     </UserRecord>
     {#each sortedRecords as result (result.userId)}
-      <UserRecord highlight={result.userId === me}>
+      <UserRecord highlight={result.userId === me.id}>
         <Rank rank={result.rank} {mode} />
         <CharacterAvatar rounded="md" characterId={result.characterId} skin={result.skin} />
         <div class="flex w-32 items-center gap-x-2">
@@ -86,6 +88,11 @@
       {/each}
     {/if}
   </div>
-  <!-- <div class="flex-1"></div>
-  <Button variant="secondary">자세히</Button> -->
+  <div class="-mt-4 flex-1"></div>
+  <Button
+    variant="secondary"
+    onclick={() => {
+      goto(`/matches/${id}?me=${encodeURIComponent(me.name)}`);
+    }}>자세히</Button
+  >
 </div>

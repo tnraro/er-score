@@ -1,0 +1,149 @@
+<script lang="ts">
+  import { page } from "$app/state";
+  import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
+  import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
+  import ErItem from "$lib/components/ui/er/er-item.svelte";
+  import Numeric from "$lib/components/ui/numeric/numeric.svelte";
+  import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
+  import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
+  import Progress from "$lib/components/ui/progress/progress.svelte";
+  import Rank from "$lib/components/ui/rank/rank.svelte";
+  import Score from "$lib/components/ui/score/score.svelte";
+  import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
+  import UserRecord from "$lib/components/ui/user-record/user-record.svelte";
+  import { Lmode } from "$lib/i18n/mode.js";
+  import { Lrank } from "$lib/i18n/rank";
+  import { groupBy } from "$lib/utils/map/group-by.js";
+  import { formatNumber } from "$lib/utils/number/format-number.js";
+  import { formatRelativeTime } from "$lib/utils/time/format-relative-time.js";
+
+  let { data } = $props();
+
+  let myName = $derived(page.url.searchParams.get("me"));
+  let teams = $derived(
+    groupBy(
+      data.match.records
+        .slice()
+        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => a.rank - b.rank),
+      (record) => record.rank,
+    ),
+  );
+  let maxTotalTime = $derived(Math.max(...data.match.records.map((r) => r.data.totalTime)));
+  let endedAt = $derived(new Date(data.match.startedAt.getTime() + maxTotalTime));
+
+  let time = $derived(formatRelativeTime(endedAt, "ko"));
+
+  let maxDamageToPlayer = $derived(Math.max(...data.match.records.map((r) => r.damageToPlayer)));
+  let maxDamageFromPlayer = $derived(
+    Math.max(...data.match.records.map((r) => r.data.damageFromPlayer)),
+  );
+  let maxHealAmount = $derived(Math.max(...data.match.records.map((r) => r.data.healAmount)));
+</script>
+
+<div class="bg-yellow-50 text-center">WIP</div>
+<div class="grid place-items-center py-8">
+  <SearchForm username={myName} />
+</div>
+<div class="flex items-baseline text-sm">
+  <span class="text-zinc-500">
+    {Lmode(data.match.mode)}
+    ·
+    {time}
+    ·
+    {endedAt.toLocaleString()}
+  </span>
+  <span class="flex-1"></span>
+  <span>
+    <span class="select-none">ID:</span>
+    <span>{data.match.id}</span>
+  </span>
+</div>
+<UserRecord class="sticky top-0 mb-2 flex-wrap border-b bg-white py-2">
+  <div class="w-8 text-center text-sm font-bold">{Lrank(data.match.mode)}</div>
+  <div class="w-8 text-center text-sm font-bold"></div>
+  <div class="w-32 text-center text-sm font-bold">이름</div>
+  <div class="w-10 text-center text-sm font-bold">점수</div>
+  <div class="flex gap-x-2 text-sm">
+    <Numeric bold>K</Numeric>
+    <Delimiter />
+    <Numeric bold>D</Numeric>
+    <Delimiter />
+    <Numeric bold>A</Numeric>
+  </div>
+  <div class="w-64 text-center text-sm font-bold">장비</div>
+  <div class="w-12 text-center text-sm font-bold">딜</div>
+  <div class="w-12 text-center text-sm font-bold">탱</div>
+  <div class="w-12 text-center text-sm font-bold">힐</div>
+</UserRecord>
+<div class="flex flex-col gap-y-4">
+  {#each teams as [rank, team] (rank)}
+    <div>
+      {#each team as record (record.userId)}
+        <UserRecord class="flex-wrap" highlight={record.data.nickname === myName}>
+          <Rank rank={record.rank} mode={data.match.mode} />
+          <CharacterAvatar
+            rounded="md"
+            characterId={record.data.characterId}
+            skin={record.data.skin}
+          />
+          <div class="flex w-32 items-center gap-x-2">
+            <PreMadeTeam preMadeTeam={record.data.preMade} />
+            <a
+              class="overflow-hidden text-ellipsis whitespace-nowrap break-keep hover:text-blue-500 hover:underline"
+              href="/users/{encodeURIComponent(record.data.nickname)}">{record.data.nickname}</a
+            >
+          </div>
+          <Score score={record.score} />
+          <div class="flex gap-x-2 text-sm">
+            <Numeric>{record.data.k}</Numeric>
+            <Delimiter />
+            <Numeric>{record.data.d}</Numeric>
+            <Delimiter />
+            <Numeric>{record.data.a}</Numeric>
+          </div>
+          <div class="flex gap-1">
+            <ErItem id={record.data.equipment[0]} />
+            <ErItem id={record.data.equipment[1]} />
+            <ErItem id={record.data.equipment[2]} />
+            <ErItem id={record.data.equipment[3]} />
+            <ErItem id={record.data.equipment[4]} />
+          </div>
+          <div class="flex w-12 flex-col">
+            <span class="text-right text-xs font-light">{formatNumber(record.damageToPlayer)}</span>
+            <Progress
+              class="overflow-hidden rounded-full"
+              value={record.damageToPlayer}
+              max={maxDamageToPlayer}
+            >
+              <ProgressRange color="red" />
+            </Progress>
+          </div>
+          <div class="flex w-12 flex-col">
+            <span class="text-right text-xs font-light"
+              >{formatNumber(record.data.damageFromPlayer)}</span
+            >
+            <Progress
+              class="overflow-hidden rounded-full"
+              value={record.data.damageFromPlayer}
+              max={maxDamageFromPlayer}
+            >
+              <ProgressRange color="blue" />
+            </Progress>
+          </div>
+          <div class="flex w-12 flex-col">
+            <span class="text-right text-xs font-light">{formatNumber(record.data.healAmount)}</span
+            >
+            <Progress
+              class=" overflow-hidden rounded-full"
+              value={record.data.healAmount}
+              max={maxHealAmount}
+            >
+              <ProgressRange color="green" />
+            </Progress>
+          </div>
+        </UserRecord>
+      {/each}
+    </div>
+  {/each}
+</div>
