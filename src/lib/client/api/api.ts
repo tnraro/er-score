@@ -5,7 +5,7 @@ export interface Character {
   name: string;
 }
 export async function getCharacters(): Promise<Character[]> {
-  const res = await fetch(`${env.PUBLIC_STATIC_URL}/data/Character.json`);
+  const res = await fetch(`${env.PUBLIC_STATIC_URL}/data/character.json`);
   return await res.json();
 }
 
@@ -18,7 +18,7 @@ export interface Item {
 }
 
 export async function getItems(): Promise<Item[]> {
-  const res = await Promise.all([requestItems("ItemWeapon"), requestItems("ItemArmor")]);
+  const res = await Promise.all([requestItems("item-weapon"), requestItems("item-armor")]);
   return res.flat();
 
   async function requestItems(name: string) {
