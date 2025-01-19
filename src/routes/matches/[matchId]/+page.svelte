@@ -71,16 +71,18 @@
     <Delimiter />
     <Numeric bold>A</Numeric>
   </div>
-  <div class="w-[13.5rem] text-center text-sm font-bold">장비</div>
-  <div class="w-12 text-center text-sm font-bold">딜</div>
-  <div class="w-12 text-center text-sm font-bold">탱</div>
-  <div class="w-12 text-center text-sm font-bold">힐</div>
+  <div class="flex items-center gap-x-[inherit]">
+    <div class="w-[13.5rem] text-center text-sm font-bold">장비</div>
+    <div class="w-12 text-center text-sm font-bold">딜</div>
+    <div class="w-12 text-center text-sm font-bold">탱</div>
+    <div class="w-12 text-center text-sm font-bold">힐</div>
+  </div>
 </UserRecord>
-<div class="flex flex-col gap-y-4">
+<div class="flex flex-col gap-y-8">
   {#each teams as [rank, team] (rank)}
-    <div>
+    <div class="flex flex-col gap-y-2">
       {#each team as record (record.userId)}
-        <UserRecord class="flex-wrap" highlight={record.data.nickname === myName}>
+        <UserRecord class="flex-wrap gap-y-2" highlight={record.data.nickname === myName}>
           <Rank rank={record.rank} mode={data.match.mode} />
           <CharacterAvatar
             rounded="md"
@@ -102,45 +104,50 @@
             <Delimiter />
             <Numeric>{record.data.a}</Numeric>
           </div>
-          <div class="flex gap-1">
-            <ErItem id={record.data.equipment[0]} size="sm" />
-            <ErItem id={record.data.equipment[1]} size="sm" />
-            <ErItem id={record.data.equipment[2]} size="sm" />
-            <ErItem id={record.data.equipment[3]} size="sm" />
-            <ErItem id={record.data.equipment[4]} size="sm" />
-          </div>
-          <div class="flex w-12 flex-col">
-            <span class="text-right text-xs font-light">{formatNumber(record.damageToPlayer)}</span>
-            <Progress
-              class="overflow-hidden rounded-full"
-              value={record.damageToPlayer}
-              max={maxDamageToPlayer}
-            >
-              <ProgressRange color="red" />
-            </Progress>
-          </div>
-          <div class="flex w-12 flex-col">
-            <span class="text-right text-xs font-light"
-              >{formatNumber(record.data.damageFromPlayer)}</span
-            >
-            <Progress
-              class="overflow-hidden rounded-full"
-              value={record.data.damageFromPlayer}
-              max={maxDamageFromPlayer}
-            >
-              <ProgressRange color="blue" />
-            </Progress>
-          </div>
-          <div class="flex w-12 flex-col">
-            <span class="text-right text-xs font-light">{formatNumber(record.data.healAmount)}</span
-            >
-            <Progress
-              class=" overflow-hidden rounded-full"
-              value={record.data.healAmount}
-              max={maxHealAmount}
-            >
-              <ProgressRange color="green" />
-            </Progress>
+          <div class="flex items-center gap-x-[inherit]">
+            <div class="flex gap-1">
+              <ErItem id={record.data.equipment[0]} size="sm" />
+              <ErItem id={record.data.equipment[1]} size="sm" />
+              <ErItem id={record.data.equipment[2]} size="sm" />
+              <ErItem id={record.data.equipment[3]} size="sm" />
+              <ErItem id={record.data.equipment[4]} size="sm" />
+            </div>
+            <div class="flex w-12 flex-col">
+              <span class="text-right text-xs font-light"
+                >{formatNumber(record.damageToPlayer)}</span
+              >
+              <Progress
+                class="overflow-hidden rounded-full"
+                value={record.damageToPlayer}
+                max={maxDamageToPlayer}
+              >
+                <ProgressRange color="red" />
+              </Progress>
+            </div>
+            <div class="flex w-12 flex-col">
+              <span class="text-right text-xs font-light"
+                >{formatNumber(record.data.damageFromPlayer)}</span
+              >
+              <Progress
+                class="overflow-hidden rounded-full"
+                value={record.data.damageFromPlayer}
+                max={maxDamageFromPlayer}
+              >
+                <ProgressRange color="blue" />
+              </Progress>
+            </div>
+            <div class="flex w-12 flex-col">
+              <span class="text-right text-xs font-light"
+                >{formatNumber(record.data.healAmount)}</span
+              >
+              <Progress
+                class=" overflow-hidden rounded-full"
+                value={record.data.healAmount}
+                max={maxHealAmount}
+              >
+                <ProgressRange color="green" />
+              </Progress>
+            </div>
           </div>
         </UserRecord>
       {/each}
