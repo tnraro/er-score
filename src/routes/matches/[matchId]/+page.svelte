@@ -71,7 +71,7 @@
     <Delimiter />
     <Numeric bold>A</Numeric>
   </div>
-  <div class="w-64 text-center text-sm font-bold">장비</div>
+  <div class="w-[13.5rem] text-center text-sm font-bold">장비</div>
   <div class="w-12 text-center text-sm font-bold">딜</div>
   <div class="w-12 text-center text-sm font-bold">탱</div>
   <div class="w-12 text-center text-sm font-bold">힐</div>
@@ -103,11 +103,11 @@
             <Numeric>{record.data.a}</Numeric>
           </div>
           <div class="flex gap-1">
-            <ErItem id={record.data.equipment[0]} />
-            <ErItem id={record.data.equipment[1]} />
-            <ErItem id={record.data.equipment[2]} />
-            <ErItem id={record.data.equipment[3]} />
-            <ErItem id={record.data.equipment[4]} />
+            <ErItem id={record.data.equipment[0]} size="sm" />
+            <ErItem id={record.data.equipment[1]} size="sm" />
+            <ErItem id={record.data.equipment[2]} size="sm" />
+            <ErItem id={record.data.equipment[3]} size="sm" />
+            <ErItem id={record.data.equipment[4]} size="sm" />
           </div>
           <div class="flex w-12 flex-col">
             <span class="text-right text-xs font-light">{formatNumber(record.damageToPlayer)}</span>

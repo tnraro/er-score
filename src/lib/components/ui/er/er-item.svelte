@@ -1,8 +1,8 @@
 <script lang="ts" module>
   const style = tv({
     slots: {
-      img: "block h-7 w-12 min-w-12 rounded object-contain p-0.5",
-      placeholder: "block h-7 w-12 min-w-12 rounded",
+      img: "block rounded object-contain p-0.5",
+      placeholder: "block rounded",
     },
     variants: {
       grade: {
@@ -13,6 +13,20 @@
         Legend: { img: "from-legendary to-legendary-dark bg-gradient-to-t" },
         Mythic: { img: "from-mythic to-mythic-dark bg-gradient-to-t" },
       },
+      size: {
+        md: {
+          img: "h-7 w-12 min-w-12",
+          placeholder: "h-7 w-12 min-w-12",
+        },
+        sm: {
+          img: "h-6 w-10 min-w-10",
+          placeholder: "h-6 w-10 min-w-10",
+        },
+      },
+    },
+    defaultVariants: {
+      grade: "Common",
+      size: "md",
     },
   });
 </script>
@@ -20,17 +34,17 @@
 <script lang="ts">
   import { env } from "$env/dynamic/public";
   import { globalData } from "$lib/global-state.svelte";
-  import { tv } from "tailwind-variants";
+  import { tv, type VariantProps } from "tailwind-variants";
 
   type Props = {
     id?: number | null | undefined;
-  };
-  let { id }: Props = $props();
+  } & Omit<VariantProps<typeof style>, "grade">;
+  let { id, size }: Props = $props();
 
   const { items } = globalData();
   let item = $derived(id != null ? items.get(id) : null);
 
-  let { img, placeholder } = $derived(style());
+  let { img, placeholder } = $derived(style({ size }));
 </script>
 
 {#if item != null}
