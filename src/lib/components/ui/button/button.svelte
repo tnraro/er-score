@@ -8,7 +8,7 @@
     variants: {
       variant: {
         primary:
-          "bg-zinc-900 text-white active:bg-zinc-800 shadow-sm disabled:bg-zinc-300 disabled:text-zinc-500",
+          "bg-zinc-900 text-white active:bg-zinc-800 shadow-xs disabled:bg-zinc-300 disabled:text-zinc-500",
         secondary: "bg-zinc-100 active:bg-zinc-200 disabled:bg-zinc-100 disabled:text-zinc-500",
       },
       size: {
@@ -20,7 +20,7 @@
       },
       rounded: {
         none: "",
-        sm: "rounded-sm",
+        xs: "rounded-xs",
         md: "rounded-md",
         lg: "rounded-lg",
         xl: "rounded-xl",

@@ -18,7 +18,7 @@
     goto(`/users/${encodeURIComponent(username)}`);
   }}
 >
-  <label class="block select-none text-sm" for="nickname">닉네임</label>
+  <label class="block text-sm select-none" for="nickname">닉네임</label>
   <div class="flex gap-1">
     <Input
       id="nickname"

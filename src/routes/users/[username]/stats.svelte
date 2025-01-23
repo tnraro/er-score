@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="mx-auto max-w-max space-y-4 rounded-xl border p-4 shadow-sm">
+<div class="mx-auto max-w-max space-y-4 rounded-xl border p-4 shadow-xs">
   <div class="flex items-center gap-x-2">
     <CharacterAvatar characterId={mostPlayedCharacterId ?? 0} />
     <h1 class="font-extrabold">{username}</h1>

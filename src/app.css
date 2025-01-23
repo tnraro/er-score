@@ -1,6 +1,42 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import "tailwindcss";
+
+@theme {
+  --color-common: oklch(29.25% 0.0023 247.89);
+  --color-common-dark: oklch(47.76% 0.0054 258.34);
+
+  --color-uncommon: oklch(49.06% 0.0677 145.78);
+  --color-uncommon-dark: oklch(27.79% 0.0252 130.93);
+
+  --color-rare: oklch(40.74% 0.0653 259.41);
+  --color-rare-dark: oklch(28.95% 0.0231 267.23);
+
+  --color-epic: oklch(51.46% 0.1115 302.43);
+  --color-epic-dark: oklch(30.03% 0.0359 288.62);
+
+  --color-legendary: oklch(58.58% 0.0952 79.42);
+  --color-legendary-dark: oklch(32.49% 0.0282 73.27);
+
+  --color-mythic: oklch(45.18% 0.1297 21.61);
+  --color-mythic-dark: oklch(30.52% 0.0578 30.4);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 html {
   font-family:

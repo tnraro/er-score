@@ -1,17 +1,17 @@
 <script lang="ts" module>
   const style = tv({
     slots: {
-      img: "block rounded object-contain p-0.5",
-      placeholder: "block rounded",
+      img: "block rounded-sm object-contain p-0.5",
+      placeholder: "block rounded-sm",
     },
     variants: {
       grade: {
-        Common: { img: "from-common to-common-dark bg-gradient-to-t" },
-        Uncommon: { img: "from-uncommon to-uncommon-dark bg-gradient-to-t" },
-        Rare: { img: "from-rare to-rare-dark bg-gradient-to-t" },
-        Epic: { img: "from-epic to-epic-dark bg-gradient-to-t" },
-        Legend: { img: "from-legendary to-legendary-dark bg-gradient-to-t" },
-        Mythic: { img: "from-mythic to-mythic-dark bg-gradient-to-t" },
+        Common: { img: "from-common to-common-dark bg-linear-to-t" },
+        Uncommon: { img: "from-uncommon to-uncommon-dark bg-linear-to-t" },
+        Rare: { img: "from-rare to-rare-dark bg-linear-to-t" },
+        Epic: { img: "from-epic to-epic-dark bg-linear-to-t" },
+        Legend: { img: "from-legendary to-legendary-dark bg-linear-to-t" },
+        Mythic: { img: "from-mythic to-mythic-dark bg-linear-to-t" },
       },
       size: {
         md: {

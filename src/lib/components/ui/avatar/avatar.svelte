@@ -15,7 +15,7 @@
       },
       rounded: {
         none: "",
-        sm: "rounded-sm",
+        xs: "rounded-xs",
         md: "rounded-md",
         lg: "rounded-lg",
         xl: "rounded-xl",

@@ -94,7 +94,7 @@
             <div class="flex w-32 items-center gap-x-2">
               <PreMadeTeam preMadeTeam={record.data.preMade} />
               <a
-                class="overflow-hidden text-ellipsis whitespace-nowrap break-keep hover:text-blue-500 hover:underline"
+                class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
                 href="/users/{encodeURIComponent(record.data.nickname)}">{record.data.nickname}</a
               >
             </div>

@@ -28,7 +28,7 @@
   let _mode = $derived(Lmode(mode));
 </script>
 
-<div class="flex flex-col gap-y-4 rounded-2xl border p-4 shadow-sm">
+<div class="flex flex-col gap-y-4 rounded-2xl border p-4 shadow-xs">
   <div class="flex items-baseline text-sm">
     <span class="text-zinc-500">
       {_mode}
@@ -64,7 +64,7 @@
         <div class="flex w-32 items-center gap-x-2">
           <PreMadeTeam preMadeTeam={result.preMade} />
           <a
-            class="overflow-hidden text-ellipsis whitespace-nowrap break-keep hover:text-blue-500 hover:underline"
+            class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
             href="/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
           >
         </div>
