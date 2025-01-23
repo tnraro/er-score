@@ -1,5 +1,5 @@
-import { reqUserGames } from "../req";
-import type { UserGame } from "../types.gen";
+import { reqUserGames } from "$lib/server/api/req";
+import type { UserGame } from "$lib/server/api/types.gen";
 
 export async function getMatches(userId: number, pages = 1) {
   const userGames = await getUserGames(userId, pages);

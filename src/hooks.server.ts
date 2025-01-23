@@ -1,10 +1,8 @@
-import { useDb } from "$lib/server/db";
-import { useQuery } from "$lib/server/query";
+import { createDb } from "$lib/server/db/client";
 import type { Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const db = useDb();
+  const db = createDb();
   event.locals.db = db;
-  event.locals.query = useQuery(db);
   return await resolve(event);
 };

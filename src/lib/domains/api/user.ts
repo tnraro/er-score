@@ -1,4 +1,4 @@
-import { reqUserNickname } from "../req";
+import { reqUserNickname } from "$lib/server/api/req";
 
 export async function getUser(name: string) {
   const res = await reqUserNickname(name);

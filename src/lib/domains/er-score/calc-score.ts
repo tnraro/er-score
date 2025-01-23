@@ -1,12 +1,7 @@
-import type { GameRecord } from "$lib/er-api/api";
+import { MatchingMode } from "$lib/domains/api/shapes";
+import type { UserGame } from "$lib/server/api/types.gen";
 
-export enum MatchingMode {
-  Normal = 2,
-  Rank = 3,
-  Cobalt = 6,
-}
-
-export function calcScore(game: GameRecord) {
+export function calcScore(game: UserGame) {
   switch (game.matchingMode) {
     case MatchingMode.Normal:
     case MatchingMode.Rank:

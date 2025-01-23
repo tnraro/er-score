@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import { MatchingMode } from "$lib/er-score";
+  import { MatchingMode } from "$lib/domains/api/shapes";
   import { tv, type VariantProps } from "tailwind-variants";
 
   export type RankVariants = VariantProps<typeof style>;

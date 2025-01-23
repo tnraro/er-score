@@ -10,7 +10,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import type { UserRecord } from "../api/get/user-records";
+import type { UserRecord } from "../../domains/api/user-records";
 
 export const users = pgTable(
   "users",

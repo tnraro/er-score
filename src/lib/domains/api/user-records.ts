@@ -1,7 +1,7 @@
-import { calcScore } from "$lib/er-score";
+import { calcScore } from "$lib/domains/er-score/calc-score";
 import { omit } from "$lib/utils/object/omit";
-import { reqGames } from "../req";
-import type { UserGame } from "../types.gen";
+import { reqGames } from "$lib/server/api/req";
+import type { UserGame } from "$lib/server/api/types.gen";
 
 export type UserRecord = Awaited<ReturnType<typeof getUserRecords>>[0];
 export async function getUserRecords(matchId: number) {
