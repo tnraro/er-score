@@ -2,7 +2,7 @@
   const style = tv({
     slots: {
       img: "block rounded-sm object-contain p-0.5",
-      placeholder: "block rounded-sm",
+      placeholder: "block rounded-sm from-common to-common-dark bg-linear-to-t",
     },
     variants: {
       grade: {

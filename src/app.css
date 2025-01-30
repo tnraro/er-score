@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-common: oklch(29.25% 0.0023 247.89);
-  --color-common-dark: oklch(47.76% 0.0054 258.34);
+  --color-common: oklch(47.76% 0.0054 258.34);
+  --color-common-dark: oklch(29.25% 0.0023 247.89);
 
   --color-uncommon: oklch(49.06% 0.0677 145.78);
   --color-uncommon-dark: oklch(27.79% 0.0252 130.93);
