@@ -1,0 +1,12 @@
+.git
+.jj
+.cache
+.github
+.svelte-kit
+build
+coverage
+node_modules
+scripts
+.gitignore
+*.md
+*.env*

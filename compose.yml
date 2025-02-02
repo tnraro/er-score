@@ -1,0 +1,35 @@
+services:
+  app:
+    depends_on:
+      pg:
+        condition: service_healthy
+    image: ghcr.io/tnraro/er-score:main
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      API_HOST: ${API_HOST}
+      API_KEY: ${API_KEY}
+      PUBLIC_STATIC_URL: ${PUBLIC_STATIC_URL}
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@pg:5432/postgres
+    ports:
+      - ${PORT}:3000
+  pg:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      TZ: ${TZ}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+volumes:
+  pg:
