@@ -1,4 +1,4 @@
-import { SQL, sql } from "drizzle-orm";
+import { type SQL, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -34,11 +34,7 @@ export const matches = pgTable(
     startedAt: timestamp("started_at", { mode: "date", withTimezone: true }).notNull(),
     size: integer("size").notNull(),
   },
-  (t) => [
-    index("matches__season_id").on(t.seasonId),
-    index("matches__mode").on(t.mode),
-    index("matches__started_at").on(t.startedAt),
-  ],
+  (t) => [index("matches__season_id").on(t.seasonId), index("matches__started_at").on(t.startedAt)],
 );
 
 export const userRecords = pgTable(

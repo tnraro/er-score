@@ -1,12 +1,12 @@
 import { env } from "$env/dynamic/private";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
+import pg from "pg";
+const { Pool } = pg;
+// const { Pool } = pg.native!;
 
-export type Database = ReturnType<typeof createDb>;
+export type Database = typeof db;
 
-export function createDb() {
-  // Disable prefetch as it is not supported for "Transaction" pool mode
-  const client = postgres(env.DATABASE_URL, { prepare: false });
-  const db = drizzle(client);
-  return db;
-}
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+});
+export const db = drizzle({ client: pool });
