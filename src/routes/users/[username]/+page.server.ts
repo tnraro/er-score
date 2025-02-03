@@ -14,18 +14,27 @@ export async function load({ params: { username }, locals: { db }, depends }) {
       const user = await measureTime("user", () => queryUser(db, username));
       let matchSummaries = await measureTime("get ", () => queryRecentMatches(db, user.id));
       if (
-        matchSummaries.length === 0 ||
-        user.updatedAt == null ||
-        Date.now() - user.updatedAt.getTime() > 14 * 86400000 /** 14 days */
+        user.updatedAt != null &&
+        Date.now() - user.updatedAt.getTime() <= 10000 /** 1 second */
       ) {
-        await measureTime("user sync", () => mutateMatches(db, user.id, 10));
-        await measureTime("user updated", () => updateUserUpdatedAt(db, user.id));
-      }
-      const { changed } = await measureTime("sync", () =>
-        mutateRecentMatches(db, user.id, matchSummaries),
-      );
-      if (changed) {
-        matchSummaries = await measureTime("get2", () => queryRecentMatches(db, user.id));
+        //
+      } else {
+        if (
+          matchSummaries.length === 0 ||
+          user.updatedMatchId == null ||
+          matchSummaries.every((m) => m.id !== user.updatedMatchId)
+        ) {
+          const updatedMatchId = await measureTime("user sync", () =>
+            mutateMatches(db, user.id, user.updatedMatchId, 10),
+          );
+          await measureTime("user updated", () => updateUserUpdatedAt(db, user.id, updatedMatchId));
+        }
+        const { changed } = await measureTime("sync", () =>
+          mutateRecentMatches(db, user.id, matchSummaries),
+        );
+        if (changed) {
+          matchSummaries = await measureTime("get2", () => queryRecentMatches(db, user.id));
+        }
       }
       const stats = await measureTime("stats", () => queryUserStats(db, user.id));
 

@@ -13,5 +13,6 @@ export async function queryUser(db: Database, username: string) {
   return {
     ...user,
     updatedAt: null,
+    updatedMatchId: null,
   };
 }

@@ -19,6 +19,7 @@ export const users = pgTable(
     id: integer().primaryKey().notNull(),
     name: text().notNull(),
     updatedAt: timestamp({ mode: "date", withTimezone: true }),
+    updatedMatchId: integer(),
   },
   (t) => [index("users__name").on(sql`(lower(${t.name}))`)],
 );

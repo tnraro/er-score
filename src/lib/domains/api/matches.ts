@@ -20,6 +20,18 @@ export async function getUserGames(userId: number, pages = 1) {
   return result;
 }
 
+export async function* genUserGames(userId: number, pages = 1) {
+  let next: number | undefined = undefined;
+  for (let i = 0; i < pages; i++) {
+    const res = await reqUserGames(userId, next);
+    yield res.userGames.sort(
+      (a, b) => new Date(b.startDtm).getTime() - new Date(a.startDtm).getTime(),
+    );
+    next = res.next;
+    if (res.next == null) break;
+  }
+}
+
 export function toMatch(game: UserGame): typeof matches.$inferSelect {
   return {
     id: game.gameId,
