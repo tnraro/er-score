@@ -40,3 +40,9 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+      - name: algae_deploy
+        env:
+          ALGAE_URL: ${{ secrets.ALGAE_URL }}
+          ALGAE_AUTH: ${{ secrets.ALGAE_AUTH }}
+        run: |
+          curl -s -X PATCH "${ALGAE_URL}" -d '{}' -H "Authorization: Basic ${ALGAE_AUTH}"
