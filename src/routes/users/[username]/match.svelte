@@ -62,7 +62,7 @@
         <Rank rank={result.rank} {mode} />
         <CharacterAvatar rounded="md" characterId={result.characterId} skin={result.skin} />
         <div class="flex w-32 items-center gap-x-2">
-          <PreMadeTeam preMadeTeam={result.preMade} />
+          <PreMadeTeam preMadeTeam={result.preMadeTeamSize} />
           <a
             class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
             href="/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
@@ -70,11 +70,11 @@
         </div>
         <Score score={result.score} />
         <div class="flex gap-x-2 text-sm">
-          <Numeric>{result.k}</Numeric>
+          <Numeric>{result.kills}</Numeric>
           <Delimiter />
-          <Numeric>{result.d}</Numeric>
+          <Numeric>{result.deaths}</Numeric>
           <Delimiter />
-          <Numeric>{result.a}</Numeric>
+          <Numeric>{result.assists}</Numeric>
         </div>
       </UserRecord>
     {/each}

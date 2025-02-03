@@ -23,13 +23,13 @@ export async function mutateRecentMatches(
     if (mm == null) {
       newMatches.push(match);
       const userRecords = await getUserRecords(match.id);
-      mayNewUsers.push(...userRecords.map((ur) => ({ id: ur.userId, name: ur.data.nickname })));
+      mayNewUsers.push(...userRecords.map((ur) => ({ id: ur.userId, name: ur.nickname })));
       newUserRecords.push(...userRecords);
     } else if (mm.records.length !== mm.teamSize) {
       const userRecords = await getUserRecords(match.id);
 
       const xs = userRecords.filter((ug) => !userRecordSet.has(`${ug.matchId}:${ug.userId}`));
-      mayNewUsers.push(...xs.map((ur) => ({ id: ur.userId, name: ur.data.nickname })));
+      mayNewUsers.push(...xs.map((ur) => ({ id: ur.userId, name: ur.nickname })));
       newUserRecords.push(...xs);
     }
   }

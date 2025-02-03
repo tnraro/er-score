@@ -1,5 +1,6 @@
 import { reqUserGames } from "$lib/server/api/req";
 import type { UserGame } from "$lib/server/api/types.gen";
+import type { matches } from "$lib/server/db/schema";
 
 export async function getMatches(userId: number, pages = 1) {
   const userGames = await getUserGames(userId, pages);
@@ -19,7 +20,7 @@ export async function getUserGames(userId: number, pages = 1) {
   return result;
 }
 
-export function toMatch(game: UserGame) {
+export function toMatch(game: UserGame): typeof matches.$inferSelect {
   return {
     id: game.gameId,
     seasonId: game.seasonId,

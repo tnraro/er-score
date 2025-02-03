@@ -29,16 +29,18 @@
       (record) => record.rank,
     ),
   );
-  let maxTotalTime = $derived(Math.max(...data.match.records.map((r) => r.data.totalTime)));
+  let maxTotalTime = $derived(Math.max(...data.match.records.map((r) => r.totalTime)));
   let endedAt = $derived(new Date(data.match.startedAt.getTime() + maxTotalTime));
 
   let time = $derived(formatRelativeTime(endedAt, "ko"));
 
-  let maxDamageToPlayer = $derived(Math.max(...data.match.records.map((r) => r.damageToPlayer)));
-  let maxDamageFromPlayer = $derived(
-    Math.max(...data.match.records.map((r) => r.data.damageFromPlayer)),
+  let maxDamageDealtToPlayers = $derived(
+    Math.max(...data.match.records.map((r) => r.damageDealtToPlayers)),
   );
-  let maxHealAmount = $derived(Math.max(...data.match.records.map((r) => r.data.healAmount)));
+  let maxDamageTakenFromPlayers = $derived(
+    Math.max(...data.match.records.map((r) => r.damageTakenFromPlayers)),
+  );
+  let maxHealingAmount = $derived(Math.max(...data.match.records.map((r) => r.healingAmount)));
 </script>
 
 <div class="bg-yellow-50 text-center">WIP</div>
@@ -84,68 +86,64 @@
     {#each teams as [rank, team] (rank)}
       <div class="flex flex-col gap-y-2">
         {#each team as record (record.userId)}
-          <UserRecord class="flex-wrap gap-y-2" highlight={record.data.nickname === myName}>
+          <UserRecord class="flex-wrap gap-y-2" highlight={record.nickname === myName}>
             <Rank rank={record.rank} mode={data.match.mode} />
-            <CharacterAvatar
-              rounded="md"
-              characterId={record.data.characterId}
-              skin={record.data.skin}
-            />
+            <CharacterAvatar rounded="md" characterId={record.characterId} skin={record.skin} />
             <div class="flex w-32 items-center gap-x-2">
-              <PreMadeTeam preMadeTeam={record.data.preMade} />
+              <PreMadeTeam preMadeTeam={record.preMadeTeamSize} />
               <a
                 class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-                href="/users/{encodeURIComponent(record.data.nickname)}">{record.data.nickname}</a
+                href="/users/{encodeURIComponent(record.nickname)}">{record.nickname}</a
               >
             </div>
             <Score score={record.score} />
             <div class="flex gap-x-2 text-sm">
-              <Numeric>{record.data.k}</Numeric>
+              <Numeric>{record.kills}</Numeric>
               <Delimiter />
-              <Numeric>{record.data.d}</Numeric>
+              <Numeric>{record.deaths}</Numeric>
               <Delimiter />
-              <Numeric>{record.data.a}</Numeric>
+              <Numeric>{record.assists}</Numeric>
             </div>
             <div class="flex items-center gap-x-[inherit]">
               <div class="flex gap-1">
-                <ErItem id={record.data.equipment[0]} size="sm" />
-                <ErItem id={record.data.equipment[1]} size="sm" />
-                <ErItem id={record.data.equipment[2]} size="sm" />
-                <ErItem id={record.data.equipment[3]} size="sm" />
-                <ErItem id={record.data.equipment[4]} size="sm" />
+                <ErItem id={record.equipments[0]} size="sm" />
+                <ErItem id={record.equipments[1]} size="sm" />
+                <ErItem id={record.equipments[2]} size="sm" />
+                <ErItem id={record.equipments[3]} size="sm" />
+                <ErItem id={record.equipments[4]} size="sm" />
               </div>
               <div class="flex w-12 flex-col">
                 <span class="text-right text-xs font-light"
-                  >{formatNumber(record.damageToPlayer)}</span
+                  >{formatNumber(record.damageDealtToPlayers)}</span
                 >
                 <Progress
                   class="overflow-hidden rounded-full"
-                  value={record.damageToPlayer}
-                  max={maxDamageToPlayer}
+                  value={record.damageDealtToPlayers}
+                  max={maxDamageDealtToPlayers}
                 >
                   <ProgressRange color="red" />
                 </Progress>
               </div>
               <div class="flex w-12 flex-col">
                 <span class="text-right text-xs font-light"
-                  >{formatNumber(record.data.damageFromPlayer)}</span
+                  >{formatNumber(record.damageTakenFromPlayers)}</span
                 >
                 <Progress
                   class="overflow-hidden rounded-full"
-                  value={record.data.damageFromPlayer}
-                  max={maxDamageFromPlayer}
+                  value={record.damageTakenFromPlayers}
+                  max={maxDamageTakenFromPlayers}
                 >
                   <ProgressRange color="blue" />
                 </Progress>
               </div>
               <div class="flex w-12 flex-col">
                 <span class="text-right text-xs font-light"
-                  >{formatNumber(record.data.healAmount)}</span
+                  >{formatNumber(record.healingAmount)}</span
                 >
                 <Progress
                   class=" overflow-hidden rounded-full"
-                  value={record.data.healAmount}
-                  max={maxHealAmount}
+                  value={record.healingAmount}
+                  max={maxHealingAmount}
                 >
                   <ProgressRange color="green" />
                 </Progress>

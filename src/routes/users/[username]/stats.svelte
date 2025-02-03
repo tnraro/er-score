@@ -69,7 +69,7 @@
             <td><Score score={stat.scoreAvg} /></td>
             <td class="text-sm">{formatSd(stat)}</td>
             <td class="text-center text-sm">{stat.rankAvg.toFixed(1)}</td>
-            <td class="text-right text-sm">{stat.damageToPlayerAvg.toFixed(0)}</td>
+            <td class="text-right text-sm">{stat.damageDealtToPlayersAvg.toFixed(0)}</td>
           </tr>
         {/each}
       </tbody>

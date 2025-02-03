@@ -11,7 +11,7 @@ export async function queryUserStats(db: Database, userId: number) {
       scoreAvg: number(stat.scoreAvg!),
       scoreSd: number(stat.scoreSd),
       rankAvg: number(stat.rankAvg!),
-      damageToPlayerAvg: number(stat.damageToPlayerAvg!),
+      damageDealtToPlayersAvg: number(stat.damageDealtToPlayersAvg!),
       mostPlayedCharacterId: stat.mostPlayedCharacterId,
     };
   });

@@ -9,7 +9,7 @@ export async function selectUserStats(db: Database, userId: number) {
         matchId: userRecords.matchId,
         score: userRecords.score,
         rank: userRecords.rank,
-        damageToPlayer: userRecords.damageToPlayer,
+        damageDealtToPlayers: userRecords.damageDealtToPlayers,
         characterId: userRecords.characterId,
       })
       .from(userRecords)
@@ -24,7 +24,7 @@ export async function selectUserStats(db: Database, userId: number) {
         mode: matches.mode,
         score: tur.score,
         rank: tur.rank,
-        damageToPlayer: tur.damageToPlayer,
+        damageDealtToPlayers: tur.damageDealtToPlayers,
         characterId: tur.characterId,
       })
       .from(tur)
@@ -39,7 +39,7 @@ export async function selectUserStats(db: Database, userId: number) {
       scoreAvg: avg(tr.score),
       scoreSd: sql<string | null>`stddev(${tr.score})`,
       rankAvg: avg(tr.rank),
-      damageToPlayerAvg: avg(tr.damageToPlayer),
+      damageDealtToPlayersAvg: avg(tr.damageDealtToPlayers),
       mostPlayedCharacterId: sql<number>`mode() within group(order by ${tr.characterId})`,
     })
     .from(tr)

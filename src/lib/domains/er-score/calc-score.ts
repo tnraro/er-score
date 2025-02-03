@@ -5,6 +5,7 @@ export function calcScore(game: UserGame) {
   switch (game.matchingMode) {
     case MatchingMode.Normal:
     case MatchingMode.Rank:
+    case MatchingMode.Union:
       return score([
         [game.clutchCount, 0.1501, 0, 0],
         [game.ccTimeToPlayer, 0.2935, 2.6666667, 17.033335],
