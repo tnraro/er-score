@@ -43,7 +43,7 @@
       <span>{id}</span>
     </span>
   </div>
-  <div>
+  <div class="flex flex-col gap-y-1">
     <UserRecord class="select-none hover:bg-transparent">
       <div class="w-8 text-center text-sm font-bold">{Lrank(mode)}</div>
       <div class="w-8 text-center text-sm font-bold"></div>
