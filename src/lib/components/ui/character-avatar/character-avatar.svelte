@@ -13,9 +13,11 @@
 
   const { characters } = globalData();
 
-  let src = $derived(
-    `${env.PUBLIC_STATIC_URL}/image/character/portrait/${characters.get(characterId)?.name}_S${skin?.toString().padStart(3, "0") ?? "000"}.webp`,
-  );
+  let src = $derived.by(() => {
+    const name = characters.get(characterId)?.name;
+    if (name == null) return null;
+    return `${env.PUBLIC_STATIC_URL}/image/character/portrait/${name}_S${skin?.toString().padStart(3, "0") ?? "000"}.webp`;
+  });
 </script>
 
 <Avatar {src} {...rest} />

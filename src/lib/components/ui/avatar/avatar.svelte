@@ -21,17 +21,25 @@
         xl: "rounded-xl",
         full: "rounded-full",
       },
+      placeholder: {
+        true: "bg-zinc-100",
+      },
     },
     defaultVariants: {
       size: "md",
       rounded: "full",
+      placeholder: false,
     },
   });
 </script>
 
 <script lang="ts">
   type Props = VariantProps<typeof style> & HTMLImgAttributes;
-  let { size, rounded, class: className, children, ...rest }: Props = $props();
+  let { size, rounded, class: className, children, src, ...rest }: Props = $props();
 </script>
 
-<img class={style({ size, rounded, class: clsx(className) })} {...rest} />
+{#if src != null}
+  <img class={style({ size, rounded, class: clsx(className) })} {src} {...rest} />
+{:else}
+  <div class={style({ size, rounded, class: clsx(className), placeholder: true })}></div>
+{/if}
