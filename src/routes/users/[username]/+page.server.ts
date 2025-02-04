@@ -13,10 +13,7 @@ export async function load({ params: { username }, locals: { db }, depends }) {
     return await measureTime(`/users/${username}`, async () => {
       const user = await measureTime("user", () => queryUser(db, username));
       let matchSummaries = await measureTime("get ", () => queryRecentMatches(db, user.id));
-      if (
-        user.updatedAt != null &&
-        Date.now() - user.updatedAt.getTime() <= 10000 /** 1 second */
-      ) {
+      if (user.updatedAt != null && Date.now() - user.updatedAt.getTime() <= 1000 /** 1 second */) {
         //
       } else {
         if (
