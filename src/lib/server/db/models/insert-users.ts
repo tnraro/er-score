@@ -1,9 +1,10 @@
 import { measureTime } from "$lib/utils/time/measureTime";
-import type { Database } from "../client";
+import type { DatabaseOrTransaction } from "../client";
 import { users } from "../schema";
 
-export async function insertUsers(db: Database, user: (typeof users.$inferInsert)[]) {
-  return await measureTime(`insert ${user.length} users`, () =>
+type InsertUser = Pick<typeof users.$inferInsert, "id" | "name">;
+export async function insertUsers(db: DatabaseOrTransaction, user: InsertUser[]) {
+  return await measureTime(`insertUsers`, () =>
     db.insert(users).values(user).onConflictDoNothing(),
   );
 }

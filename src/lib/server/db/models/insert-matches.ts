@@ -1,7 +1,13 @@
-import type { Database } from "../client";
+import { measureTime } from "$lib/utils/time/measureTime";
+import type { DatabaseOrTransaction } from "../client";
 import { matches } from "../schema";
 
-export async function insertMatches(db: Database, values: (typeof matches.$inferInsert)[]) {
+export async function insertMatches(
+  db: DatabaseOrTransaction,
+  values: (typeof matches.$inferInsert)[],
+) {
   if (values.length === 0) return;
-  return db.insert(matches).values(values).onConflictDoNothing();
+  return await measureTime("insertMatches", () =>
+    db.insert(matches).values(values).onConflictDoNothing(),
+  );
 }
