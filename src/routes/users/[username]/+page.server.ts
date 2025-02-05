@@ -18,23 +18,18 @@ export async function load({ params: { username }, depends, parent }) {
     freshPromise,
   };
   async function update() {
-    console.log(1);
     if (user.updatedAt != null && Date.now() - user.updatedAt.getTime() <= 1000 /** 1 second */)
       return Promise.resolve(null);
 
-    console.log(2);
     const updatedMatchId = await mutateMatches(user.id, {
       matchId: user.updatedMatchId,
       pages: 10,
     });
     const hasNewMatches = updatedMatchId != null && updatedMatchId != user.updatedMatchId;
-    console.log(3, updatedMatchId, hasNewMatches);
     if (!hasNewMatches) return Promise.resolve(null);
     await updateUserUpdatedAt(user.id, updatedMatchId);
-    console.log(4);
     const staleMatches = await staleMatchesPromise;
     const { changed } = await mutateRecentMatches(user.id, staleMatches);
-    console.log(5, changed);
     if (!changed) return Promise.resolve(null);
     const [stats, matches] = await Promise.allSettled([
       selectUserStats(user.id),
