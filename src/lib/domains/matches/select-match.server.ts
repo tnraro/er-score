@@ -1,4 +1,4 @@
-import { db, type Database } from "$lib/server/db/client";
+import { db } from "$lib/server/db/client";
 import { matches, userRecords } from "$lib/server/db/schema";
 import { eq, sql } from "drizzle-orm";
 
@@ -34,6 +34,6 @@ const prepared = db
   .orderBy(userRecords.rank)
   .prepare("select-match");
 
-export async function selectMatch(db: Database, matchId: number) {
+export async function selectMatch(matchId: number) {
   return prepared.execute({ matchId });
 }

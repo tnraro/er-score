@@ -1,8 +1,30 @@
 import { avg, count, desc, eq, gte, sql } from "drizzle-orm";
-import type { Database } from "../../server/db/client";
+import { db } from "../../server/db/client";
 import { matches, userRecords } from "../../server/db/schema";
 
-export async function selectUserStats(db: Database, userId: number) {
+export type UserStats = Awaited<ReturnType<typeof selectUserStats>>;
+const plan = prepareSelectUserStats();
+export async function selectUserStats(userId: number) {
+  const rows = await plan.execute({ userId });
+
+  return rows.map((stat) => {
+    return {
+      mode: stat.mode!,
+      count: stat.count,
+      scoreAvg: number(stat.scoreAvg!),
+      scoreSd: number(stat.scoreSd),
+      rankAvg: number(stat.rankAvg!),
+      damageDealtToPlayersAvg: number(stat.damageDealtToPlayersAvg!),
+      mostPlayedCharacterId: stat.mostPlayedCharacterId,
+    };
+  });
+}
+function number<T extends string | null | undefined>(x: T) {
+  if (x == null) return x as unknown as T extends string ? never : null | undefined;
+  return Number(x);
+}
+
+function prepareSelectUserStats() {
   const tur = db.$with("target_user_records").as(
     db
       .select({
@@ -13,7 +35,7 @@ export async function selectUserStats(db: Database, userId: number) {
         characterId: userRecords.characterId,
       })
       .from(userRecords)
-      .where(eq(userRecords.userId, userId))
+      .where(eq(userRecords.userId, sql.placeholder("userId")))
       .orderBy(desc(userRecords.matchId))
       .limit(100),
   );
@@ -43,5 +65,6 @@ export async function selectUserStats(db: Database, userId: number) {
       mostPlayedCharacterId: sql<number>`mode() within group(order by ${tr.characterId})`,
     })
     .from(tr)
-    .groupBy(tr.mode);
+    .groupBy(tr.mode)
+    .prepare("select_user_stats_plan");
 }

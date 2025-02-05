@@ -1,8 +1,8 @@
 import { eq, sql } from "drizzle-orm";
-import type { Database } from "../client";
+import { db } from "../client";
 import { users } from "../schema";
 
-export async function updateUserUpdatedAt(db: Database, userId: number, updatedMatchId: number) {
+export async function updateUserUpdatedAt(userId: number, updatedMatchId: number) {
   await db
     .update(users)
     .set({

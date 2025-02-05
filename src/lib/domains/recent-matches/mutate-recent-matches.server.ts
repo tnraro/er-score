@@ -1,12 +1,11 @@
 import { getMatches } from "$lib/domains/api/matches";
 import { getUserRecords } from "$lib/domains/api/user-records";
-import type { Database } from "$lib/server/db/client";
+import { db } from "$lib/server/db/client";
 import { insertMatches } from "$lib/server/db/models/insert-matches";
 import { insertUserRecords } from "$lib/server/db/models/insert-user-records";
 import { insertUsers } from "$lib/server/db/models/insert-users";
 
 export async function mutateRecentMatches(
-  db: Database,
   userId: number,
   prevMatches: { id: number; teamSize: number; records: { userId: number }[] }[],
 ) {
@@ -21,7 +20,7 @@ export async function mutateRecentMatches(
   };
 
   async function fetchThings() {
-    const matches = await getMatches(userId);
+    const matches = (await getMatches(userId)).slice(0, 6);
     const matchMap = new Map(prevMatches.map((m) => [m.id, m]));
     const userRecordSet = new Set(
       prevMatches.flatMap((m) => m.records.map((r) => `${m.id}:${r.userId}`)),

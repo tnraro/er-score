@@ -1,4 +1,4 @@
-import { db, type Database } from "$lib/server/db/client";
+import { db } from "$lib/server/db/client";
 import { matches, userRecords } from "$lib/server/db/schema";
 import { and, desc, eq, sql } from "drizzle-orm";
 
@@ -75,7 +75,7 @@ const prepared = db
   .groupBy(rm.id, rm.seasonId, rm.mode, rm.size, rm.teamSize, rm.startedAt)
   .orderBy(desc(rm.startedAt))
   .prepare("select-recent-matches");
-export async function selectRecentMatches(db: Database, userId: number, n = 12) {
+export async function selectRecentMatches(userId: number, n = 6) {
   return prepared.execute({
     userId,
     n,

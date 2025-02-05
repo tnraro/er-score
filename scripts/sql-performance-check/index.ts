@@ -20,12 +20,15 @@ function query(...tags: string[]) {
   for (const { tag, groups } of result) {
     console.group(tag);
     console.table(
-      groups.map(({ name, agg }) => ({
-        "log name": name,
-        avg: agg?.avg,
-        count: agg?.count,
-        sd: agg?.stddev,
-      })),
+      groups
+        .filter(({ agg }) => agg != null)
+        .map(({ name, agg }) => ({
+          "log name": name,
+          avg: agg?.avg,
+          count: agg?.count,
+          sd: agg?.stddev,
+        }))
+        .toSorted((a, b) => a.avg! + a.sd! - b.avg! - b.sd!),
     );
     console.groupEnd();
   }

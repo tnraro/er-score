@@ -32,6 +32,26 @@ export async function* genUserGames(userId: number, pages = 1) {
   }
 }
 
+export async function getRecentUserGames(
+  userId: number,
+  until?: { matchId?: number | null; pages?: number },
+) {
+  const untilMatchId = until?.matchId;
+  const untilPages = until?.pages ?? 1;
+
+  const result = [];
+  loop: for await (const chunk of genUserGames(userId, untilPages)) {
+    for (const game of chunk) {
+      if (untilMatchId != null && game.gameId <= untilMatchId) {
+        break loop;
+      }
+      result.push(game);
+    }
+  }
+  result.sort((a, b) => new Date(b.startDtm).getTime() - new Date(a.startDtm).getTime());
+  return result;
+}
+
 export function toMatch(game: UserGame): typeof matches.$inferSelect {
   return {
     id: game.gameId,

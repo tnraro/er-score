@@ -1,54 +1,43 @@
-import { mutateMatches } from "$lib/domains/matches/mutate-matches.server.js";
-import { mutateRecentMatches } from "$lib/domains/recent-matches/mutate-recent-matches.server.js";
-import { queryRecentMatches } from "$lib/domains/recent-matches/query-recent-matches.server.js";
-import { queryUserStats } from "$lib/domains/user-stats/query-user-stats.server.js";
-import { queryUser } from "$lib/domains/user/query-user.server.js";
+import { mutateMatches } from "$lib/domains/matches/mutate-matches.server";
+import { mutateRecentMatches } from "$lib/domains/recent-matches/mutate-recent-matches.server";
+import { selectRecentMatches } from "$lib/domains/recent-matches/select-recent-matches.server.js";
+import { selectUserStats } from "$lib/domains/user-stats/select-user-stats.js";
 import { updateUserUpdatedAt } from "$lib/server/db/models/update-user-updated-at";
-import { measureTime } from "$lib/utils/time/measureTime";
-import { error } from "@sveltejs/kit";
 
-export async function load({ params: { username }, locals: { db }, depends }) {
-  try {
-    depends(`/users/${username}`);
-    return await measureTime(`/users/${username}`, async () => {
-      const user = await measureTime("user", () => queryUser(db, username));
-      let matchSummaries = await measureTime("get ", () => queryRecentMatches(db, user.id));
-      if (user.updatedAt != null && Date.now() - user.updatedAt.getTime() <= 1000 /** 1 second */) {
-        //
-      } else {
-        if (
-          matchSummaries.length === 0 ||
-          user.updatedMatchId == null ||
-          matchSummaries.every((m) => m.id !== user.updatedMatchId)
-        ) {
-          const updatedMatchId = await measureTime("user sync", () =>
-            mutateMatches(db, user.id, user.updatedMatchId, 10),
-          );
-          await measureTime("user updated", () => updateUserUpdatedAt(db, user.id, updatedMatchId));
-        }
-        const { changed } = await measureTime("sync", () =>
-          mutateRecentMatches(db, user.id, matchSummaries),
-        );
-        if (changed) {
-          matchSummaries = await measureTime("get2", () => queryRecentMatches(db, user.id));
-        }
-      }
-      const stats = await measureTime("stats", () => queryUserStats(db, user.id));
+export async function load({ params: { username }, depends, parent }) {
+  depends(`/users/${username}`);
+  const { user } = await parent();
+  const staleStatsPromise = selectUserStats(user.id);
+  const staleMatchesPromise = selectRecentMatches(user.id);
 
-      return {
-        user,
-        stats,
-        matches: matchSummaries,
-      };
+  const freshPromise = update();
+
+  return {
+    staleStatsPromise,
+    staleMatchesPromise,
+    freshPromise,
+  };
+  async function update() {
+    if (user.updatedAt != null && Date.now() - user.updatedAt.getTime() <= 1000 /** 1 second */)
+      return Promise.resolve(null);
+
+    const updatedMatchId = await mutateMatches(user.id, {
+      matchId: user.updatedMatchId,
+      pages: 10,
     });
-  } catch (e) {
-    if (e instanceof Response) {
-      if (e.status === 404) {
-        error(e.status, "찾을 수 없습니다");
-      }
-      console.error(e);
-      error(e.status, await e.text());
-    }
-    throw e;
+    const hasNewMatches = updatedMatchId != null && updatedMatchId != user.updatedMatchId;
+    if (!hasNewMatches) return Promise.resolve(null);
+    await updateUserUpdatedAt(user.id, updatedMatchId);
+    const staleMatches = await staleMatchesPromise;
+    const { changed } = await mutateRecentMatches(user.id, staleMatches);
+    if (!changed) return Promise.resolve(null);
+    const [stats, matches] = await Promise.allSettled([
+      selectUserStats(user.id),
+      selectRecentMatches(user.id),
+    ]);
+    return {
+      stats,
+      matches,
+    };
   }
 }

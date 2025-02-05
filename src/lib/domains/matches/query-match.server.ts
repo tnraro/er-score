@@ -1,12 +1,10 @@
-import type { Database } from "$lib/server/db/client";
 import type { matches } from "$lib/server/db/schema";
 import { omit } from "$lib/utils/object/omit";
-import { measureTime } from "$lib/utils/time/measureTime";
-import { selectMatch } from "./select-match";
+import { selectMatch } from "./select-match.server";
 
-export async function queryMatch(db: Database, matchId: string | number) {
+export async function queryMatch(matchId: string | number) {
   const id = Number(matchId);
-  const rows = await measureTime("get", () => selectMatch(db, id));
+  const rows = await selectMatch(id);
   if (rows.length === 0) return null;
   const match: Omit<typeof matches.$inferSelect, "id"> = {
     mode: rows[0].mode,

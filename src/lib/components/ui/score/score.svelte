@@ -19,12 +19,13 @@
 
 <script lang="ts">
   interface Props {
-    score: number;
+    score?: number;
     class?: string;
   }
   let { score: value, class: className, ...rest }: Props = $props();
 
   function score() {
+    if (value == null) return 0;
     if (value >= 0.95) return 1;
     if (value < 0) return -1;
     return 0;
@@ -32,5 +33,5 @@
 </script>
 
 <div class={style({ score: score(), className })} {...rest}>
-  {value.toFixed(1)}
+  {value?.toFixed(1) ?? "‍"}
 </div>
