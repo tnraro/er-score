@@ -10,4 +10,5 @@ export default defineConfig({
     url: process.env.DATABASE_URL!,
   },
   casing: "snake_case",
+  tablesFilter: ["!pg_stat_statements*"]
 });
