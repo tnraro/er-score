@@ -10,13 +10,13 @@
         1: "h-1",
       },
       color: {
-        zinc: "bg-zinc-100",
+        gray: "bg-gray-100",
         transparent: "",
       },
     },
     defaultVariants: {
       size: 1,
-      color: "zinc",
+      color: "gray",
     },
   });
 </script>

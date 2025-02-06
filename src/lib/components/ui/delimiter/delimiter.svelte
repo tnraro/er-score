@@ -4,7 +4,7 @@
   import { tv } from "tailwind-variants";
 
   const style = tv({
-    base: "text-zinc-300 select-none",
+    base: "text-gray-300 select-none",
   });
 </script>
 

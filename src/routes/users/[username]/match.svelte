@@ -5,9 +5,9 @@
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
   import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
-  import Rank from "$lib/components/ui/rank/rank.svelte";
-  import Score from "$lib/components/ui/score/score.svelte";
-  import UserRecord from "$lib/components/ui/user-record/user-record.svelte";
+  import Score from "$lib/features/score/score.svelte";
+  import Rank from "$lib/features/user-records/rank.svelte";
+  import UserRecord from "$lib/features/user-records/user-record.svelte";
   import { Lmode } from "$lib/i18n/mode";
   import { Lrank } from "$lib/i18n/rank";
   import { makeArray } from "$lib/utils/array/make-array";
@@ -15,7 +15,7 @@
   import type { PageData } from "./$types";
 
   type Props = { me: { id: number; name: string } } & PageData["matches"][0];
-  let { me, records, mode, teamSize, id, startedAt }: Props = $props();
+  let { me, records, mode, teamSize, matchId, startedAt }: Props = $props();
 
   let sortedRecords = $derived(records.slice().sort((a, b) => b.score - a.score));
 
@@ -28,9 +28,9 @@
   let _mode = $derived(Lmode(mode));
 </script>
 
-<div class="flex flex-col gap-y-4 rounded-2xl border p-4 shadow-xs">
+<div class="flex flex-col gap-y-4 rounded-2xl bg-white p-4">
   <div class="flex items-baseline text-sm">
-    <span class="text-zinc-500">
+    <span class="text-gray-500">
       {_mode}
       ·
       {time}
@@ -40,7 +40,7 @@
     <span class="flex-1"></span>
     <span>
       <span class="select-none">ID:</span>
-      <span>{id}</span>
+      <span>{matchId}</span>
     </span>
   </div>
   <div class="flex flex-col gap-y-1">
@@ -83,7 +83,7 @@
         <UserRecord>
           <Rank rank={records[0].rank} {mode} />
           <CharacterAvatar rounded="md" characterId={0} />
-          <div class="flex items-center text-zinc-500">정보 없음</div>
+          <div class="flex items-center text-gray-500">정보 없음</div>
         </UserRecord>
       {/each}
     {/if}
@@ -92,7 +92,7 @@
   <Button
     variant="secondary"
     onclick={() => {
-      goto(`/matches/${id}?me=${encodeURIComponent(me.name)}`);
+      goto(`/matches/${matchId}?me=${encodeURIComponent(me.name)}`);
     }}>자세히</Button
   >
 </div>

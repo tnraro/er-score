@@ -7,10 +7,10 @@
   import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
-  import Rank from "$lib/components/ui/rank/rank.svelte";
-  import Score from "$lib/components/ui/score/score.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import UserRecord from "$lib/components/ui/user-record/user-record.svelte";
+  import Score from "$lib/features/score/score.svelte";
+  import Rank from "$lib/features/user-records/rank.svelte";
+  import UserRecord from "$lib/features/user-records/user-record.svelte";
   import { Lmode } from "$lib/i18n/mode.js";
   import { Lrank } from "$lib/i18n/rank";
   import { groupBy } from "$lib/utils/map/group-by.js";
@@ -50,7 +50,7 @@
 
 <main class="container mx-auto space-y-8">
   <div class="flex items-baseline text-sm">
-    <span class="text-zinc-500">
+    <span class="text-gray-500">
       {Lmode(data.match.mode)}
       ·
       {time}
@@ -60,7 +60,7 @@
     <span class="flex-1"></span>
     <span>
       <span class="select-none">ID:</span>
-      <span>{data.match.id}</span>
+      <span>{data.match.matchId}</span>
     </span>
   </div>
   <UserRecord class="sticky top-0 mb-2 flex-wrap border-b bg-white py-2">

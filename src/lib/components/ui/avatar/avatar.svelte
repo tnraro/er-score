@@ -22,7 +22,7 @@
         full: "rounded-full",
       },
       placeholder: {
-        true: "bg-zinc-100",
+        true: "bg-gray-100",
       },
     },
     defaultVariants: {

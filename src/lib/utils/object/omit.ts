@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function omit<T extends Record<string, any>, K extends keyof T>(
   item: T,
-  keys: K[],
+  keys: readonly K[],
 ): Omit<T, K> {
   if (keys.length === 0) return { ...item };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

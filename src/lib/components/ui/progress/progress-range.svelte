@@ -8,13 +8,13 @@
       color: {
         red: "bg-red-500",
         blue: "bg-blue-500",
-        zinc: "bg-zinc-900",
+        gray: "bg-gray-900",
         yellow: "bg-yellow-500",
         green: "bg-green-500",
       },
     },
     defaultVariants: {
-      color: "zinc",
+      color: "gray",
     },
   });
 </script>

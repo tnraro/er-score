@@ -1,0 +1,25 @@
+import { eq, sql } from "drizzle-orm";
+import { db } from "../db/client.server";
+import { users } from "../db/schema.server";
+
+export async function updateUser(
+  userId: number,
+  options: {
+    updatedMatchId?: number;
+    name?: string;
+  },
+) {
+  await db
+    .update(users)
+    .set({
+      updatedAt: sql`current_timestamp`,
+      ...options,
+    })
+    .where(eq(users.id, userId));
+}
+
+type InsertUser = Pick<typeof users.$inferInsert, "id" | "name">;
+export async function insertUsers(values: InsertUser[]) {
+  if (values.length === 0) return;
+  return await db.insert(users).values(values).onConflictDoNothing();
+}

@@ -56,3 +56,7 @@ html {
     "Segoe UI Symbol",
     sans-serif;
 }
+
+body {
+  @apply bg-gray-100;
+}

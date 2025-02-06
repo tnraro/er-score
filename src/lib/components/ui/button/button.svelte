@@ -8,8 +8,8 @@
     variants: {
       variant: {
         primary:
-          "bg-zinc-900 text-white active:bg-zinc-800 shadow-xs disabled:bg-zinc-300 disabled:text-zinc-500",
-        secondary: "bg-zinc-100 active:bg-zinc-200 disabled:bg-zinc-100 disabled:text-zinc-500",
+          "bg-gray-900 text-white active:bg-gray-800 shadow-xs disabled:bg-gray-300 disabled:text-gray-500",
+        secondary: "bg-gray-200 active:bg-gray-200 disabled:bg-gray-100 disabled:text-gray-500",
       },
       size: {
         xs: "h-4 px-1 text-xs",
@@ -24,6 +24,7 @@
         md: "rounded-md",
         lg: "rounded-lg",
         xl: "rounded-xl",
+        "2xl": "rounded-2xl",
         full: "rounded-full",
       },
     },

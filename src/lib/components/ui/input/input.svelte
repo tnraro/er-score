@@ -5,7 +5,7 @@
 
   type InputVariants = VariantProps<typeof style>;
   const style = tv({
-    base: "border shadow-xs outline-hidden focus:ring-1 focus:ring-zinc-900",
+    base: "border outline-hidden focus:ring-1 focus:ring-gray-900 bg-white",
     variants: {
       size: {
         xs: "h-4 px-1 text-xs",

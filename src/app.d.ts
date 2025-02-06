@@ -1,4 +1,4 @@
-import type { Database } from "$lib/server/db/client";
+import type { Database } from "$lib/features/db/client.server";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces

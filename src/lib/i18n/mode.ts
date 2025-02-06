@@ -1,4 +1,4 @@
-import { MatchingMode } from "$lib/domains/api/shapes";
+import { MatchingMode } from "$lib/features/er-api/shapes";
 
 export function Lmode(matchingMode: MatchingMode) {
   switch (matchingMode) {
@@ -8,6 +8,8 @@ export function Lmode(matchingMode: MatchingMode) {
       return "랭크";
     case MatchingMode.Cobalt:
       return "코발트";
+    case MatchingMode.Union:
+      return "유니온";
     default:
       return matchingMode as unknown as string;
   }

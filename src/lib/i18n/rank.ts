@@ -1,4 +1,4 @@
-import { MatchingMode } from "$lib/domains/api/shapes";
+import { MatchingMode } from "$lib/features/er-api/shapes";
 
 export function Lrank(matchingMode: MatchingMode) {
   switch (matchingMode) {

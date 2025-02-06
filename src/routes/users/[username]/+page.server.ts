@@ -1,49 +1,42 @@
-import { mutateMatches } from "$lib/domains/matches/mutate-matches.server";
-import { mutateRecentMatches } from "$lib/domains/recent-matches/mutate-recent-matches.server";
-import { selectRecentMatches } from "$lib/domains/recent-matches/select-recent-matches.server.js";
-import { selectUserStats } from "$lib/domains/user-stats/select-user-stats.js";
-import { queryUser } from "$lib/domains/user/query-user.server.js";
-import { updateUserUpdatedAt } from "$lib/server/db/models/update-user-updated-at";
+import type { UserRecord } from "$lib/features/db/schema.server.js";
+import { selectMatchesCount } from "$lib/features/match-summary/select-matches-count.server";
+import {
+  recentMatchesSize,
+  selectRecentMatches,
+  type RecentMatches,
+} from "$lib/features/match-summary/select-recent-matches.server.js";
+import {
+  getRecentUserRecords,
+  getUserRecordsByMatchId,
+} from "$lib/features/user-records/api.server.js";
+import { insertUserRecords } from "$lib/features/user-records/db.server.js";
+import { selectUserStats } from "$lib/features/user-stats/select-user-stats.server.js";
+import { updateUser } from "$lib/features/user/db.server.js";
+import { queryUser, type UserQueryResult } from "$lib/features/user/query-user.server.js";
+import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
 import { error } from "@sveltejs/kit";
 
-export async function load({ params: { username }, depends }) {
+export async function load({ params: { username }, url, depends }) {
   depends(`/users/${username}`);
   try {
+    const page = numberOrNullable(url.searchParams.get("page")) ?? 0;
+    const mode = numberOrNullable(url.searchParams.get("mode")) ?? undefined;
     const user = await queryUser(username);
-    const staleStatsPromise = selectUserStats(user.id);
-    const staleMatchesPromise = selectRecentMatches(user.id);
+    const [stats, matches, matchesCount] = await Promise.all([
+      selectUserStats(user.id, mode),
+      selectRecentMatches(user.id, page, mode),
+      selectMatchesCount(user.id, mode),
+    ]);
 
-    const freshPromise = update();
+    const isUpdatedPromise = update(user, matches, page);
 
     return {
       user,
-      staleStatsPromise,
-      staleMatchesPromise,
-      freshPromise,
+      stats,
+      matches,
+      maxPages: Math.ceil(matchesCount / recentMatchesSize),
+      isUpdatedPromise,
     };
-    async function update() {
-      if (user.updatedAt != null && Date.now() - user.updatedAt.getTime() <= 1000 /** 1 second */)
-        return Promise.resolve(null);
-
-      const updatedMatchId = await mutateMatches(user.id, {
-        matchId: user.updatedMatchId,
-        pages: 10,
-      });
-      const hasNewMatches = updatedMatchId != null && updatedMatchId != user.updatedMatchId;
-      if (!hasNewMatches) return Promise.resolve(null);
-      await updateUserUpdatedAt(user.id, updatedMatchId);
-      const staleMatches = await staleMatchesPromise;
-      const { changed } = await mutateRecentMatches(user.id, staleMatches);
-      if (!changed) return Promise.resolve(null);
-      const [stats, matches] = await Promise.allSettled([
-        selectUserStats(user.id),
-        selectRecentMatches(user.id),
-      ]);
-      return {
-        stats,
-        matches,
-      };
-    }
   } catch (e) {
     if (e instanceof Response) {
       if (e.status === 404) {
@@ -54,4 +47,40 @@ export async function load({ params: { username }, depends }) {
     }
     throw e;
   }
+}
+async function update(user: UserQueryResult, matches: RecentMatches, page: number | undefined) {
+  const elapsedTime = Date.now() - (user.updatedAt?.getTime() ?? 0);
+  const updatedUserRecordMap = new Map<string, UserRecord>();
+  if (page === 0 && elapsedTime >= 5000) {
+    const recentUserRecords = await getRecentUserRecords(user.id, {
+      maxPages: 10,
+      beforeMatchId: user.updatedMatchId ?? undefined,
+    });
+    for (const ur of recentUserRecords) {
+      updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
+    }
+    const latestUserRecord = recentUserRecords.at(0);
+    await updateUser(user.id, {
+      updatedMatchId: latestUserRecord?.matchId,
+      name:
+        latestUserRecord != null && user.name !== latestUserRecord.nickname
+          ? latestUserRecord.nickname
+          : undefined,
+    });
+  }
+
+  {
+    for (const match of matches) {
+      if (match.records.length >= match.teamSize) continue;
+      const userRecords = await getUserRecordsByMatchId(match.matchId);
+      for (const ur of userRecords) {
+        updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
+      }
+    }
+  }
+
+  const updatedUserRecords = updatedUserRecordMap.values().toArray();
+  await insertUserRecords(updatedUserRecords);
+  const updated = updatedUserRecords.length > 0;
+  return updated;
 }
