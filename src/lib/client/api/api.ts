@@ -4,7 +4,7 @@ export interface Character {
   code: number;
   name: string;
 }
-export async function getCharacters(): Promise<Character[]> {
+export async function getCharacters(fetch: typeof window.fetch): Promise<Character[]> {
   const res = await fetch(`${env.PUBLIC_STATIC_URL}/data/character.json`);
   return await res.json();
 }
@@ -17,7 +17,7 @@ export interface Item {
   itemGrade: "Common" | "Uncommon" | "Rare" | "Epic" | "Legend" | "Mythic";
 }
 
-export async function getItems(): Promise<Item[]> {
+export async function getItems(fetch: typeof window.fetch): Promise<Item[]> {
   const res = await Promise.all([requestItems("item-weapon"), requestItems("item-armor")]);
   return res.flat();
 
