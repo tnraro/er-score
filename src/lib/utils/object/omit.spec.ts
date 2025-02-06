@@ -19,3 +19,9 @@ it("should omit specified keys from the object", () => {
   const result = omit(obj, ["b", "c"]);
   expect(result).toStrictEqual({ a: 5 });
 });
+it("delete not exist key", () => {
+  const obj = { a: 5, b: 3, c: 7 };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result = omit(obj, ["d"] as any);
+  expect(result).toStrictEqual(obj);
+});
