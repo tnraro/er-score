@@ -1,7 +1,8 @@
 const worker = {
   async fetch(req, env) {
-    const { pathname } = new URL(req.url);
-    const url = new URL(pathname, env.APP_HOST);
+    const baseUrl = new URL(req.url);
+    const path = baseUrl.href.slice(baseUrl.origin.length);
+    const url = new URL(path, env.APP_HOST);
     const res = await fetch(url);
     const headers = new Headers(res.headers);
     headers.delete("x-served-by");
