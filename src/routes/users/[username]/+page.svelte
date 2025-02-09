@@ -8,13 +8,16 @@
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { Lmode } from "$lib/i18n/mode";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
+  import { untrack } from "svelte";
   import Match from "./match.svelte";
   import Pagination from "./pagination.svelte";
 
   let { data } = $props();
 
   $effect(() => {
+    untrack(() => ls.increase(0.5));
     data.isUpdatedPromise.then((isUpdated) => {
+      untrack(() => ls.done());
       if (isUpdated) {
         invalidateAll();
       }
