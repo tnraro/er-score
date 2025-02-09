@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
   import { page } from "$app/state";
   import LL from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -19,7 +19,7 @@
     data.isUpdatedPromise.then((isUpdated) => {
       untrack(() => ls.done());
       if (isUpdated) {
-        invalidateAll();
+        invalidate(`users:${untrack(() => page.params.username)}`);
       }
     });
   });
@@ -29,8 +29,8 @@
 
   let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]());
 
-  function update() {
-    return ls.do(() => invalidateAll());
+  function refresh() {
+    return ls.do(() => invalidate(`users:${page.params.username}`));
   }
 </script>
 
@@ -42,7 +42,7 @@
   class="container mx-auto flex flex-col gap-8 px-4 sm:w-105 lg:w-auto lg:flex-row-reverse lg:justify-center"
 >
   <div class="flex flex-col gap-y-4 lg:w-94">
-    <Button class="mx-auto flex w-full py-6" rounded="2xl" onclick={update} disabled={ls.show}>
+    <Button class="mx-auto flex w-full py-6" rounded="2xl" onclick={refresh} disabled={ls.show}>
       {$LL.refresh.text()} <kbd class="font-[unset]">{$LL.refresh.keyboard()}</kbd>
     </Button>
     <Stats stats={data.stats} {mode} username={data.user.name} />
@@ -83,7 +83,7 @@
   onkeydown={(e) => {
     if (e.key === "F5") {
       e.preventDefault();
-      update();
+      refresh();
     }
   }}
 />
