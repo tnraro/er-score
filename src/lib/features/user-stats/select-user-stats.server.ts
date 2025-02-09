@@ -12,7 +12,6 @@ export async function selectUserStats(userId: number, mode?: number) {
       characterId: stat.characterId,
       count: stat.count,
       scoreAvg: numberOrNullable(stat.scoreAvg!),
-      scoreSd: numberOrNullable(stat.scoreSd),
       halfRateAvg: numberOrNullable(stat.halfRateAvg!),
       damageDealtToPlayersAvg: numberOrNullable(stat.damageDealtToPlayersAvg!),
     };
@@ -55,7 +54,6 @@ function prepareSelectUserStatsPlan(name: string, filters: SQL[]) {
       characterId: tur.characterId,
       count: count(),
       scoreAvg: avg(tur.score),
-      scoreSd: sql<string | null>`stddev(${tur.score})`,
       halfRateAvg: avg(tur.halfRate),
       damageDealtToPlayersAvg: avg(tur.damageDealtToPlayers),
     })

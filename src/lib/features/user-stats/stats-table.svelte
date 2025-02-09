@@ -15,7 +15,6 @@
       <th>{$LL.stats.heading.count()}</th>
       <th></th>
       <th>{$LL.stats.heading.score()}</th>
-      <th>기복</th>
       <th>{$LL.stats.heading.halfRate()}</th>
       <th>{$LL.stats.heading.averageDamage()}</th>
     </tr>

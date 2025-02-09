@@ -41,12 +41,6 @@
     Math.max(...stats.map((stat) => stat.damageDealtToPlayersAvg)),
   );
 
-  function formatSd(stat: (typeof stats)[0]) {
-    if (stat.count < 3 || stat.scoreSd == null) return "표본 부족";
-    if (stat.scoreSd > 1) return "기복 큼";
-    if (stat.scoreSd < 0.5) return "기복 작음";
-    return "기복 보통";
-  }
   const c = style();
 </script>
 
@@ -73,9 +67,6 @@
           <td class="text-center text-sm">{stat.count}</td>
           <td><CharacterAvatar characterId={stat.characterId} size="sm" rounded="md" /></td>
           <td><Score score={stat.scoreAvg} /></td>
-          <td class="text-sm" class:text-gray-400={stat.count < 3 || stat.scoreSd == null}
-            >{formatSd(stat)}</td
-          >
           <td class="text-center text-sm"
             >{stat.halfRateAvg.toFixed(1)}
             <Progress class="overflow-hidden rounded-full" value={stat.halfRateAvg} max={1}>
