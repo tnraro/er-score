@@ -93,10 +93,10 @@
     {/if}
   </div>
   <div class="-mt-4 flex-1"></div>
-  <Button
-    variant="secondary"
-    onclick={() => {
-      goto(`/${$locale}/matches/${matchId}?me=${encodeURIComponent(me.name)}`);
-    }}>{$LL.button.detail()}</Button
+  <a
+    class="inline-flex h-8 items-center justify-center gap-x-1 rounded-md bg-gray-200 px-3 font-medium select-none active:bg-gray-200"
+    href="/{$locale}/matches/{matchId}?me={encodeURIComponent(me.name)}"
   >
+    {$LL.button.detail()}
+  </a>
 </div>
