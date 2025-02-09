@@ -1,15 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import LL, { locale } from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
   import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
+  import { MatchingMode } from "$lib/features/er-api/shapes";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecord from "$lib/features/user-records/user-record.svelte";
-  import { Lmode } from "$lib/i18n/mode";
-  import { Lrank } from "$lib/i18n/rank";
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "./$types";
@@ -25,7 +25,7 @@
 
   let time = $derived(formatRelativeTime(endedAt, "ko"));
 
-  let _mode = $derived(Lmode(mode));
+  let _mode = $derived($LL.matchingMode[mode as MatchingMode]?.() ?? mode);
 </script>
 
 <div class="flex flex-col gap-y-4 rounded-2xl bg-white p-4">
@@ -45,16 +45,20 @@
   </div>
   <div class="flex flex-col gap-y-1">
     <UserRecord class="select-none hover:bg-transparent">
-      <div class="w-8 text-center text-sm font-bold">{Lrank(mode)}</div>
+      <div class="w-8 text-center text-sm font-bold">
+        {mode === MatchingMode.Cobalt
+          ? $LL.userRecords.heading.winLose()
+          : $LL.userRecords.heading.rank()}
+      </div>
       <div class="w-8 text-center text-sm font-bold"></div>
-      <div class="w-32 text-center text-sm font-bold">이름</div>
-      <div class="w-10 text-center text-sm font-bold">점수</div>
+      <div class="w-32 text-center text-sm font-bold">{$LL.userRecords.heading.name()}</div>
+      <div class="w-10 text-center text-sm font-bold">{$LL.userRecords.heading.score()}</div>
       <div class="flex gap-x-2 text-sm">
-        <Numeric bold>K</Numeric>
+        <Numeric bold>{$LL.userRecords.heading.k()}</Numeric>
         <Delimiter />
-        <Numeric bold>D</Numeric>
+        <Numeric bold>{$LL.userRecords.heading.d()}</Numeric>
         <Delimiter />
-        <Numeric bold>A</Numeric>
+        <Numeric bold>{$LL.userRecords.heading.a()}</Numeric>
       </div>
     </UserRecord>
     {#each sortedRecords as result (result.userId)}
@@ -65,7 +69,7 @@
           <PreMadeTeam preMadeTeam={result.preMadeTeamSize} />
           <a
             class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-            href="/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
+            href="/{$locale}/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
           >
         </div>
         <Score score={result.score} />
@@ -83,7 +87,7 @@
         <UserRecord>
           <Rank rank={records[0].rank} {mode} />
           <CharacterAvatar rounded="md" characterId={0} />
-          <div class="flex items-center text-gray-500">정보 없음</div>
+          <div class="flex items-center text-gray-500">{$LL.userRecords.noData()}</div>
         </UserRecord>
       {/each}
     {/if}
@@ -92,7 +96,7 @@
   <Button
     variant="secondary"
     onclick={() => {
-      goto(`/matches/${matchId}?me=${encodeURIComponent(me.name)}`);
-    }}>자세히</Button
+      goto(`/${$locale}/matches/${matchId}?me=${encodeURIComponent(me.name)}`);
+    }}>{$LL.button.detail()}</Button
   >
 </div>

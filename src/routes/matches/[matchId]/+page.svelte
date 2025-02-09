@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { LL, locale } from "$i18n/i18n-svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import ErItem from "$lib/components/ui/er/er-item.svelte";
@@ -8,11 +9,10 @@
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
+  import { MatchingMode } from "$lib/features/er-api/shapes.js";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecord from "$lib/features/user-records/user-record.svelte";
-  import { Lmode } from "$lib/i18n/mode.js";
-  import { Lrank } from "$lib/i18n/rank";
   import { groupBy } from "$lib/utils/map/group-by.js";
   import { formatNumber } from "$lib/utils/number/format-number.js";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time.js";
@@ -51,7 +51,7 @@
 <main class="container mx-auto space-y-8">
   <div class="flex items-baseline text-sm">
     <span class="text-gray-500">
-      {Lmode(data.match.mode)}
+      {$LL.matchingMode[data.match.mode as MatchingMode]()}
       ·
       {time}
       ·
@@ -64,22 +64,34 @@
     </span>
   </div>
   <UserRecord class="sticky top-0 mb-2 flex-wrap border-b bg-white py-2">
-    <div class="w-8 text-center text-sm font-bold">{Lrank(data.match.mode)}</div>
+    <div class="w-8 text-center text-sm font-bold">
+      {data.match.mode === MatchingMode.Cobalt
+        ? $LL.userRecords.heading.winLose()
+        : $LL.userRecords.heading.rank()}
+    </div>
     <div class="w-8 text-center text-sm font-bold"></div>
-    <div class="w-32 text-center text-sm font-bold">이름</div>
-    <div class="w-10 text-center text-sm font-bold">점수</div>
+    <div class="w-32 text-center text-sm font-bold">{$LL.userRecords.heading.name()}</div>
+    <div class="w-10 text-center text-sm font-bold">{$LL.userRecords.heading.score()}</div>
     <div class="flex gap-x-2 text-sm">
-      <Numeric bold>K</Numeric>
+      <Numeric bold>{$LL.userRecords.heading.k()}</Numeric>
       <Delimiter />
-      <Numeric bold>D</Numeric>
+      <Numeric bold>{$LL.userRecords.heading.d()}</Numeric>
       <Delimiter />
-      <Numeric bold>A</Numeric>
+      <Numeric bold>{$LL.userRecords.heading.a()}</Numeric>
     </div>
     <div class="flex items-center gap-x-[inherit]">
-      <div class="w-[13.5rem] text-center text-sm font-bold">장비</div>
-      <div class="w-12 text-center text-sm font-bold">딜</div>
-      <div class="w-12 text-center text-sm font-bold">탱</div>
-      <div class="w-12 text-center text-sm font-bold">힐</div>
+      <div class="w-[13.5rem] text-center text-sm font-bold">
+        {$LL.userRecords.heading.equipments()}
+      </div>
+      <div class="w-12 text-center text-sm font-bold">
+        {$LL.userRecords.heading.damageDealtToPlayers()}
+      </div>
+      <div class="w-12 text-center text-sm font-bold">
+        {$LL.userRecords.heading.damageTakenFromPlayers()}
+      </div>
+      <div class="w-12 text-center text-sm font-bold">
+        {$LL.userRecords.heading.healingAmount()}
+      </div>
     </div>
   </UserRecord>
   <div class="flex flex-col gap-y-8">
@@ -93,7 +105,7 @@
               <PreMadeTeam preMadeTeam={record.preMadeTeamSize} />
               <a
                 class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-                href="/users/{encodeURIComponent(record.nickname)}">{record.nickname}</a
+                href="/{$locale}/users/{encodeURIComponent(record.nickname)}">{record.nickname}</a
               >
             </div>
             <Score score={record.score} />

@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { LL } from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import Score from "$lib/features/score/score.svelte";
-  import { Lmode } from "$lib/i18n/mode";
   import { formatNumber } from "$lib/utils/number/format-number";
+  import type { MatchingMode } from "../er-api/shapes";
   import type { UserStats } from "./select-user-stats.server";
   import { style } from "./stats-style";
   import StatsTable from "./stats-table.svelte";
@@ -31,6 +32,8 @@
 
   let isOpen = $state(false);
 
+  let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]?.() ?? mode);
+
   const previewSize = 3;
   let filteredStats = $derived(isOpen ? stats : stats.slice(0, previewSize));
 
@@ -55,13 +58,13 @@
   <div>
     <div class={c.tableLabel()}>
       {#if mode == null}
-        전체
+        {$LL.matchingMode.all()}
       {:else}
         {Lmode(mode)}
       {/if}
-      · 최근 14일간
+      · {$LL.stats.recentNDays({ n: 14 })}
       {#if playedMatches >= 100}
-        (최대 100경기)
+        {$LL.stats.limitHint({ limit: 100 })}
       {/if}
     </div>
     <StatsTable>
@@ -100,7 +103,7 @@
   </div>
   {#if stats.length > previewSize}
     <Button variant="secondary" class="w-full" onclick={() => (isOpen = !isOpen)}
-      >{isOpen ? "닫기" : "열기"}</Button
+      >{isOpen ? $LL.button.close() : $LL.button.open()}</Button
     >
   {/if}
 </div>

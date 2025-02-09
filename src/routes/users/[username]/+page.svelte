@@ -1,12 +1,12 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
+  import LL from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import { ls } from "$lib/components/ui/loading-progress/state.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
   import { MatchingMode } from "$lib/features/er-api/shapes";
   import Stats from "$lib/features/user-stats/stats.svelte";
-  import { Lmode } from "$lib/i18n/mode";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
   import { untrack } from "svelte";
   import Match from "./match.svelte";
@@ -27,6 +27,8 @@
   let mode = $derived(numberOrNullable(page.url.searchParams.get("mode")) ?? undefined);
   let currentPage = $derived(numberOrNullable(page.url.searchParams.get("page")) ?? 0);
 
+  let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]());
+
   function update() {
     return ls.do(() => invalidateAll());
   }
@@ -41,7 +43,7 @@
 >
   <div class="flex flex-col gap-y-4 lg:w-94">
     <Button class="mx-auto flex w-full py-6" rounded="2xl" onclick={update} disabled={ls.show}>
-      전적 갱신 <kbd class="font-[unset]">[F5]</kbd>
+      {$LL.refresh.text()} <kbd class="font-[unset]">{$LL.refresh.keyboard()}</kbd>
     </Button>
     <Stats stats={data.stats} {mode} username={data.user.name} />
   </div>
@@ -52,7 +54,7 @@
         aria-disabled={mode == null}
         onclick={(e) =>
           e.currentTarget.getAttribute("aria-disabled") === "true" && e.preventDefault()}
-        href={page.url.pathname}>전체</a
+        href={page.url.pathname}>{$LL.matchingMode.all()}</a
       >
       {#each [MatchingMode.Normal, MatchingMode.Rank, MatchingMode.Cobalt, MatchingMode.Union] as m}
         <a
@@ -70,7 +72,7 @@
         <Match {...match} me={data.user} />
       {/each}
     {:else}
-      <div class="h-lvh">정보가 없습니다.</div>
+      <div class="h-lvh">{$LL.recentMatches.noData()}</div>
     {/if}
     <Pagination pathname={page.url.pathname} maxPages={data.maxPages} {mode} page={currentPage} />
   </div>

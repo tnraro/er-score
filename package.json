@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "bunx -b vite dev",
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:i18n": "typesafe-i18n",
+    "dev:vite": "bunx -b vite dev",
     "build": "vite build",
     "preview": "bunx -b vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -33,6 +35,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
@@ -51,6 +54,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.39.1",
     "pg": "^8.13.1",
-    "tailwind-variants": "^0.3.1"
+    "tailwind-variants": "^0.3.1",
+    "typesafe-i18n": "^5.26.2"
   }
 }

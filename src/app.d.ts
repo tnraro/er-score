@@ -1,3 +1,4 @@
+import type { Locales, TranslationFunctions } from "$i18n/i18n-types";
 import type { Database } from "$lib/features/db/client.server";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
@@ -7,6 +8,8 @@ declare global {
     // interface Error {}
     interface Locals {
       db: Database;
+      locale: Locales;
+      LL: TranslationFunctions;
     }
     // interface PageData {}
     // interface PageState {}

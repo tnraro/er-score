@@ -1,4 +1,5 @@
 <script lang="ts" module>
+  import LL from "$i18n/i18n-svelte";
   import { MatchingMode } from "$lib/features/er-api/shapes";
   import { tv, type VariantProps } from "tailwind-variants";
 
@@ -26,18 +27,18 @@
 
 <script lang="ts">
   type Props = { rank: number; mode: MatchingMode; class?: string } & RankVariants;
-  let { rank: value, mode, class: className }: Props = $props();
+  let { rank, mode, class: className }: Props = $props();
 
   let variant: RankVariants["variant"] = $derived.by(() => {
     if (mode === MatchingMode.Cobalt) {
-      switch (value) {
+      switch (rank) {
         case 1:
           return "best";
         default:
           return "low";
       }
     }
-    switch (value) {
+    switch (rank) {
       case 1:
         return "best";
       case 2:
@@ -54,8 +55,9 @@
     if (mode === MatchingMode.Cobalt) return "center";
   });
   let text = $derived.by(() => {
-    if (mode === MatchingMode.Cobalt) return value === 1 ? "승" : "패";
-    return `${value}위`;
+    if (mode === MatchingMode.Cobalt)
+      return rank === 1 ? $LL.userRecords.value.win() : $LL.userRecords.value.lose();
+    return $LL.userRecords.value.rank({ rank });
   });
 </script>
 

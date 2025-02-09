@@ -2,3 +2,6 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+src/i18n/formatters.ts
+src/i18n/i18n-*.ts

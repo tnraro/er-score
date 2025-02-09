@@ -40,7 +40,7 @@ export async function load({ params: { username }, url, depends }) {
   } catch (e) {
     if (e instanceof Response) {
       if (e.status === 404) {
-        error(e.status, "찾을 수 없습니다");
+        error(e.status);
       }
       console.error(e);
       error(e.status, await e.text());

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import { LL } from "$i18n/i18n-svelte";
   import { style } from "./stats-style";
 
   interface Props {
@@ -11,12 +12,12 @@
 <table class="border-separate border-spacing-x-4 border-spacing-y-2">
   <thead class="select-none">
     <tr class={style().tableRow()}>
-      <th>횟수</th>
+      <th>{$LL.stats.heading.count()}</th>
       <th></th>
-      <th>점수</th>
+      <th>{$LL.stats.heading.score()}</th>
       <th>기복</th>
-      <th>반타작률</th>
-      <th>평균 딜</th>
+      <th>{$LL.stats.heading.halfRate()}</th>
+      <th>{$LL.stats.heading.averageDamage()}</th>
     </tr>
   </thead>
   <tbody>

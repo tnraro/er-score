@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { LL, locale } from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
 
@@ -15,19 +16,19 @@
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username");
     if (typeof username !== "string") throw new Error("Invalid username");
-    goto(`/users/${encodeURIComponent(username)}`);
+    goto(`/${$locale}/users/${encodeURIComponent(username)}`);
   }}
 >
-  <label class="block text-sm select-none" for="nickname">닉네임</label>
+  <label class="block text-sm select-none" for="nickname">{$LL.searchForm.label()}</label>
   <div class="flex gap-1">
     <Input
       id="nickname"
       type="search"
       autocomplete="username"
       name="username"
-      placeholder="닉네임을 입력해주세요"
+      placeholder={$LL.searchForm.placeholder()}
       value={username}
     />
-    <Button>검색</Button>
+    <Button>{$LL.searchForm.search()}</Button>
   </div>
 </form>
