@@ -5,7 +5,7 @@
 
   export type RankVariants = VariantProps<typeof style>;
   export const style = tv({
-    base: "w-8 text-right text-sm",
+    base: "text-right text-sm break-keep whitespace-nowrap",
     variants: {
       variant: {
         best: "text-yellow-500",
@@ -61,6 +61,6 @@
   });
 </script>
 
-<div class={style({ variant, align, className })}>
+<span class={style({ variant, align, className })}>
   {text}
-</div>
+</span>

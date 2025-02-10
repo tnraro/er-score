@@ -4,14 +4,14 @@
   import { tv, type VariantProps } from "tailwind-variants";
 
   const style = tv({
-    base: "select-none overflow-hidden object-cover",
+    base: "select-none overflow-hidden object-cover flex-none",
     variants: {
       size: {
-        xs: "w-4 h-4",
-        sm: "w-6 h-6",
-        md: "w-8 h-8",
-        lg: "w-10 h-10",
-        xl: "w-12 h-12",
+        xs: "w-4 h-4 min-w-4",
+        sm: "w-6 h-6 min-w-6",
+        md: "w-8 h-8 min-w-8",
+        lg: "w-10 h-10 min-w-10",
+        xl: "w-12 h-12 min-w-12",
       },
       rounded: {
         none: "",

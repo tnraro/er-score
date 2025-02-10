@@ -26,14 +26,16 @@
   let _mode = $derived($LL.matchingMode[mode as MatchingMode]());
 </script>
 
-<div class="flex flex-col gap-y-4 rounded-2xl bg-white p-4">
-  <div class="flex items-baseline text-sm">
+<div class="@container flex flex-col gap-y-4 rounded-2xl bg-white p-4">
+  <div class="flex flex-wrap items-baseline text-sm">
     <span class="text-gray-500">
+      <Rank rank={sortedRecords[0].rank} {mode} />
+      ·
       {_mode}
       ·
-      {time}
-      ·
-      {endedAt.toLocaleString($locale)}
+      <time datetime={endedAt.toISOString()} title={endedAt.toLocaleString($locale)}>
+        {time}
+      </time>
     </span>
     <span class="flex-1"></span>
     <span>
@@ -42,33 +44,27 @@
     </span>
   </div>
   <div class="flex flex-col gap-y-1">
-    <UserRecord class="select-none hover:bg-transparent">
-      <div class="w-8 text-center text-sm font-bold">
-        {mode === MatchingMode.Cobalt
-          ? $LL.userRecords.heading.winLose()
-          : $LL.userRecords.heading.rank()}
-      </div>
-      <div class="w-8 text-center text-sm font-bold"></div>
-      <div class="w-32 text-center text-sm font-bold">{$LL.userRecords.heading.name()}</div>
-      <div class="w-10 text-center text-sm font-bold">{$LL.userRecords.heading.score()}</div>
+    <UserRecord class="text-sm font-bold select-none">
+      <div class="w-8 flex-none"></div>
+      <div class="min-w-0 flex-1 overflow-clip">{$LL.userRecords.heading.name()}</div>
+      <div class="w-10">{$LL.userRecords.heading.score()}</div>
       <div class="flex gap-x-2 text-sm">
-        <Numeric bold>{$LL.userRecords.heading.k()}</Numeric>
+        <Numeric>{$LL.userRecords.heading.k()}</Numeric>
         <Delimiter />
-        <Numeric bold>{$LL.userRecords.heading.d()}</Numeric>
+        <Numeric>{$LL.userRecords.heading.d()}</Numeric>
         <Delimiter />
-        <Numeric bold>{$LL.userRecords.heading.a()}</Numeric>
+        <Numeric>{$LL.userRecords.heading.a()}</Numeric>
       </div>
     </UserRecord>
     {#each sortedRecords as result (result.userId)}
       <UserRecord highlight={result.userId === me.id}>
-        <Rank rank={result.rank} {mode} />
         <CharacterAvatar rounded="md" characterId={result.characterId} skin={result.skin} />
-        <div class="flex w-32 items-center gap-x-2">
-          <PreMadeTeam preMadeTeam={result.preMadeTeamSize} />
+        <div class="flex min-w-0 flex-1 items-center gap-x-2">
           <a
             class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
             href="/{$locale}/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
           >
+          <PreMadeTeam preMadeTeam={result.preMadeTeamSize} />
         </div>
         <Score score={result.score} />
         <div class="flex gap-x-2 text-sm">
