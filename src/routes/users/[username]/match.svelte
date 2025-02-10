@@ -21,7 +21,7 @@
 
   let endedAt = $derived(new Date(startedAt.getTime() + myRecord.totalTime));
 
-  let time = $derived(formatRelativeTime(endedAt, "ko"));
+  let time = $derived(formatRelativeTime(endedAt, $locale));
 
   let _mode = $derived($LL.matchingMode[mode as MatchingMode]());
 </script>
@@ -33,7 +33,7 @@
       ·
       {time}
       ·
-      {endedAt.toLocaleString()}
+      {endedAt.toLocaleString($locale)}
     </span>
     <span class="flex-1"></span>
     <span>

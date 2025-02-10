@@ -32,7 +32,7 @@
   let maxTotalTime = $derived(Math.max(...data.match.records.map((r) => r.totalTime)));
   let endedAt = $derived(new Date(data.match.startedAt.getTime() + maxTotalTime));
 
-  let time = $derived(formatRelativeTime(endedAt, "ko"));
+  let time = $derived(formatRelativeTime(endedAt, $locale));
 
   let maxDamageDealtToPlayers = $derived(
     Math.max(...data.match.records.map((r) => r.damageDealtToPlayers)),
@@ -55,7 +55,7 @@
       ·
       {time}
       ·
-      {endedAt.toLocaleString()}
+      {endedAt.toLocaleString($locale)}
     </span>
     <span class="flex-1"></span>
     <span>
