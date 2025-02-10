@@ -32,7 +32,7 @@
 
   let isOpen = $state(false);
 
-  let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]?.() ?? mode);
+  let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]());
 
   const previewSize = 3;
   let filteredStats = $derived(isOpen ? stats : stats.slice(0, previewSize));

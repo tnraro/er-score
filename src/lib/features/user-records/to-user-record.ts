@@ -1,6 +1,6 @@
-import { calcScore } from "$lib/features/score/calc-score";
 import type { UserRecord } from "$lib/features/db/schema.server";
 import type { UserGame } from "$lib/features/er-api/types.gen";
+import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";
 
 export function toUserRecord(game: UserGame): UserRecord {

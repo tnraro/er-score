@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import LL, { locale } from "$i18n/i18n-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
@@ -25,7 +23,7 @@
 
   let time = $derived(formatRelativeTime(endedAt, "ko"));
 
-  let _mode = $derived($LL.matchingMode[mode as MatchingMode]?.() ?? mode);
+  let _mode = $derived($LL.matchingMode[mode as MatchingMode]());
 </script>
 
 <div class="flex flex-col gap-y-4 rounded-2xl bg-white p-4">
