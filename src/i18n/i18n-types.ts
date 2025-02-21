@@ -102,6 +102,22 @@ type RootTranslation = {
 		 */
 		preMadeTeamSize: RequiredParams<'n'>
 		/**
+		 * 알​파​ ​킬
+		 */
+		isAlphaKilled: string
+		/**
+		 * 오​메​가​ ​킬
+		 */
+		isOmegaKilled: string
+		/**
+		 * 감​마​ ​킬
+		 */
+		isGammaKilled: string
+		/**
+		 * 위​클​라​인​ ​킬
+		 */
+		isWickelineKilled: string
+		/**
 		 * 정​보​ ​없​음
 		 */
 		noData: string
@@ -276,6 +292,22 @@ export type TranslationFunctions = {
 		 * 사전구성 {n}인 팀
 		 */
 		preMadeTeamSize: (arg: { n: number }) => LocalizedString
+		/**
+		 * 알파 킬
+		 */
+		isAlphaKilled: () => LocalizedString
+		/**
+		 * 오메가 킬
+		 */
+		isOmegaKilled: () => LocalizedString
+		/**
+		 * 감마 킬
+		 */
+		isGammaKilled: () => LocalizedString
+		/**
+		 * 위클라인 킬
+		 */
+		isWickelineKilled: () => LocalizedString
 		/**
 		 * 정보 없음
 		 */

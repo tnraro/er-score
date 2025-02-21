@@ -1,7 +1,7 @@
-import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server.js";
-import { toMatch } from "$lib/features/user-records/to-match.js";
 import { db } from "$lib/features/db/client.server";
 import { userRecords } from "$lib/features/db/schema.server";
+import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server.js";
+import { toMatch } from "$lib/features/user-records/to-match.js";
 import { error } from "@sveltejs/kit";
 import { eq, sql } from "drizzle-orm";
 
@@ -54,6 +54,10 @@ const selectMatchPlan = db
     deaths: userRecords.deaths,
     assists: userRecords.assists,
     equipments: userRecords.equipments,
+    isAlphaKilled: userRecords.isAlphaKilled,
+    isOmegaKilled: userRecords.isOmegaKilled,
+    isGammaKilled: userRecords.isGammaKilled,
+    isWickelineKilled: userRecords.isWickelineKilled,
   })
   .from(userRecords)
   .where(eq(userRecords.matchId, sql.placeholder("matchId")))

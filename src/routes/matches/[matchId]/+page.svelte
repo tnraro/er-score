@@ -5,13 +5,13 @@
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import ErItem from "$lib/components/ui/er/er-item.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
-  import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
   import { MatchingMode } from "$lib/features/er-api/shapes.js";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
+  import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
   import UserRecord from "$lib/features/user-records/user-record.svelte";
   import { groupBy } from "$lib/utils/map/group-by.js";
   import { formatNumber } from "$lib/utils/number/format-number.js";
@@ -102,11 +102,18 @@
             <Rank rank={record.rank} mode={data.match.mode} />
             <CharacterAvatar rounded="md" characterId={record.characterId} skin={record.skin} />
             <div class="flex w-32 items-center gap-x-2">
-              <PreMadeTeam preMadeTeam={record.preMadeTeamSize} />
               <a
                 class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-                href="/{$locale}/users/{encodeURIComponent(record.nickname)}">{record.nickname}</a
+                href="/{$locale}/users/{encodeURIComponent(record.nickname)}"
+                title={record.nickname}>{record.nickname}</a
               >
+              <UserRecordBadges
+                preMadeTeamSize={record.preMadeTeamSize}
+                isAlphaKilled={record.isAlphaKilled}
+                isOmegaKilled={record.isOmegaKilled}
+                isGammaKilled={record.isGammaKilled}
+                isWickelineKilled={record.isWickelineKilled}
+              />
             </div>
             <Score score={record.score} />
             <div class="flex gap-x-2 text-sm">

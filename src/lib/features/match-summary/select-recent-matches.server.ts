@@ -63,6 +63,10 @@ function preparePlan(name: string, filters: SQL[]) {
           | "kills"
           | "assists"
           | "deaths"
+          | "isAlphaKilled"
+          | "isOmegaKilled"
+          | "isGammaKilled"
+          | "isWickelineKilled"
         >[]
       >`json_agg(json_build_object(
             'userId', ${userRecords.userId}
@@ -78,6 +82,10 @@ function preparePlan(name: string, filters: SQL[]) {
           , 'kills', ${userRecords.kills}
           , 'assists', ${userRecords.assists}
           , 'deaths', ${userRecords.deaths}
+          , 'isAlphaKilled', ${userRecords.isAlphaKilled}
+          , 'isOmegaKilled', ${userRecords.isOmegaKilled}
+          , 'isGammaKilled', ${userRecords.isGammaKilled}
+          , 'isWickelineKilled', ${userRecords.isWickelineKilled}
         ))`,
     })
     .from(userRecords)

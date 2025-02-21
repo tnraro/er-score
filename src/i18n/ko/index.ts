@@ -30,6 +30,10 @@ const ko = {
       rank: "{rank:number}위",
     },
     preMadeTeamSize: "사전구성 {n:number}인 팀",
+    isAlphaKilled: "알파 킬",
+    isOmegaKilled: "오메가 킬",
+    isGammaKilled: "감마 킬",
+    isWickelineKilled: "위클라인 킬",
     noData: "정보 없음",
   },
   matchingMode: {

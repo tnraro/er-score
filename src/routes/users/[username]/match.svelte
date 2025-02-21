@@ -3,10 +3,10 @@
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
-  import PreMadeTeam from "$lib/components/ui/pre-made-team/pre-made-team.svelte";
   import { MatchingMode } from "$lib/features/er-api/shapes";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
+  import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
   import UserRecord from "$lib/features/user-records/user-record.svelte";
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
@@ -62,9 +62,16 @@
         <div class="flex min-w-0 flex-1 items-center gap-x-2">
           <a
             class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-            href="/{$locale}/users/{encodeURIComponent(result.nickname)}">{result.nickname}</a
+            href="/{$locale}/users/{encodeURIComponent(result.nickname)}"
+            title={result.nickname}>{result.nickname}</a
           >
-          <PreMadeTeam preMadeTeam={result.preMadeTeamSize} />
+          <UserRecordBadges
+            preMadeTeamSize={result.preMadeTeamSize}
+            isAlphaKilled={result.isAlphaKilled}
+            isOmegaKilled={result.isOmegaKilled}
+            isGammaKilled={result.isGammaKilled}
+            isWickelineKilled={result.isWickelineKilled}
+          />
         </div>
         <Score score={result.score} />
         <div class="flex gap-x-2 text-sm">

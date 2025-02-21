@@ -30,6 +30,10 @@ const en: Translation = {
       rank: "Rank {rank}",
     },
     preMadeTeamSize: "Pre-made team of {n}",
+    isAlphaKilled: "Killed Alpha",
+    isOmegaKilled: "Killed Omega",
+    isGammaKilled: "Killed Gamma",
+    isWickelineKilled: "Killed Wickeline",
     noData: "No data available",
   },
   matchingMode: {
