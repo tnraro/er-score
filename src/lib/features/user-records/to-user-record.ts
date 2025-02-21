@@ -83,7 +83,7 @@ function hasMonster(
   },
   monsterId: number,
 ) {
-  return Object.keys(monsters).some((key) => Number(key) % 10 === monsterId);
+  return Object.keys(monsters).some((key) => Number(key) % 100 === monsterId);
 }
 
 export type UserRecordData = ReturnType<typeof toData>;
