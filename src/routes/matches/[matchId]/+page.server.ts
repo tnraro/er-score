@@ -19,7 +19,10 @@ async function queryMatch(matchId: number) {
   const ids = new Set(match?.records.map((record) => record.userId));
 
   const records = await getUserRecordsByMatchId(matchId);
-  await db.insert(userRecords).values(records.filter((record) => !ids.has(record.userId)));
+  const updateRecords = records.filter((record) => !ids.has(record.userId));
+  if (updateRecords.length > 0) {
+    await db.insert(userRecords).values(updateRecords);
+  }
   return toMatch(records);
 }
 
