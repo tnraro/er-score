@@ -72,7 +72,9 @@ export const userRecords = pgTable(
 
     healingAmount: integer().notNull(),
 
-    rpGain: integer().notNull(),
+    matchingAverageRp: integer(),
+    rp: integer(),
+    rpGain: integer(),
     scoredPoints: integer().notNull(),
     usedVFCredits: integer().notNull(),
     visionScore: integer().notNull(),

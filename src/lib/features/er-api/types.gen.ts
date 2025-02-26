@@ -254,6 +254,8 @@ export interface UserGame {
   crUseActivationModule: number;
   crUseRootkit: number;
   mmrGainInGame: number;
+  mmrAvg?: number;
+  mmrAfter?: number;
   mmrLossEntryCost: number;
   premadeMatchingType: number;
   viewContribution: number;

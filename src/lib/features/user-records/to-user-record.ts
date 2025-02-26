@@ -2,6 +2,7 @@ import type { UserRecord } from "$lib/features/db/schema.server";
 import type { UserGame } from "$lib/features/er-api/types.gen";
 import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";
+import { MatchingMode } from "../er-api/shapes";
 
 export function toUserRecord(game: UserGame): UserRecord {
   return {
@@ -39,7 +40,9 @@ export function toUserRecord(game: UserGame): UserRecord {
     damageTakenFromPlayers: game.damageFromPlayer,
     damageDealtToMonsters: game.damageToMonster,
     healingAmount: game.healAmount,
-    rpGain: game.mmrGainInGame,
+    rpGain: rankOrNull(game.matchingMode, game.mmrGainInGame),
+    rp: rankOrNull(game.matchingMode, game.mmrAfter),
+    matchingAverageRp: rankOrNull(game.matchingMode, game.mmrAvg),
     scoredPoints: game.scoredPoint.reduce((a, b) => a + b, 0),
     usedVFCredits: game.sumUsedVFCredits,
     visionScore: game.viewContribution,
@@ -84,6 +87,10 @@ function hasMonster(
   monsterId: number,
 ) {
   return Object.keys(monsters).some((key) => Number(key) % 100 === monsterId);
+}
+function rankOrNull<T>(mode: number, value: T | undefined): T | null {
+  if (mode === MatchingMode.Rank || mode === MatchingMode.Union) return value!;
+  return null;
 }
 
 export type UserRecordData = ReturnType<typeof toData>;
