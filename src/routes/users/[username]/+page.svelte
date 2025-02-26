@@ -45,7 +45,13 @@
     <Button class="mx-auto flex w-full py-6" rounded="2xl" onclick={refresh} disabled={ls.show}>
       {$LL.refresh.text()} <kbd class="font-[unset]">{$LL.refresh.keyboard()}</kbd>
     </Button>
-    <Stats stats={data.stats} {mode} username={data.user.name} />
+    <Stats
+      stats={data.stats}
+      {mode}
+      name={data.user.name}
+      level={data.user.level}
+      rp={data.user.rp}
+    />
   </div>
   <div class="flex flex-col gap-x-2 gap-y-4 lg:w-105">
     <div class="flex overflow-clip rounded-2xl bg-white">

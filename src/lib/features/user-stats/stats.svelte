@@ -6,7 +6,7 @@
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import Score from "$lib/features/score/score.svelte";
   import { formatNumber } from "$lib/utils/number/format-number";
-  import type { MatchingMode } from "../er-api/shapes";
+  import { MatchingMode } from "../er-api/shapes";
   import type { UserStats } from "./select-user-stats.server";
   import { style } from "./stats-style";
   import StatsTable from "./stats-table.svelte";
@@ -14,10 +14,12 @@
   interface Props {
     stats: UserStats;
     mode?: number | null | undefined;
-    username: string;
+    name: string;
+    level: number | null;
+    rp: number | null;
   }
 
-  let { stats, mode, username }: Props = $props();
+  let { stats, mode, name, level, rp }: Props = $props();
 
   let mostPlayedCharacterId = $derived.by(() => {
     let stat = stats
@@ -47,8 +49,18 @@
 <div class={c.container()}>
   <div class={c.header()}>
     <CharacterAvatar characterId={mostPlayedCharacterId ?? 0} />
-    <div class={c.headerName()}>{username}</div>
+    <div class="flex flex-col">
+      {#if level != null}
+        <div class="text-xs leading-none">Lv {level}</div>
+      {/if}
+      <div class={c.headerName()}>{name}</div>
+    </div>
   </div>
+  {#if rp != null && (mode == null || mode === MatchingMode.Rank)}
+    <div>
+      {$LL.matchingMode[MatchingMode.Rank]()}: {rp} RP
+    </div>
+  {/if}
   <div>
     <div class={c.tableLabel()}>
       {#if mode == null}

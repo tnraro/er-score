@@ -17,6 +17,8 @@ export async function queryUser(username: string) {
     ...user,
     updatedAt: null,
     updatedMatchId: null,
+    level: null,
+    rp: null,
   };
 }
 
@@ -31,6 +33,8 @@ const selectUserByNamePlan = db
     name: users.name,
     updatedAt: users.updatedAt,
     updatedMatchId: users.updatedMatchId,
+    level: users.level,
+    rp: users.rp,
   })
   .from(users)
   .where(eq(sql`lower(${users.name})`, sql.placeholder("name")))

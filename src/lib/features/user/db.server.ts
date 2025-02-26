@@ -4,10 +4,7 @@ import { users } from "../db/schema.server";
 
 export async function updateUser(
   userId: number,
-  options: {
-    updatedMatchId?: number;
-    name?: string;
-  },
+  options: Partial<Omit<typeof users.$inferInsert, "id" | "updatedAt">>,
 ) {
   await db
     .update(users)

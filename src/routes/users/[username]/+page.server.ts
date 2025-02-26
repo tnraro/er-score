@@ -1,4 +1,5 @@
 import type { UserRecord } from "$lib/features/db/schema.server.js";
+import { MatchingMode } from "$lib/features/er-api/shapes";
 import { selectMatchesCount } from "$lib/features/match-summary/select-matches-count.server";
 import {
   recentMatchesSize,
@@ -66,6 +67,8 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
         latestUserRecord != null && user.name !== latestUserRecord.nickname
           ? latestUserRecord.nickname
           : undefined,
+      level: latestUserRecord?.data.accountLevel,
+      rp: latestUserRecord?.mode === MatchingMode.Rank ? latestUserRecord?.rp : undefined,
     });
   }
 
