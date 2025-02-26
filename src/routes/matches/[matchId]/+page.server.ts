@@ -61,6 +61,7 @@ const selectMatchPlan = db
     isOmegaKilled: userRecords.isOmegaKilled,
     isGammaKilled: userRecords.isGammaKilled,
     isWickelineKilled: userRecords.isWickelineKilled,
+    traits: userRecords.traits,
   })
   .from(userRecords)
   .where(eq(userRecords.matchId, sql.placeholder("matchId")))

@@ -4,6 +4,7 @@
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import ErItem from "$lib/components/ui/er/er-item.svelte";
+  import ErTrait from "$lib/components/ui/er/er-trait.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
@@ -98,77 +99,97 @@
     {#each teams as [rank, team] (rank)}
       <div class="flex flex-col gap-y-2">
         {#each team as record (record.userId)}
-          <UserRecord class="flex-wrap gap-y-2" highlight={record.nickname === myName}>
-            <Rank rank={record.rank} mode={data.match.mode} />
-            <CharacterAvatar rounded="md" characterId={record.characterId} skin={record.skin} />
-            <div class="flex w-32 items-center gap-x-2">
-              <a
-                class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-                href="/{$locale}/users/{encodeURIComponent(record.nickname)}"
-                title={record.nickname}>{record.nickname}</a
-              >
-              <UserRecordBadges
-                preMadeTeamSize={record.preMadeTeamSize}
-                isAlphaKilled={record.isAlphaKilled}
-                isOmegaKilled={record.isOmegaKilled}
-                isGammaKilled={record.isGammaKilled}
-                isWickelineKilled={record.isWickelineKilled}
-              />
+          <details>
+            <summary class="flex">
+              <UserRecord class="flex-wrap gap-y-2" highlight={record.nickname === myName}>
+                <Rank rank={record.rank} mode={data.match.mode} />
+                <CharacterAvatar rounded="md" characterId={record.characterId} skin={record.skin} />
+                <div class="flex w-32 items-center gap-x-2">
+                  <a
+                    class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
+                    href="/{$locale}/users/{encodeURIComponent(record.nickname)}"
+                    title={record.nickname}>{record.nickname}</a
+                  >
+                  <UserRecordBadges
+                    preMadeTeamSize={record.preMadeTeamSize}
+                    isAlphaKilled={record.isAlphaKilled}
+                    isOmegaKilled={record.isOmegaKilled}
+                    isGammaKilled={record.isGammaKilled}
+                    isWickelineKilled={record.isWickelineKilled}
+                  />
+                </div>
+                <Score score={record.score} />
+                <div class="flex gap-x-2 text-sm">
+                  <Numeric>{record.kills}</Numeric>
+                  <Delimiter />
+                  <Numeric>{record.deaths}</Numeric>
+                  <Delimiter />
+                  <Numeric>{record.assists}</Numeric>
+                </div>
+                <div class="flex items-center gap-x-[inherit]">
+                  <div class="flex gap-1">
+                    <ErItem id={record.equipments[0]} size="sm" />
+                    <ErItem id={record.equipments[1]} size="sm" />
+                    <ErItem id={record.equipments[2]} size="sm" />
+                    <ErItem id={record.equipments[3]} size="sm" />
+                    <ErItem id={record.equipments[4]} size="sm" />
+                  </div>
+                  <div class="flex w-12 flex-col">
+                    <span class="text-right text-xs font-light"
+                      >{formatNumber(record.damageDealtToPlayers)}</span
+                    >
+                    <Progress
+                      class="overflow-hidden rounded-full"
+                      value={record.damageDealtToPlayers}
+                      max={maxDamageDealtToPlayers}
+                    >
+                      <ProgressRange color="red" />
+                    </Progress>
+                  </div>
+                  <div class="flex w-12 flex-col">
+                    <span class="text-right text-xs font-light"
+                      >{formatNumber(record.damageTakenFromPlayers)}</span
+                    >
+                    <Progress
+                      class="overflow-hidden rounded-full"
+                      value={record.damageTakenFromPlayers}
+                      max={maxDamageTakenFromPlayers}
+                    >
+                      <ProgressRange color="blue" />
+                    </Progress>
+                  </div>
+                  <div class="flex w-12 flex-col">
+                    <span class="text-right text-xs font-light"
+                      >{formatNumber(record.healingAmount)}</span
+                    >
+                    <Progress
+                      class=" overflow-hidden rounded-full"
+                      value={record.healingAmount}
+                      max={maxHealingAmount}
+                    >
+                      <ProgressRange color="green" />
+                    </Progress>
+                  </div>
+                </div>
+              </UserRecord>
+            </summary>
+            <div class="rounded-2xl bg-white p-4">
+              <section>
+                <h1 class="font-bold">{$LL.userRecords.heading.trait()}</h1>
+                <ErTrait id={record.traits["0"]} />
+                <div class="flex gap-4">
+                  {#each record.traits["1"] as trait}
+                    <ErTrait id={trait} />
+                  {/each}
+                </div>
+                <div class="flex gap-4">
+                  {#each record.traits["2"] as trait}
+                    <ErTrait id={trait} />
+                  {/each}
+                </div>
+              </section>
             </div>
-            <Score score={record.score} />
-            <div class="flex gap-x-2 text-sm">
-              <Numeric>{record.kills}</Numeric>
-              <Delimiter />
-              <Numeric>{record.deaths}</Numeric>
-              <Delimiter />
-              <Numeric>{record.assists}</Numeric>
-            </div>
-            <div class="flex items-center gap-x-[inherit]">
-              <div class="flex gap-1">
-                <ErItem id={record.equipments[0]} size="sm" />
-                <ErItem id={record.equipments[1]} size="sm" />
-                <ErItem id={record.equipments[2]} size="sm" />
-                <ErItem id={record.equipments[3]} size="sm" />
-                <ErItem id={record.equipments[4]} size="sm" />
-              </div>
-              <div class="flex w-12 flex-col">
-                <span class="text-right text-xs font-light"
-                  >{formatNumber(record.damageDealtToPlayers)}</span
-                >
-                <Progress
-                  class="overflow-hidden rounded-full"
-                  value={record.damageDealtToPlayers}
-                  max={maxDamageDealtToPlayers}
-                >
-                  <ProgressRange color="red" />
-                </Progress>
-              </div>
-              <div class="flex w-12 flex-col">
-                <span class="text-right text-xs font-light"
-                  >{formatNumber(record.damageTakenFromPlayers)}</span
-                >
-                <Progress
-                  class="overflow-hidden rounded-full"
-                  value={record.damageTakenFromPlayers}
-                  max={maxDamageTakenFromPlayers}
-                >
-                  <ProgressRange color="blue" />
-                </Progress>
-              </div>
-              <div class="flex w-12 flex-col">
-                <span class="text-right text-xs font-light"
-                  >{formatNumber(record.healingAmount)}</span
-                >
-                <Progress
-                  class=" overflow-hidden rounded-full"
-                  value={record.healingAmount}
-                  max={maxHealingAmount}
-                >
-                  <ProgressRange color="green" />
-                </Progress>
-              </div>
-            </div>
-          </UserRecord>
+          </details>
         {/each}
       </div>
     {/each}

@@ -80,6 +80,10 @@ type RootTranslation = {
 			 * 힐
 			 */
 			healingAmount: string
+			/**
+			 * 특​성
+			 */
+			trait: string
 		}
 		value: {
 			/**
@@ -4072,6 +4076,10 @@ export type TranslationFunctions = {
 			 * 힐
 			 */
 			healingAmount: () => LocalizedString
+			/**
+			 * 특성
+			 */
+			trait: () => LocalizedString
 		}
 		value: {
 			/**

@@ -23,6 +23,7 @@ const ko = {
       damageDealtToPlayers: "딜",
       damageTakenFromPlayers: "탱",
       healingAmount: "힐",
+      trait: "특성",
     },
     value: {
       win: "승",

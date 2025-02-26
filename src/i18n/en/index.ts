@@ -23,6 +23,7 @@ const en = {
       damageDealtToPlayers: "Damage Dealt",
       damageTakenFromPlayers: "Damage Taken",
       healingAmount: "Healing",
+      trait: "Trait",
     },
     value: {
       win: "Win",
