@@ -2,10 +2,9 @@
   import { page } from "$app/state";
   import { LL, locale } from "$i18n/i18n-svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
-  import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import ErItem from "$lib/components/ui/er/er-item.svelte";
   import ErTrait from "$lib/components/ui/er/er-trait.svelte";
-  import Numeric from "$lib/components/ui/numeric/numeric.svelte";
+  import Icon from "$lib/components/ui/icon/icon.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
@@ -13,23 +12,16 @@
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
-  import UserRecord from "$lib/features/user-records/user-record.svelte";
-  import { groupBy } from "$lib/utils/map/group-by.js";
   import { formatNumber } from "$lib/utils/number/format-number.js";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time.js";
+  import type { Snippet } from "svelte";
+  import { SvelteMap, SvelteSet } from "svelte/reactivity";
+  import { fade } from "svelte/transition";
+  import type { PageData } from "./$types.js";
 
   let { data } = $props();
 
   let myName = $derived(page.url.searchParams.get("me"));
-  let teams = $derived(
-    groupBy(
-      data.match.records
-        .slice()
-        .sort((a, b) => b.score - a.score)
-        .sort((a, b) => a.rank - b.rank),
-      (record) => record.rank,
-    ),
-  );
   let maxTotalTime = $derived(Math.max(...data.match.records.map((r) => r.totalTime)));
   let endedAt = $derived(new Date(data.match.startedAt.getTime() + maxTotalTime));
 
@@ -42,14 +34,221 @@
     Math.max(...data.match.records.map((r) => r.damageTakenFromPlayers)),
   );
   let maxHealingAmount = $derived(Math.max(...data.match.records.map((r) => r.healingAmount)));
+
+  type UserRecordType = PageData["match"]["records"][0];
+  interface ColumnOptions {
+    render: Snippet<[UserRecordType]>;
+    heading: () => string;
+    padding?: number;
+    sortKey?: (record: UserRecordType) => number;
+  }
+  type ColumnName = keyof typeof columnConfig;
+  const columnConfig = {
+    rank: {
+      heading: () =>
+        data.match.mode === MatchingMode.Cobalt
+          ? $LL.userRecords.heading.winLose()
+          : $LL.userRecords.heading.rank(),
+      render: summary_rank,
+      sortKey: (record) => record.rank,
+    },
+    character: {
+      heading: () => "",
+      render: summary_character,
+      padding: 0,
+    },
+    name: {
+      heading: () => $LL.userRecords.heading.name(),
+      render: summary_name,
+    },
+    badges: {
+      heading: () => "",
+      render: summary_badges,
+    },
+    score: {
+      heading: () => $LL.userRecords.heading.score(),
+      render: summary_score,
+      sortKey: (record) => record.score,
+    },
+    k: {
+      heading: () => $LL.userRecords.heading.k(),
+      render: summary_k,
+      sortKey: (record) => record.kills,
+    },
+    d: {
+      heading: () => $LL.userRecords.heading.d(),
+      render: summary_d,
+      sortKey: (record) => record.deaths,
+    },
+    a: {
+      heading: () => $LL.userRecords.heading.a(),
+      render: summary_a,
+      sortKey: (record) => record.assists,
+    },
+    trait: {
+      heading: () => $LL.userRecords.heading.trait(),
+      render: summary_trait,
+    },
+    equipments: {
+      heading: () => $LL.userRecords.heading.equipments(),
+      render: summary_equipments,
+    },
+    damageDealtToPlayers: {
+      heading: () => $LL.userRecords.heading.damageDealtToPlayers(),
+      render: summary_damageDealtToPlayers,
+      sortKey: (record) => record.damageDealtToPlayers,
+    },
+    damageTakenFromPlayers: {
+      heading: () => $LL.userRecords.heading.damageTakenFromPlayers(),
+      render: summary_damageTakenFromPlayers,
+      sortKey: (record) => record.damageTakenFromPlayers,
+    },
+    healingAmount: {
+      heading: () => $LL.userRecords.heading.healingAmount(),
+      render: summary_healingAmount,
+      sortKey: (record) => record.healingAmount,
+    },
+  } satisfies Record<string, ColumnOptions>;
+  let visibleColumns = new SvelteSet<ColumnName>(Object.keys(columnConfig) as ColumnName[]);
+  let sortingColumns = new SvelteMap<ColumnName, "asc" | "desc">([
+    ["score", "desc"],
+    ["rank", "asc"],
+  ]);
+  interface Column extends ColumnOptions {
+    key: ColumnName;
+    sortingMethod?: "asc" | "desc";
+  }
+  let columns: Column[] = $derived(
+    [...visibleColumns].map((column) => ({
+      key: column,
+      ...columnConfig[column],
+      sortingMethod: sortingColumns.get(column),
+    })),
+  );
+  let rows = $derived(
+    data.match.records.slice().sort((a, b) => {
+      const entries = [...sortingColumns.entries()];
+      for (let i = entries.length - 1; i >= 0; i--) {
+        const [key, sortingMethod] = entries[i];
+        const column = columnConfig[key] as ColumnOptions;
+        if (column.sortKey == null) continue;
+        const value = column.sortKey(a) - column.sortKey(b);
+        if (value === 0) continue;
+        if (sortingMethod === "asc") return value;
+        return -value;
+      }
+      return 0;
+    }),
+  );
 </script>
+
+{#snippet summary_rank(record: UserRecordType)}
+  <Rank class="block w-full" rank={record.rank} mode={data.match.mode} />
+{/snippet}
+{#snippet summary_character(record: UserRecordType)}
+  <CharacterAvatar characterId={record.characterId} skin={record.skin} rounded="md" />
+{/snippet}
+{#snippet summary_name(record: UserRecordType)}
+  <a
+    class="flex gap-1 overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
+    href="/{$locale}/users/{encodeURIComponent(record.nickname)}"
+    title={record.nickname}
+    >{record.nickname}
+    {#if record.nickname === myName}
+      <div class="self-center rounded-full bg-yellow-400 px-1 text-xs text-yellow-900">me</div>
+    {/if}
+  </a>
+{/snippet}
+{#snippet summary_score(record: UserRecordType)}
+  <Score score={record.score} />
+{/snippet}
+{#snippet summary_k(record: UserRecordType)}
+  <div class="text-right">{record.kills}</div>
+{/snippet}
+{#snippet summary_d(record: UserRecordType)}
+  <div class="text-right">{record.deaths}</div>
+{/snippet}
+{#snippet summary_a(record: UserRecordType)}
+  <div class="text-right">{record.assists}</div>
+{/snippet}
+{#snippet summary_badges(record: UserRecordType)}
+  <div class="flex gap-x-1">
+    <UserRecordBadges
+      preMadeTeamSize={record.preMadeTeamSize}
+      isAlphaKilled={record.isAlphaKilled}
+      isOmegaKilled={record.isOmegaKilled}
+      isGammaKilled={record.isGammaKilled}
+      isWickelineKilled={record.isWickelineKilled}
+    />
+  </div>
+{/snippet}
+{#snippet summary_trait(record: UserRecordType)}
+  <div class="flex gap-x-0.5">
+    <ErTrait id={record.traits["0"]} size="sm" />
+    <div class="flex">
+      {#each record.traits["1"] as trait}
+        <ErTrait id={trait} size="sm" />
+      {/each}
+    </div>
+    <div class="flex">
+      {#each record.traits["2"] as trait}
+        <ErTrait id={trait} size="sm" />
+      {/each}
+    </div>
+  </div>
+{/snippet}
+{#snippet summary_equipments(record: UserRecordType)}
+  <div class="flex gap-1">
+    <ErItem id={record.equipments[0]} size="sm" />
+    <ErItem id={record.equipments[1]} size="sm" />
+    <ErItem id={record.equipments[2]} size="sm" />
+    <ErItem id={record.equipments[3]} size="sm" />
+    <ErItem id={record.equipments[4]} size="sm" />
+  </div>
+{/snippet}
+{#snippet summary_damageDealtToPlayers(record: UserRecordType)}
+  <div class="flex flex-col">
+    <span class="text-right text-xs font-light">{formatNumber(record.damageDealtToPlayers)}</span>
+    <Progress
+      class="overflow-hidden rounded-full"
+      value={record.damageDealtToPlayers}
+      max={maxDamageDealtToPlayers}
+    >
+      <ProgressRange color="red" />
+    </Progress>
+  </div>
+{/snippet}
+{#snippet summary_damageTakenFromPlayers(record: UserRecordType)}
+  <div class="flex flex-col">
+    <span class="text-right text-xs font-light">{formatNumber(record.damageTakenFromPlayers)}</span>
+    <Progress
+      class="overflow-hidden rounded-full"
+      value={record.damageTakenFromPlayers}
+      max={maxDamageTakenFromPlayers}
+    >
+      <ProgressRange color="blue" />
+    </Progress>
+  </div>
+{/snippet}
+{#snippet summary_healingAmount(record: UserRecordType)}
+  <div class="flex flex-col">
+    <span class="text-right text-xs font-light">{formatNumber(record.healingAmount)}</span>
+    <Progress
+      class="overflow-hidden rounded-full"
+      value={record.healingAmount}
+      max={maxHealingAmount}
+    >
+      <ProgressRange color="green" />
+    </Progress>
+  </div>
+{/snippet}
 
 <div class="bg-yellow-50 text-center">WIP</div>
 <div class="grid place-items-center py-8">
   <SearchForm username={myName} />
 </div>
 
-<main class="container mx-auto space-y-8">
+<main class="container mx-auto space-y-8 rounded-2xl bg-white p-4">
   <div class="flex items-baseline text-sm">
     <span class="text-gray-500">
       {$LL.matchingMode[data.match.mode as MatchingMode]()}
@@ -64,135 +263,72 @@
       <span>{data.match.matchId}</span>
     </span>
   </div>
-  <UserRecord class="sticky top-0 mb-2 flex-wrap border-b bg-white py-2">
-    <div class="w-8 text-center text-sm font-bold">
-      {data.match.mode === MatchingMode.Cobalt
-        ? $LL.userRecords.heading.winLose()
-        : $LL.userRecords.heading.rank()}
-    </div>
-    <div class="w-8 text-center text-sm font-bold"></div>
-    <div class="w-32 text-center text-sm font-bold">{$LL.userRecords.heading.name()}</div>
-    <div class="w-10 text-center text-sm font-bold">{$LL.userRecords.heading.score()}</div>
-    <div class="flex gap-x-2 text-sm">
-      <Numeric bold>{$LL.userRecords.heading.k()}</Numeric>
-      <Delimiter />
-      <Numeric bold>{$LL.userRecords.heading.d()}</Numeric>
-      <Delimiter />
-      <Numeric bold>{$LL.userRecords.heading.a()}</Numeric>
-    </div>
-    <div class="flex items-center gap-x-[inherit]">
-      <div class="w-[13.5rem] text-center text-sm font-bold">
-        {$LL.userRecords.heading.equipments()}
-      </div>
-      <div class="w-12 text-center text-sm font-bold">
-        {$LL.userRecords.heading.damageDealtToPlayers()}
-      </div>
-      <div class="w-12 text-center text-sm font-bold">
-        {$LL.userRecords.heading.damageTakenFromPlayers()}
-      </div>
-      <div class="w-12 text-center text-sm font-bold">
-        {$LL.userRecords.heading.healingAmount()}
-      </div>
-    </div>
-  </UserRecord>
-  <div class="flex flex-col gap-y-8">
-    {#each teams as [rank, team] (rank)}
-      <div class="flex flex-col gap-y-2">
-        {#each team as record (record.userId)}
-          <details>
-            <summary class="flex">
-              <UserRecord class="flex-wrap gap-y-2" highlight={record.nickname === myName}>
-                <Rank rank={record.rank} mode={data.match.mode} />
-                <CharacterAvatar rounded="md" characterId={record.characterId} skin={record.skin} />
-                <div class="flex w-32 items-center gap-x-2">
-                  <a
-                    class="overflow-hidden break-keep text-ellipsis whitespace-nowrap hover:text-blue-500 hover:underline"
-                    href="/{$locale}/users/{encodeURIComponent(record.nickname)}"
-                    title={record.nickname}>{record.nickname}</a
-                  >
-                  <UserRecordBadges
-                    preMadeTeamSize={record.preMadeTeamSize}
-                    isAlphaKilled={record.isAlphaKilled}
-                    isOmegaKilled={record.isOmegaKilled}
-                    isGammaKilled={record.isGammaKilled}
-                    isWickelineKilled={record.isWickelineKilled}
-                  />
+  <div class="overflow-x-auto">
+    <table>
+      <thead>
+        <tr>
+          <!-- <th class="border"></th> -->
+          {#each columns as column}
+            <th
+              class="cursor-pointer border bg-white px-(--padding) py-1 select-none"
+              style:--padding="calc(var(--spacing) * {column.padding ?? 1})"
+              onpointerdown={() => {
+                if (column.sortingMethod == null) {
+                  sortingColumns.delete(column.key);
+                  sortingColumns.set(column.key, "desc");
+                } else if (column.sortingMethod === "desc") {
+                  sortingColumns.delete(column.key);
+                  sortingColumns.set(column.key, "asc");
+                } else if (column.sortingMethod === "asc") {
+                  sortingColumns.delete(column.key);
+                }
+              }}
+            >
+              <div class="flex items-center">
+                <div class="text-sm font-medium break-keep">
+                  {column.heading?.()}
                 </div>
-                <Score score={record.score} />
-                <div class="flex gap-x-2 text-sm">
-                  <Numeric>{record.kills}</Numeric>
-                  <Delimiter />
-                  <Numeric>{record.deaths}</Numeric>
-                  <Delimiter />
-                  <Numeric>{record.assists}</Numeric>
-                </div>
-                <div class="flex items-center gap-x-[inherit]">
-                  <div class="flex gap-1">
-                    <ErItem id={record.equipments[0]} size="sm" />
-                    <ErItem id={record.equipments[1]} size="sm" />
-                    <ErItem id={record.equipments[2]} size="sm" />
-                    <ErItem id={record.equipments[3]} size="sm" />
-                    <ErItem id={record.equipments[4]} size="sm" />
+                {#if column.sortKey != null}
+                  <div class="relative text-gray-700">
+                    {#if column.sortingMethod == null}
+                      <div transition:fade={{ duration: 100 }}>
+                        <Icon as="minus" size={14} class="absolute" />
+                      </div>
+                    {/if}
+                    <Icon
+                      as="arrow-big-up"
+                      size={14}
+                      class="transition-transform {column.sortingMethod == null
+                        ? 'rotate-x-90'
+                        : column.sortingMethod === 'desc'
+                          ? 'rotate-x-180'
+                          : 'rotate-x-0'}"
+                    />
                   </div>
-                  <div class="flex w-12 flex-col">
-                    <span class="text-right text-xs font-light"
-                      >{formatNumber(record.damageDealtToPlayers)}</span
-                    >
-                    <Progress
-                      class="overflow-hidden rounded-full"
-                      value={record.damageDealtToPlayers}
-                      max={maxDamageDealtToPlayers}
-                    >
-                      <ProgressRange color="red" />
-                    </Progress>
-                  </div>
-                  <div class="flex w-12 flex-col">
-                    <span class="text-right text-xs font-light"
-                      >{formatNumber(record.damageTakenFromPlayers)}</span
-                    >
-                    <Progress
-                      class="overflow-hidden rounded-full"
-                      value={record.damageTakenFromPlayers}
-                      max={maxDamageTakenFromPlayers}
-                    >
-                      <ProgressRange color="blue" />
-                    </Progress>
-                  </div>
-                  <div class="flex w-12 flex-col">
-                    <span class="text-right text-xs font-light"
-                      >{formatNumber(record.healingAmount)}</span
-                    >
-                    <Progress
-                      class=" overflow-hidden rounded-full"
-                      value={record.healingAmount}
-                      max={maxHealingAmount}
-                    >
-                      <ProgressRange color="green" />
-                    </Progress>
-                  </div>
-                </div>
-              </UserRecord>
-            </summary>
-            <div class="rounded-2xl bg-white p-4">
-              <section>
-                <h1 class="font-bold">{$LL.userRecords.heading.trait()}</h1>
-                <ErTrait id={record.traits["0"]} />
-                <div class="flex gap-4">
-                  {#each record.traits["1"] as trait}
-                    <ErTrait id={trait} />
-                  {/each}
-                </div>
-                <div class="flex gap-4">
-                  {#each record.traits["2"] as trait}
-                    <ErTrait id={trait} />
-                  {/each}
-                </div>
-              </section>
-            </div>
-          </details>
+                {/if}
+              </div>
+            </th>
+          {/each}
+        </tr>
+      </thead>
+      <tbody>
+        {#each rows as record (record.userId)}
+          <tr class:bg-gray-100={record.rank % 2 === 1}>
+            <!-- <td class="cursor-pointer border">
+              <Icon as="ellipsis-vertical" class="transition-all hover:rotate-90" size={16} />
+            </td> -->
+            {#each columns as column}
+              <td
+                class="border px-(--padding)"
+                style:--padding="calc(var(--spacing) * {column.padding ?? 1})"
+              >
+                {@render column.render(record)}
+              </td>
+            {/each}
+          </tr>
         {/each}
-      </div>
-    {/each}
+      </tbody>
+    </table>
   </div>
 </main>
 <footer class="h-lvh"></footer>

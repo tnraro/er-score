@@ -5,17 +5,18 @@
   const style = tv({
     slots: {
       img: "block rounded-full overflow-clip object-contain p-0.5",
-      placeholder: "block rounded-full bg-gray-200 border border-transparent",
+      placeholder:
+        "flex items-center justify-center rounded-full select-none overflow-clip bg-gray-200 border border-transparent text-gray-700 break-keep",
     },
     variants: {
       size: {
         md: {
           img: "h-7 w-7 min-w-7",
-          placeholder: "h-6 w-6 min-w-6 m-0.5",
+          placeholder: "h-6 w-6 min-w-6 m-0.5 text-xs",
         },
         sm: {
           img: "h-6 w-6 min-w-6",
-          placeholder: "h-5 w-5 min-w-5 m-0.5",
+          placeholder: "h-5 w-5 min-w-5 m-0.5 text-xs",
         },
       },
     },
@@ -28,8 +29,9 @@
 <script lang="ts">
   type Props = {
     id?: number | null | undefined;
+    showName?: boolean;
   } & Omit<VariantProps<typeof style>, "grade">;
-  let { id, size }: Props = $props();
+  let { id, size, showName = false }: Props = $props();
 
   let c = $derived(style({ size }));
   let name = $derived($LL.api.traitName[String(id) as keyof (typeof $LL)["api"]["traitName"]]?.());
@@ -39,6 +41,7 @@
 <div class="flex items-center gap-1">
   {#if !failed}
     <img
+      title={name}
       class={c.img()}
       draggable="false"
       alt=""
@@ -46,7 +49,9 @@
       onerror={() => (failed = true)}
     />
   {:else}
-    <div class={c.placeholder()}></div>
+    <div title={name} class={c.placeholder()}>{name.slice(0, 2)}</div>
   {/if}
-  <div>{name}</div>
+  {#if showName && name != null}
+    <div>{name}</div>
+  {/if}
 </div>

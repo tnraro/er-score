@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="arrow-big-up">
+      <path d="M9 18v-6H5l7-7 7 7h-4v6H9z" />
+    </symbol>
+    <symbol id="minus">
+      <path d="M5 12h14" />
+    </symbol>
+    <symbol id="ellipsis-vertical">
+      <circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" />
+    </symbol>
+  </defs>
+</svg>
