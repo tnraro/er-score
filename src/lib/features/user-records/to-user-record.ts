@@ -164,5 +164,7 @@ function toData(game: UserGame) {
     "versionMajor",
     "versionMinor",
     "viewContribution",
+    "mmrAfter",
+    "mmrAvg",
   ]);
 }
