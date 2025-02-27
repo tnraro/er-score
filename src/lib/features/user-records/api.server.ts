@@ -1,13 +1,14 @@
 import { reqGames, reqUserGames } from "$lib/features/er-api/primitive.server";
+import { erApiOptionsSvelteKit } from "../er-api/er-api-options-sveltekit.server";
 import { toUserRecord } from "./to-user-record";
 
 export async function getUserRecordsByUserId(userId: number, next?: number) {
-  const res = await reqUserGames(userId, next);
+  const res = await reqUserGames(userId, erApiOptionsSvelteKit, next);
   return res.userGames.map(toUserRecord);
 }
 
 export async function getUserRecordsByMatchId(matchId: number) {
-  const res = await reqGames(matchId);
+  const res = await reqGames(matchId, erApiOptionsSvelteKit);
   return res.userGames.map(toUserRecord);
 }
 
@@ -43,7 +44,7 @@ export async function* genUserGames(
   const fromMatchId = options?.afterMatchId ?? undefined;
   let next: number | undefined = fromMatchId;
   for (let i = 0; i < pages; i++) {
-    const res = await reqUserGames(userId, next);
+    const res = await reqUserGames(userId, erApiOptionsSvelteKit, next);
     const userGames = res.userGames.sort(
       (a, b) => new Date(b.startDtm).getTime() - new Date(a.startDtm).getTime(),
     );

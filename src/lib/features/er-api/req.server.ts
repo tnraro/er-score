@@ -1,26 +1,29 @@
-import { env } from "$env/dynamic/private";
-import { measureTime } from "$lib/utils/time/measureTime";
+export interface ErApiOptions {
+  apiHost: string;
+  apiKey: string;
+}
 
-export async function req<T extends ErResponse>(path: string | URL): Promise<T> {
-  const url = new URL(path, env.API_HOST);
-  return await measureTime(`req: ${url.href.slice(url.origin.length)}`, async () => {
-    const res = await fetch(url, {
-      headers: {
-        accept: "application/json",
-        "x-api-key": env.API_KEY,
-      },
-    });
-    if (!res.ok) throw res;
-    const body = await res.json();
-    if (!isErResponse(body)) throw body;
-    if (body.code >= 400)
-      throw new Response(JSON.stringify(body), {
-        ...res,
-        status: body.code,
-        statusText: body.message,
-      });
-    return body as T;
+export async function req<T extends ErResponse>(
+  path: string | URL,
+  { apiHost, apiKey }: ErApiOptions,
+): Promise<T> {
+  const url = new URL(path, apiHost);
+  const res = await fetch(url, {
+    headers: {
+      accept: "application/json",
+      "x-api-key": apiKey,
+    },
   });
+  if (!res.ok) throw res;
+  const body = await res.json();
+  if (!isErResponse(body)) throw body;
+  if (body.code >= 400)
+    throw new Response(JSON.stringify(body), {
+      ...res,
+      status: body.code,
+      statusText: body.message,
+    });
+  return body as T;
 }
 
 export interface ErResponse {
