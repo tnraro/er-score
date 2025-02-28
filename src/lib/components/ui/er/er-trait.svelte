@@ -34,7 +34,11 @@
   let { id, size, showName = false }: Props = $props();
 
   let c = $derived(style({ size }));
-  let name = $derived($LL.api.traitName[String(id) as keyof (typeof $LL)["api"]["traitName"]]?.());
+  let name = $derived.by(() => {
+    const fn = $LL.api.traitName[String(id) as keyof (typeof $LL)["api"]["traitName"]];
+    if (fn == null) return;
+    return fn();
+  });
   let failed = $state(false);
 </script>
 
@@ -49,7 +53,7 @@
       onerror={() => (failed = true)}
     />
   {:else}
-    <div title={name} class={c.placeholder()}>{name.slice(0, 2)}</div>
+    <div title={name} class={c.placeholder()}>{name?.slice(0, 2)}</div>
   {/if}
   {#if showName && name != null}
     <div>{name}</div>
