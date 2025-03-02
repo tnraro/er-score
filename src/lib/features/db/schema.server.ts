@@ -101,3 +101,9 @@ export const userRecords = pgTable(
     index("user_records__user_id").on(t.userId),
   ],
 );
+
+export const filledMatches = pgTable("filled_matches", {
+  latestMatchId: integer().primaryKey(),
+  version: text().notNull(),
+  createdAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
+});
