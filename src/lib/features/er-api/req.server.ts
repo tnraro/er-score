@@ -1,12 +1,27 @@
+import { sleep } from "$lib/utils/time/sleep";
+
 export interface ErApiOptions {
   apiHost: string;
   apiKey: string;
 }
 
+let lock = 0;
+const apiDelay = 20;
+
 export async function req<T extends ErResponse>(
   path: string | URL,
   { apiHost, apiKey }: ErApiOptions,
 ): Promise<T> {
+  {
+    const now = performance.now();
+    if (now <= lock) {
+      const delay = Math.ceil(lock - now);
+      lock += apiDelay + 10;
+      await sleep(delay);
+    } else {
+      lock = now + apiDelay;
+    }
+  }
   const url = new URL(path, apiHost);
   const res = await fetch(url, {
     headers: {
