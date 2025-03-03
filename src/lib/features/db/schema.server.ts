@@ -34,6 +34,7 @@ export const userRecords = pgTable(
     seasonId: smallint().notNull(),
     mode: smallint().notNull(),
     teamSize: smallint().notNull(),
+    botSize: smallint().notNull().default(0),
     version: text().notNull(),
     serverName: text().notNull(),
     startedAt: timestamp({ mode: "date", withTimezone: true }).notNull(),

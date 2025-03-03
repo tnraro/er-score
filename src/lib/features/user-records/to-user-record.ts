@@ -11,6 +11,7 @@ export function toUserRecord(game: UserGame): UserRecord {
     seasonId: game.seasonId,
     mode: game.matchingMode,
     teamSize: game.matchingTeamMode,
+    botSize: game.botAdded,
     version: `${game.versionMajor}.${game.versionMinor}`,
     serverName: game.serverName,
     startedAt: new Date(game.startDtm),
@@ -65,9 +66,10 @@ export function toUserRecord(game: UserGame): UserRecord {
 function calcHalfRate({
   gameRank,
   matchSize,
+  botAdded,
   matchingTeamMode,
-}: Pick<UserGame, "gameRank" | "matchSize" | "matchingTeamMode">) {
-  const teams = matchSize / matchingTeamMode - 1;
+}: Pick<UserGame, "gameRank" | "botAdded" | "matchSize" | "matchingTeamMode">) {
+  const teams = (matchSize + botAdded) / matchingTeamMode - 1;
   const rank = gameRank - 1;
 
   return 1 - rank / teams;
