@@ -74,7 +74,14 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
 
   {
     for (const match of matches) {
-      if (match.records.length >= match.teamSize) continue;
+      /**
+       * 각 팀에 필요한 최소한의 플레이어 수
+       *
+       * Bot이 포함된 전적의 경우, 한 팀에 team size보다 적은 수의 플레이어가 존재할 수 있음.
+       * 무한 루프가 발생하지 않으면서, 최대한 많은 플레이어를 불러오도록 구현.
+       */
+      const minimumRequiredTeamSize = ((match.size - 1) % match.teamSize) + 1;
+      if (match.records.length >= minimumRequiredTeamSize) continue;
       const userRecords = await getUserRecordsByMatchId(match.matchId);
       for (const ur of userRecords) {
         updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);

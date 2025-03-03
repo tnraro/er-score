@@ -69,7 +69,8 @@ function calcHalfRate({
   botAdded,
   matchingTeamMode,
 }: Pick<UserGame, "gameRank" | "botAdded" | "matchSize" | "matchingTeamMode">) {
-  const teams = (matchSize + botAdded) / matchingTeamMode - 1;
+  const size = Math.ceil(matchSize / matchingTeamMode) * matchingTeamMode;
+  const teams = (size + botAdded) / matchingTeamMode - 1;
   const rank = gameRank - 1;
 
   return 1 - rank / teams;
