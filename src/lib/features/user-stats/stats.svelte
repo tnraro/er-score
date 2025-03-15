@@ -36,6 +36,41 @@
 
   let Lmode = $derived((mode: MatchingMode) => $LL.matchingMode[mode]());
 
+  let statSummary = $derived.by(() => {
+    const goodStats = [];
+    const badStats = [];
+    for (const stat of stats) {
+      const size = 1 / (stat.count + 1);
+      const demo = stat.count * size;
+      const scoreExpectation = 0.5;
+      const halfRateExpectation = 0.5;
+      const scoreE = stat.scoreAvg * demo + scoreExpectation * size;
+      const halfRateE = stat.halfRateAvg * demo + halfRateExpectation * size;
+      if (scoreE >= scoreExpectation && halfRateE >= halfRateExpectation) {
+        goodStats.push({
+          characterId: stat.characterId,
+          scale: (scoreE + halfRateE) * 0.5,
+          scoreE,
+          halfRateE,
+        });
+      } else if (scoreE < scoreExpectation && halfRateE < halfRateExpectation) {
+        badStats.push({
+          characterId: stat.characterId,
+          scale: (scoreE + halfRateE) * 0.5,
+          scoreE,
+          halfRateE,
+        });
+      }
+    }
+
+    goodStats.sort((a, b) => b.scale - a.scale);
+    badStats.sort((a, b) => a.scale - b.scale);
+    return {
+      goodStats,
+      badStats,
+    };
+  });
+
   const previewSize = 3;
   let filteredStats = $derived(isOpen ? stats : stats.slice(0, previewSize));
 
@@ -72,6 +107,48 @@
       {#if playedMatches >= 100}
         {$LL.stats.limitHint({ limit: 100 })}
       {/if}
+    </div>
+    <div class="overflow-x-auto px-2">
+      <div class="flex">
+        {#each statSummary.goodStats as stat, i (stat.characterId)}
+          {@const size = statSummary.goodStats.length}
+          <div
+            class="z-(--z) -ml-2 rounded-full border border-(--b)"
+            style:--z={size - i}
+            style:--hue="132.35"
+            style:--b="oklch(0.5 0.12 var(--hue))"
+            style:--bg="oklch({0.75 + (1 - stat.scale) * 0.2}
+            {0.25 - (1 - stat.scale) * 0.2} var(--hue))"
+            title="score: {stat.scoreE.toFixed(1)} / half rate: {stat.halfRateE.toFixed(1)}"
+          >
+            <CharacterAvatar
+              characterId={stat.characterId}
+              size="sm"
+              class="border-2 border-transparent bg-(--bg)"
+            />
+          </div>
+        {/each}
+      </div>
+      <div class="flex">
+        {#each statSummary.badStats as stat, i (stat.characterId)}
+          {@const size = statSummary.badStats.length}
+          <div
+            class="z-(--z) -ml-2 rounded-full border border-(--b)"
+            style:--z={size - i}
+            style:--hue="28.3"
+            style:--b="oklch(0.5 0.12 var(--hue))"
+            style:--bg="oklch({0.75 + stat.scale * 0.2}
+            {0.25 - stat.scale * 0.2} var(--hue))"
+            title="score: {stat.scoreE.toFixed(1)} / half rate: {stat.halfRateE.toFixed(1)}"
+          >
+            <CharacterAvatar
+              characterId={stat.characterId}
+              size="sm"
+              class="border-2 border-transparent bg-(--bg)"
+            />
+          </div>
+        {/each}
+      </div>
     </div>
     <StatsTable>
       {#each filteredStats as stat (stat.characterId)}
