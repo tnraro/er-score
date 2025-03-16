@@ -46,14 +46,14 @@
       const halfRateExpectation = 0.5;
       const scoreE = stat.scoreAvg * demo + scoreExpectation * size;
       const halfRateE = stat.halfRateAvg * demo + halfRateExpectation * size;
-      if (scoreE >= scoreExpectation && halfRateE >= halfRateExpectation) {
+      if (stat.count >= 4 && scoreE >= scoreExpectation && halfRateE >= halfRateExpectation) {
         goodStats.push({
           characterId: stat.characterId,
           scale: (scoreE + halfRateE) * 0.5,
           scoreE,
           halfRateE,
         });
-      } else if (scoreE < scoreExpectation && halfRateE < halfRateExpectation) {
+      } else if (stat.count >= 4 && scoreE < scoreExpectation && halfRateE < halfRateExpectation) {
         badStats.push({
           characterId: stat.characterId,
           scale: (scoreE + halfRateE) * 0.5,
