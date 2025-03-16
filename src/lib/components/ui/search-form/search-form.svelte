@@ -16,7 +16,18 @@
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username");
     if (typeof username !== "string") throw new Error("Invalid username");
-    goto(`/${$locale}/users/${encodeURIComponent(username)}`);
+    const usernames = username
+      .trim()
+      .split(/\s*,\s*/g)
+      .filter((x) => x.length > 0);
+
+    if (usernames.length === 1) {
+      goto(`/${$locale}/users/${encodeURIComponent(username)}`);
+    } else {
+      const sp = new URLSearchParams();
+      usernames.forEach((username) => sp.append("u", username));
+      goto(`/${$locale}/stats?${sp.toString()}`);
+    }
   }}
 >
   <label class="block text-sm select-none" for="nickname">{$LL.searchForm.label()}</label>

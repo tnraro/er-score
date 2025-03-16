@@ -90,7 +90,7 @@
       {#if level != null}
         <div class="text-xs leading-none">Lv {level}</div>
       {/if}
-      <div class={c.headerName()}>{name}</div>
+      <a class={c.headerName()} href="/users/{encodeURIComponent(name)}">{name}</a>
     </div>
   </div>
   {#if rp != null && (mode == null || mode === MatchingMode.Rank)}
