@@ -42,24 +42,26 @@
     for (const stat of stats) {
       const size = 1 / (stat.count + 1);
       const demo = stat.count * size;
-      const scoreExpectation = 0.5;
-      const halfRateExpectation = 0.5;
-      const scoreE = stat.scoreAvg * demo + scoreExpectation * size;
-      const halfRateE = stat.halfRateAvg * demo + halfRateExpectation * size;
-      if (scoreE >= scoreExpectation && halfRateE >= halfRateExpectation) {
+      const scoreE = e(stat.scoreAvg, 0.5);
+      const halfRateE = e(stat.halfRateAvg, 0.5);
+      const scale = (scoreE + halfRateE) * 0.5;
+      if (e(stat.scoreAvg, 0) >= 0.5 && e(stat.halfRateAvg, 0) >= 0.5) {
         goodStats.push({
           characterId: stat.characterId,
-          scale: (scoreE + halfRateE) * 0.5,
+          scale,
           scoreE,
           halfRateE,
         });
-      } else if (scoreE < scoreExpectation && halfRateE < halfRateExpectation) {
+      } else if (e(stat.scoreAvg, 1) < 0.5 && e(stat.halfRateAvg, 1) < 0.5) {
         badStats.push({
           characterId: stat.characterId,
-          scale: (scoreE + halfRateE) * 0.5,
+          scale,
           scoreE,
           halfRateE,
         });
+      }
+      function e(x: number, e: number) {
+        return x * demo + e * size;
       }
     }
 
