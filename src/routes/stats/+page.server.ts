@@ -46,7 +46,7 @@ async function update(user: UserQueryResult) {
         latestUserRecord != null && user.name !== latestUserRecord.nickname
           ? latestUserRecord.nickname
           : undefined,
-      level: latestUserRecord?.data.accountLevel,
+      level: latestUserRecord?.data?.accountLevel ?? undefined,
       rp: latestUserRecord?.mode === MatchingMode.Rank ? latestUserRecord?.rp : undefined,
     });
   }
