@@ -208,6 +208,100 @@ type RootTranslation = {
 		 */
 		'404': string
 	}
+	weapon: {
+		/**
+		 * 글​러​브
+		 */
+		'1': string
+		/**
+		 * 톤​파
+		 */
+		'2': string
+		/**
+		 * 방​망​이
+		 */
+		'3': string
+		/**
+		 * 채​찍
+		 */
+		'4': string
+		/**
+		 * 투​척
+		 */
+		'5': string
+		/**
+		 * 암​기
+		 */
+		'6': string
+		/**
+		 * 활
+		 */
+		'7': string
+		/**
+		 * 석​궁
+		 */
+		'8': string
+		/**
+		 * 권​총
+		 */
+		'9': string
+		/**
+		 * 돌​격​소​총
+		 */
+		'10': string
+		/**
+		 * 저​격​총
+		 */
+		'11': string
+		/**
+		 * 망​치
+		 */
+		'13': string
+		/**
+		 * 도​끼
+		 */
+		'14': string
+		/**
+		 * 단​검
+		 */
+		'15': string
+		/**
+		 * 양​손​검
+		 */
+		'16': string
+		/**
+		 * 쌍​검
+		 */
+		'18': string
+		/**
+		 * 창
+		 */
+		'19': string
+		/**
+		 * 쌍​절​곤
+		 */
+		'20': string
+		/**
+		 * 레​이​피​어
+		 */
+		'21': string
+		/**
+		 * 기​타
+		 */
+		'22': string
+		/**
+		 * 카​메​라
+		 */
+		'23': string
+		/**
+		 * 아​르​카​나
+		 */
+		'24': string
+		/**
+		 * V​F​의​수
+		 */
+		'25': string
+	}
 	api: {
 		weaponTypeDescription: {
 			/**
@@ -754,6 +848,10 @@ type RootTranslation = {
 			 * 행​진​은​ ​멈​추​지​ ​않​아​.​ ​음​악​으​로​ ​세​상​을​ ​구​할​ ​때​까​지​!
 			 */
 			'1008004': string
+			/**
+			 * 이​번​에​도​ ​내​ ​음​악​을​ ​사​랑​해​줘​서​ ​고​,​고​마​워​!
+			 */
+			'1008005': string
 			/**
 			 * 특​별​히​ ​새​로​운​ ​상​황​인​ ​건​ ​아​니​야​.​ ​하​던​ ​대​로​ ​하​면​ ​되​는​ ​거​지​.
 			 */
@@ -1343,6 +1441,10 @@ type RootTranslation = {
 			 */
 			'1047003': string
 			/**
+			 * 꽤​나​ ​혹​독​한​ ​훈​련​이​ ​될​지​도​ ​몰​라​,​ ​괜​찮​지​?
+			 */
+			'1047004': string
+			/**
 			 * 붓​과​ ​함​께​라​면​,​ ​어​디​든​ ​내​ ​캔​버​스​야​!
 			 */
 			'1048001': string
@@ -1433,6 +1535,10 @@ type RootTranslation = {
 			 */
 			'1055003': string
 			/**
+			 * 이​번​ ​훈​련​의​ ​목​표​는​ ​안​전​!
+			 */
+			'1055004': string
+			/**
 			 * 항​상​ ​부​족​하​다​ ​느​껴​지​는​ ​것​.​ ​돈​과​ ​단​련​의​ ​공​통​점​이​지​.
 			 */
 			'1056001': string
@@ -1496,6 +1602,10 @@ type RootTranslation = {
 			 * 다​만​ ​싸​워​서​ ​지​켜​낸​다​.​ ​그​뿐​입​니​다​.
 			 */
 			'1062002': string
+			/**
+			 * 복​창​합​니​다​.​ ​목​표​ ​확​인​,​ ​조​준​,​ ​발​사​.
+			 */
+			'1062003': string
 			/**
 			 * 이​게​ ​네​가​ ​말​한​ ​최​선​의​ ​방​책​이​야​?
 			 */
@@ -1568,6 +1678,10 @@ type RootTranslation = {
 			 * 쉿​.​ ​모​두​ ​자​고​ ​있​잖​아​.
 			 */
 			'1072001': string
+			/**
+			 * 자​,​ ​모​두​ ​집​중​.​ ​시​범​은​ ​딱​ ​한​ ​번​ ​뿐​이​야​.
+			 */
+			'1072002': string
 			/**
 			 * 잘​ ​어​울​리​나​요​?​ ​후​후​,​ ​다​녀​오​겠​습​니​다​!​
 	
@@ -2234,7 +2348,7 @@ type RootTranslation = {
 			 */
 			'7921402': string
 			/**
-			 * 수​집​가
+			 * 수​집​가​ ​I​I​I
 			 */
 			'7921403': string
 			/**
@@ -2519,6 +2633,10 @@ type RootTranslation = {
 			 * 군​악​대​ ​하​트
 			 */
 			'1008004': string
+			/**
+			 * 사​관​후​보​생​ ​하​트
+			 */
+			'1008005': string
 			/**
 			 * 아​이​솔
 			 */
@@ -2823,6 +2941,10 @@ type RootTranslation = {
 			 * 루​돌​크
 			 */
 			'1022005': string
+			/**
+			 * 사​신​ ​루​크
+			 */
+			'1022006': string
 			/**
 			 * 캐​시
 			 */
@@ -3256,6 +3378,10 @@ type RootTranslation = {
 			 */
 			'1047003': string
 			/**
+			 * 작​전​ ​교​관​ ​라​우​라
+			 */
+			'1047004': string
+			/**
 			 * 띠​아
 			 */
 			'1048000': string
@@ -3376,6 +3502,10 @@ type RootTranslation = {
 			 */
 			'1055003': string
 			/**
+			 * 안​전​ ​교​관​ ​에​스​텔
+			 */
+			'1055004': string
+			/**
 			 * 피​올​로
 			 */
 			'1056000': string
@@ -3468,6 +3598,10 @@ type RootTranslation = {
 			 */
 			'1062002': string
 			/**
+			 * 사​격​ ​교​관​ ​테​오​도​르
+			 */
+			'1062003': string
+			/**
 			 * 이​안
 			 */
 			'1063000': string
@@ -3507,6 +3641,10 @@ type RootTranslation = {
 			 * 스​파​클​링​ ​트​윈​즈​ ​데​비​&​마​를​렌
 			 */
 			'1065002': string
+			/**
+			 * 방​과​ ​후​ ​자​유​시​간​ ​데​비​&​마​를​렌
+			 */
+			'1065003': string
 			/**
 			 * 아​르​다
 			 */
@@ -3575,6 +3713,10 @@ type RootTranslation = {
 			 * 밤​까​마​귀​ ​카​티​야
 			 */
 			'1072001': string
+			/**
+			 * 훈​련​소​장​ ​카​티​야
+			 */
+			'1072002': string
 			/**
 			 * 샬​럿
 			 */
@@ -4200,6 +4342,100 @@ export type TranslationFunctions = {
 		 */
 		'404': () => LocalizedString
 	}
+	weapon: {
+		/**
+		 * 글러브
+		 */
+		'1': () => LocalizedString
+		/**
+		 * 톤파
+		 */
+		'2': () => LocalizedString
+		/**
+		 * 방망이
+		 */
+		'3': () => LocalizedString
+		/**
+		 * 채찍
+		 */
+		'4': () => LocalizedString
+		/**
+		 * 투척
+		 */
+		'5': () => LocalizedString
+		/**
+		 * 암기
+		 */
+		'6': () => LocalizedString
+		/**
+		 * 활
+		 */
+		'7': () => LocalizedString
+		/**
+		 * 석궁
+		 */
+		'8': () => LocalizedString
+		/**
+		 * 권총
+		 */
+		'9': () => LocalizedString
+		/**
+		 * 돌격소총
+		 */
+		'10': () => LocalizedString
+		/**
+		 * 저격총
+		 */
+		'11': () => LocalizedString
+		/**
+		 * 망치
+		 */
+		'13': () => LocalizedString
+		/**
+		 * 도끼
+		 */
+		'14': () => LocalizedString
+		/**
+		 * 단검
+		 */
+		'15': () => LocalizedString
+		/**
+		 * 양손검
+		 */
+		'16': () => LocalizedString
+		/**
+		 * 쌍검
+		 */
+		'18': () => LocalizedString
+		/**
+		 * 창
+		 */
+		'19': () => LocalizedString
+		/**
+		 * 쌍절곤
+		 */
+		'20': () => LocalizedString
+		/**
+		 * 레이피어
+		 */
+		'21': () => LocalizedString
+		/**
+		 * 기타
+		 */
+		'22': () => LocalizedString
+		/**
+		 * 카메라
+		 */
+		'23': () => LocalizedString
+		/**
+		 * 아르카나
+		 */
+		'24': () => LocalizedString
+		/**
+		 * VF의수
+		 */
+		'25': () => LocalizedString
+	}
 	api: {
 		weaponTypeDescription: {
 			/**
@@ -4746,6 +4982,10 @@ export type TranslationFunctions = {
 			 * 행진은 멈추지 않아. 음악으로 세상을 구할 때까지!
 			 */
 			'1008004': () => LocalizedString
+			/**
+			 * 이번에도 내 음악을 사랑해줘서 고,고마워!
+			 */
+			'1008005': () => LocalizedString
 			/**
 			 * 특별히 새로운 상황인 건 아니야. 하던 대로 하면 되는 거지.
 			 */
@@ -5335,6 +5575,10 @@ export type TranslationFunctions = {
 			 */
 			'1047003': () => LocalizedString
 			/**
+			 * 꽤나 혹독한 훈련이 될지도 몰라, 괜찮지?
+			 */
+			'1047004': () => LocalizedString
+			/**
 			 * 붓과 함께라면, 어디든 내 캔버스야!
 			 */
 			'1048001': () => LocalizedString
@@ -5425,6 +5669,10 @@ export type TranslationFunctions = {
 			 */
 			'1055003': () => LocalizedString
 			/**
+			 * 이번 훈련의 목표는 안전!
+			 */
+			'1055004': () => LocalizedString
+			/**
 			 * 항상 부족하다 느껴지는 것. 돈과 단련의 공통점이지.
 			 */
 			'1056001': () => LocalizedString
@@ -5488,6 +5736,10 @@ export type TranslationFunctions = {
 			 * 다만 싸워서 지켜낸다. 그뿐입니다.
 			 */
 			'1062002': () => LocalizedString
+			/**
+			 * 복창합니다. 목표 확인, 조준, 발사.
+			 */
+			'1062003': () => LocalizedString
 			/**
 			 * 이게 네가 말한 최선의 방책이야?
 			 */
@@ -5560,6 +5812,10 @@ export type TranslationFunctions = {
 			 * 쉿. 모두 자고 있잖아.
 			 */
 			'1072001': () => LocalizedString
+			/**
+			 * 자, 모두 집중. 시범은 딱 한 번 뿐이야.
+			 */
+			'1072002': () => LocalizedString
 			/**
 			 * 잘 어울리나요? 후후, 다녀오겠습니다!
 	
@@ -6226,7 +6482,7 @@ export type TranslationFunctions = {
 			 */
 			'7921402': () => LocalizedString
 			/**
-			 * 수집가
+			 * 수집가 III
 			 */
 			'7921403': () => LocalizedString
 			/**
@@ -6511,6 +6767,10 @@ export type TranslationFunctions = {
 			 * 군악대 하트
 			 */
 			'1008004': () => LocalizedString
+			/**
+			 * 사관후보생 하트
+			 */
+			'1008005': () => LocalizedString
 			/**
 			 * 아이솔
 			 */
@@ -6815,6 +7075,10 @@ export type TranslationFunctions = {
 			 * 루돌크
 			 */
 			'1022005': () => LocalizedString
+			/**
+			 * 사신 루크
+			 */
+			'1022006': () => LocalizedString
 			/**
 			 * 캐시
 			 */
@@ -7248,6 +7512,10 @@ export type TranslationFunctions = {
 			 */
 			'1047003': () => LocalizedString
 			/**
+			 * 작전 교관 라우라
+			 */
+			'1047004': () => LocalizedString
+			/**
 			 * 띠아
 			 */
 			'1048000': () => LocalizedString
@@ -7368,6 +7636,10 @@ export type TranslationFunctions = {
 			 */
 			'1055003': () => LocalizedString
 			/**
+			 * 안전 교관 에스텔
+			 */
+			'1055004': () => LocalizedString
+			/**
 			 * 피올로
 			 */
 			'1056000': () => LocalizedString
@@ -7460,6 +7732,10 @@ export type TranslationFunctions = {
 			 */
 			'1062002': () => LocalizedString
 			/**
+			 * 사격 교관 테오도르
+			 */
+			'1062003': () => LocalizedString
+			/**
 			 * 이안
 			 */
 			'1063000': () => LocalizedString
@@ -7499,6 +7775,10 @@ export type TranslationFunctions = {
 			 * 스파클링 트윈즈 데비&마를렌
 			 */
 			'1065002': () => LocalizedString
+			/**
+			 * 방과 후 자유시간 데비&마를렌
+			 */
+			'1065003': () => LocalizedString
 			/**
 			 * 아르다
 			 */
@@ -7567,6 +7847,10 @@ export type TranslationFunctions = {
 			 * 밤까마귀 카티야
 			 */
 			'1072001': () => LocalizedString
+			/**
+			 * 훈련소장 카티야
+			 */
+			'1072002': () => LocalizedString
 			/**
 			 * 샬럿
 			 */
