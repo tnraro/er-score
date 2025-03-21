@@ -7,8 +7,7 @@ import { error, text } from "@sveltejs/kit";
 import { and, asc, desc, eq, gt, lte, sql } from "drizzle-orm";
 
 export async function POST({ url }) {
-  if (!import.meta.env.DEV) error(404);
-
+  if (!import.meta.env.DEV) throw error(404);
   const FETCHING_TIME = Number(url.searchParams.get("fetching_time") ?? 30);
   const MAX_WAITING_TIME = Number(url.searchParams.get("max_waiting_time") ?? 60000);
 
