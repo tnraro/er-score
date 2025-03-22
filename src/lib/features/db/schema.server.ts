@@ -100,6 +100,8 @@ export const userRecords = pgTable(
     }),
     index("user_records__match_id").on(t.matchId),
     index("user_records__user_id").on(t.userId),
+    index("user_records__mode").on(t.mode),
+    index("user_records__version").on(t.version),
   ],
 );
 
