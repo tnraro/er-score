@@ -106,7 +106,7 @@ export const userRecords = pgTable(
 );
 
 export const filledMatches = pgTable("filled_matches", {
-  latestMatchId: integer().primaryKey(),
-  version: text().notNull(),
+  version: text().primaryKey(),
+  latestMatchId: integer().notNull(),
   createdAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
 });

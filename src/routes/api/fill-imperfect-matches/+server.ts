@@ -59,10 +59,16 @@ export async function POST({ url }) {
   );
 
   if (lastMatch != null) {
-    await db.insert(filledMatches).values({
-      latestMatchId: lastMatch.matchId,
-      version: lastMatch.version,
-    });
+    await db
+      .insert(filledMatches)
+      .values({
+        version: lastMatch.version,
+        latestMatchId: lastMatch.matchId,
+      })
+      .onConflictDoUpdate({
+        target: filledMatches.version,
+        set: { latestMatchId: lastMatch.matchId },
+      });
     console.info(`last match id: ${lastMatch.matchId}, version: ${lastMatch.version}`);
   }
   console.info(`${addedMatches} matches are added`);
@@ -75,13 +81,9 @@ export async function POST({ url }) {
       const ignoreSet = new Set(match?.userIds);
 
       const updateRecords = records.filter((ur) => !ignoreSet.has(ur.userId));
-      if (updateRecords.length <= 0)
-        console.error(
-          matchId,
-          match,
-          records.map((ur) => ur.userId),
-        );
-      await db.insert(userRecords).values(updateRecords);
+      if (updateRecords.length > 0) {
+        await db.insert(userRecords).values(updateRecords);
+      }
       lastMatch = {
         matchId,
         version: records[0].version,
