@@ -788,7 +788,8 @@ type RootTranslation = {
 			 */
 			'1005002': string
 			/**
-			 * 재​물​이​ ​많​다​면​ ​마​음​도​ ​풍​요​로​워​ ​지​는​ ​법​이​오​.
+			 * 재​물​이​ ​많​다​면​ ​마​음​도​ ​풍​요​로​워​ ​지​는​ ​법​이​오​.​
+		​<​c​o​l​o​r​=​#​F​F​B​B​0​0​>​[​보​이​스​ ​변​경​]​<​/​c​o​l​o​r​>
 			 */
 			'1005003': string
 			/**
@@ -1550,6 +1551,11 @@ type RootTranslation = {
 			 * 좋​아​,​ ​이​번​엔​ ​나​침​반​을​ ​따​라​가​ ​볼​까​.
 			 */
 			'1057001': string
+			/**
+			 * 오​직​ ​진​실​과​ ​공​정​함​으​로​ ​기​자​로​서​의​ ​초​심​을​ ​잊​지​ ​않​도​록​.​.​
+		​<​c​o​l​o​r​=​#​F​F​B​B​0​0​>​[​보​이​스​ ​변​경​]​<​/​c​o​l​o​r​>
+			 */
+			'1057002': string
 			/**
 			 * 영​원​한​ ​적​ ​같​은​ ​건​ ​없​어​.​ ​잠​재​적​ ​파​트​너​만​ ​있​을​ ​뿐​이​야​.
 			 */
@@ -3526,6 +3532,10 @@ type RootTranslation = {
 			 */
 			'1057001': string
 			/**
+			 * 2​0​년​ ​전​ ​마​르​티​나
+			 */
+			'1057002': string
+			/**
 			 * 헤​이​즈
 			 */
 			'1058000': string
@@ -3769,6 +3779,10 @@ type RootTranslation = {
 			 * 유​스​티​나
 			 */
 			'1079000': string
+			/**
+			 * 이​슈​트​반
+			 */
+			'1080000': string
 		}
 		characterName: {
 			/**
@@ -4091,6 +4105,14 @@ type RootTranslation = {
 			 * 유​스​티​나
 			 */
 			'79': string
+			/**
+			 * 이​슈​트​반
+			 */
+			'80': string
+			/**
+			 * 니​아
+			 */
+			'81': string
 			/**
 			 * 나​쟈
 			 */
@@ -4923,6 +4945,7 @@ export type TranslationFunctions = {
 			'1005002': () => LocalizedString
 			/**
 			 * 재물이 많다면 마음도 풍요로워 지는 법이오.
+		<color=#FFBB00>[보이스 변경]</color>
 			 */
 			'1005003': () => LocalizedString
 			/**
@@ -5684,6 +5707,11 @@ export type TranslationFunctions = {
 			 * 좋아, 이번엔 나침반을 따라가 볼까.
 			 */
 			'1057001': () => LocalizedString
+			/**
+			 * 오직 진실과 공정함으로 기자로서의 초심을 잊지 않도록..
+		<color=#FFBB00>[보이스 변경]</color>
+			 */
+			'1057002': () => LocalizedString
 			/**
 			 * 영원한 적 같은 건 없어. 잠재적 파트너만 있을 뿐이야.
 			 */
@@ -7660,6 +7688,10 @@ export type TranslationFunctions = {
 			 */
 			'1057001': () => LocalizedString
 			/**
+			 * 20년 전 마르티나
+			 */
+			'1057002': () => LocalizedString
+			/**
 			 * 헤이즈
 			 */
 			'1058000': () => LocalizedString
@@ -7903,6 +7935,10 @@ export type TranslationFunctions = {
 			 * 유스티나
 			 */
 			'1079000': () => LocalizedString
+			/**
+			 * 이슈트반
+			 */
+			'1080000': () => LocalizedString
 		}
 		characterName: {
 			/**
@@ -8225,6 +8261,14 @@ export type TranslationFunctions = {
 			 * 유스티나
 			 */
 			'79': () => LocalizedString
+			/**
+			 * 이슈트반
+			 */
+			'80': () => LocalizedString
+			/**
+			 * 니아
+			 */
+			'81': () => LocalizedString
 			/**
 			 * 나쟈
 			 */
