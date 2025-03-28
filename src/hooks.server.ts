@@ -14,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const [, lang] = event.url.pathname.split("/");
 
-  if (!isLocale(lang)) {
+  if (!isLocale(lang) && !event.url.pathname.startsWith("/api")) {
     const locale = getPreferredLocale(event);
     const url = event.url.href.slice(event.url.origin.length);
     redirect(307, `/${locale}${url}`);
