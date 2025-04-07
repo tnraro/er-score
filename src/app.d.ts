@@ -1,4 +1,5 @@
 import type { Locales, TranslationFunctions } from "$i18n/i18n-types";
+import type { AdminSession } from "$lib/features/admin-auth/db.server";
 import type { Database } from "$lib/features/db/client.server";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
@@ -10,6 +11,7 @@ declare global {
       db: Database;
       locale: Locales;
       LL: TranslationFunctions;
+      adminSession: AdminSession | undefined;
     }
     // interface PageData {}
     // interface PageState {}

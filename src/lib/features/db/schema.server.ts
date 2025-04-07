@@ -11,7 +11,20 @@ import {
   smallint,
   text,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
+
+export const adminSessions = pgTable(
+  "admin_sessions",
+  {
+    id: uuid().primaryKey().notNull().defaultRandom(),
+    tag: text().notNull(),
+    expiresAt: timestamp({ mode: "date", withTimezone: true }).notNull(),
+    createdAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
+    isValid: boolean().notNull().default(true),
+  },
+  (t) => [index("admin_sessions__expires_at").on(t.expiresAt)],
+);
 
 export const users = pgTable(
   "users",

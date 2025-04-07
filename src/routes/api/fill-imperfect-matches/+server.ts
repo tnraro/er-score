@@ -1,13 +1,18 @@
 import { db } from "$lib/features/db/client.server";
 import { filledMatches, userRecords } from "$lib/features/db/schema.server";
+import { selectLatestMatch } from "$lib/features/matches/select-latest-match";
 import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server";
 import { makeArray } from "$lib/utils/array/make-array.js";
 import { single } from "$lib/utils/array/single";
 import { error, text } from "@sveltejs/kit";
 import { and, asc, desc, eq, gt, lte, sql } from "drizzle-orm";
 
-export async function POST({ url }) {
-  if (!import.meta.env.DEV) throw error(404);
+let isUpdating = false;
+
+export async function POST({ url, locals }) {
+  if (locals.adminSession == null) throw error(401);
+  if (isUpdating) return text("locked");
+  isUpdating = true;
   const FETCHING_TIME = Number(url.searchParams.get("fetching_time") ?? 30);
   const MAX_WAITING_TIME = Number(url.searchParams.get("max_waiting_time") ?? 60000);
 
@@ -72,6 +77,7 @@ export async function POST({ url }) {
     console.info(`last match id: ${lastMatch.matchId}, version: ${lastMatch.version}`);
   }
   console.info(`${addedMatches} matches are added`);
+  isUpdating = false;
   return text("done");
   async function processMatch(matchId: number) {
     try {
@@ -93,7 +99,7 @@ export async function POST({ url }) {
     } catch (e) {
       if (e instanceof Response) {
         if (e.status === 404) {
-          console.error(`${matchId} not found`);
+          // console.error(`${matchId} not found`);
           return;
         } else {
           console.error(e.status, e.statusText);
@@ -135,15 +141,6 @@ async function selectFirstMatchIdByVersion(version: string | undefined) {
     .limit(1);
   return single(rows)?.matchId;
 }
-async function selectLatestMatch() {
-  const rows = await db
-    .select({ matchId: userRecords.matchId, version: userRecords.version })
-    .from(userRecords)
-    .orderBy(desc(userRecords.matchId))
-    .limit(1);
-  return single(rows);
-}
-
 async function selectMatches(options?: {
   start: number | undefined;
   end: number | undefined;
