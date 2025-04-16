@@ -4,6 +4,7 @@ import {
   boolean,
   index,
   integer,
+  json,
   jsonb,
   pgTable,
   primaryKey,
@@ -123,3 +124,15 @@ export const filledMatches = pgTable("filled_matches", {
   latestMatchId: integer().notNull(),
   createdAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
 });
+
+export const cacheCharacterStats = pgTable(
+  "cache_character_stats",
+  {
+    version: text().notNull(),
+    mode: smallint().notNull(),
+    characterId: smallint().notNull(),
+    weaponId: smallint().notNull(),
+    data: json().notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.version, t.mode, t.characterId, t.weaponId] })],
+);
