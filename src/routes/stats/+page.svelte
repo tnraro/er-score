@@ -3,7 +3,7 @@
   import LL from "$i18n/i18n-svelte.js";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes.js";
+  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
   import { style } from "$lib/features/user-stats/stats-style.js";
   import Stats from "$lib/features/user-stats/stats.svelte";
 

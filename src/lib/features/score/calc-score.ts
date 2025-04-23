@@ -1,5 +1,5 @@
-import { MatchingMode } from "$lib/features/er-api/shapes";
-import type { UserGame } from "$lib/features/er-api/types.gen";
+import { MatchingMode } from "$lib/shared/er-api/shapes";
+import type { UserGame } from "$lib/shared/er-api/types.gen";
 
 export function calcScore(game: UserGame) {
   switch (game.matchingMode) {

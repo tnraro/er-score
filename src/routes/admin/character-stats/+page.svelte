@@ -1,7 +1,7 @@
 <script lang="ts">
   import LL from "$i18n/i18n-svelte";
   import { ls } from "$lib/components/ui/loading-progress/state.svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { untrack } from "svelte";
   import type { CharacterStat } from "../../api/character-stats/versions/[version]/mode/[mode]/+server";
   import CharacterStats from "./character-stats.svelte";

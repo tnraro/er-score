@@ -1,8 +1,8 @@
 import type { UserRecord } from "$lib/features/db/schema.server";
-import type { UserGame } from "$lib/features/er-api/types.gen";
+import type { UserGame } from "$lib/shared/er-api/types.gen";
 import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";
-import { MatchingMode } from "../er-api/shapes";
+import { MatchingMode } from "../../shared/er-api/shapes";
 
 export function toUserRecord(game: UserGame): UserRecord {
   return {

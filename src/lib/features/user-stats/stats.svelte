@@ -6,7 +6,7 @@
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import Score from "$lib/features/score/score.svelte";
   import { formatNumber } from "$lib/utils/number/format-number";
-  import { MatchingMode } from "../er-api/shapes";
+  import { MatchingMode } from "../../shared/er-api/shapes";
   import type { UserStats } from "./select-user-stats.server";
   import { style } from "./stats-style";
   import StatsTable from "./stats-table.svelte";

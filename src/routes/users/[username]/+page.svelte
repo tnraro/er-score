@@ -5,7 +5,7 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import { ls } from "$lib/components/ui/loading-progress/state.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
   import { untrack } from "svelte";

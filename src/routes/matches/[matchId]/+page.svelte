@@ -8,7 +8,7 @@
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes.js";
+  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";

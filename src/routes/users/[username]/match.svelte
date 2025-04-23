@@ -3,7 +3,7 @@
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";

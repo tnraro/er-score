@@ -2,6 +2,7 @@ import { db } from "$lib/features/db/client.server";
 import { filledMatches, userRecords } from "$lib/features/db/schema.server";
 import { selectLatestMatch } from "$lib/features/matches/select-latest-match";
 import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server";
+import { ApiQueuePriority } from "$lib/shared/api-queue/index.js";
 import { makeArray } from "$lib/utils/array/make-array.js";
 import { single } from "$lib/utils/array/single";
 import { error, text } from "@sveltejs/kit";
@@ -85,14 +86,17 @@ export async function POST({ url, locals }) {
   return text("done");
   async function processMatch(matchId: number) {
     try {
-      const records = await getUserRecordsByMatchId(matchId);
+      const records = await getUserRecordsByMatchId(matchId, { priority: ApiQueuePriority.Sub });
       const t0 = performance.now();
       const match = imperfectMatchMap.get(matchId);
       const ignoreSet = new Set(match?.userIds);
 
       const updateRecords = records.filter((ur) => !ignoreSet.has(ur.userId));
       if (updateRecords.length > 0) {
-        await db.insert(userRecords).values(updateRecords);
+        await db
+          .insert(userRecords)
+          .values(updateRecords)
+          .onConflictDoNothing({ target: [userRecords.matchId, userRecords.userId] });
       }
       lastMatch = {
         matchId,

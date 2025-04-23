@@ -1,6 +1,6 @@
 <script lang="ts" module>
   import LL from "$i18n/i18n-svelte";
-  import { MatchingMode } from "$lib/features/er-api/shapes";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { tv, type VariantProps } from "tailwind-variants";
 
   export type RankVariants = VariantProps<typeof style>;
