@@ -63,8 +63,12 @@ const en = {
 		text: 'Refresh Records',
 		keyboard: '[F5]',
 	},
+	error: {
+		title: 'Error',
+	},
 	status: {
 		'404': 'Page not found.',
+		'401': 'Unauthorized.',
 	},
 	weapon: {
 		'1': 'Glove',

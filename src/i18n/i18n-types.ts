@@ -202,7 +202,17 @@ type RootTranslation = {
 		 */
 		keyboard: string
 	}
+	error: {
+		/**
+		 * 오​류
+		 */
+		title: string
+	}
 	status: {
+		/**
+		 * 인​증​ ​자​격​ ​증​명​이​ ​없​습​니​다​.
+		 */
+		'401': string
 		/**
 		 * 페​이​지​를​ ​찾​을​ ​수​ ​없​습​니​다​.
 		 */
@@ -4370,7 +4380,17 @@ export type TranslationFunctions = {
 		 */
 		keyboard: () => LocalizedString
 	}
+	error: {
+		/**
+		 * 오류
+		 */
+		title: () => LocalizedString
+	}
 	status: {
+		/**
+		 * 인증 자격 증명이 없습니다.
+		 */
+		'401': () => LocalizedString
 		/**
 		 * 페이지를 찾을 수 없습니다.
 		 */
