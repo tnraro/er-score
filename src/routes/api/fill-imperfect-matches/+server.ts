@@ -13,7 +13,7 @@ export async function POST({ url, locals }) {
   if (locals.adminSession == null) throw error(401);
   if (isUpdating) return text("locked");
   isUpdating = true;
-  const FETCHING_TIME = Number(url.searchParams.get("fetching_time") ?? 30);
+  const FETCHING_TIME = Number(url.searchParams.get("fetching_time") ?? 60);
   const MAX_WAITING_TIME = Number(url.searchParams.get("max_waiting_time") ?? 60000);
 
   const latestMatch = await selectLatestMatch();
@@ -46,12 +46,16 @@ export async function POST({ url, locals }) {
   const t0 = performance.now();
 
   try {
-    await Promise.all(
-      makeArray(end - start)
-        .map((_, i) => start + i + 1)
-        .filter((matchId) => !perfectMatchIdSet.has(matchId))
-        .map((matchId) => processMatch(matchId)),
-    );
+    const chunkSize = 10;
+    for (let j = start + 1; j < end; j += chunkSize) {
+      const length = Math.min(chunkSize, end - j);
+      await Promise.all(
+        makeArray(length)
+          .map((_, i) => j + i)
+          .filter((matchId) => !perfectMatchIdSet.has(matchId))
+          .map((matchId) => processMatch(matchId)),
+      );
+    }
   } catch (e) {
     err = e;
   }
