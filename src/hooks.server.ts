@@ -2,7 +2,7 @@ import type { Locales } from "$i18n/i18n-types";
 import { detectLocale, i18n, isLocale } from "$i18n/i18n-util";
 import { loadAllLocales } from "$i18n/i18n-util.sync";
 import { selectAdminSession } from "$lib/features/admin-auth/db.server";
-import { db } from "$lib/features/db/client.server";
+import { db } from "$lib/shared/db/client.server";
 import type { RequestEvent } from "@sveltejs/kit";
 import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";

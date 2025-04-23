@@ -1,4 +1,4 @@
-import type { UserRecord } from "$lib/features/db/schema.server.js";
+import type { UserRecord } from "$lib/shared/db/schema.server.js";
 import { MatchingMode } from "$lib/shared/er-api/shapes";
 import { getRecentUserRecords } from "$lib/features/user-records/api.server.js";
 import { insertUserRecords } from "$lib/features/user-records/db.server.js";

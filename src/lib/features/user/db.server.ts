@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
-import { db } from "../db/client.server";
-import { users } from "../db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { users } from "$lib/shared/db/schema.server";
 
 export async function updateUser(
   userId: number,

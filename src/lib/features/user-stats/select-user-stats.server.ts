@@ -1,7 +1,7 @@
 import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
 import { and, avg, count, desc, eq, gte, type SQL, sql } from "drizzle-orm";
-import { db } from "../db/client.server";
-import { userRecords } from "../db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { userRecords } from "$lib/shared/db/schema.server";
 
 export type UserStats = Awaited<ReturnType<typeof selectUserStats>>;
 export async function selectUserStats(userId: number, mode?: number) {

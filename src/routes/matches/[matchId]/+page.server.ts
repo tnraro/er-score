@@ -1,5 +1,5 @@
-import { db } from "$lib/features/db/client.server";
-import { userRecords } from "$lib/features/db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { userRecords } from "$lib/shared/db/schema.server";
 import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server.js";
 import { toMatch } from "$lib/features/user-records/to-match.js";
 import { error } from "@sveltejs/kit";

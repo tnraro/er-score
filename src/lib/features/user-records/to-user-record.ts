@@ -1,4 +1,4 @@
-import type { UserRecord } from "$lib/features/db/schema.server";
+import type { UserRecord } from "$lib/shared/db/schema.server";
 import type { UserGame } from "$lib/shared/er-api/types.gen";
 import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";

@@ -1,5 +1,5 @@
-import { db } from "$lib/features/db/client.server";
-import { users } from "$lib/features/db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { users } from "$lib/shared/db/schema.server";
 import { single } from "$lib/utils/array/single";
 import { eq, sql } from "drizzle-orm";
 import { getUser } from "./api.server";

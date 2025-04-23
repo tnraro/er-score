@@ -1,5 +1,5 @@
-import { db } from "$lib/features/db/client.server";
-import { filledMatches, userRecords } from "$lib/features/db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { filledMatches, userRecords } from "$lib/shared/db/schema.server";
 import { selectLatestMatch } from "$lib/features/matches/select-latest-match";
 import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server";
 import { ApiQueuePriority } from "$lib/shared/api-queue/index.js";

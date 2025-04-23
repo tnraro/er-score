@@ -1,7 +1,7 @@
 import { single } from "$lib/utils/array/single";
 import { and, eq, gt, lte } from "drizzle-orm";
-import { db } from "../db/client.server";
-import { adminSessions } from "../db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { adminSessions } from "$lib/shared/db/schema.server";
 
 export interface AdminSession {
   id: string;

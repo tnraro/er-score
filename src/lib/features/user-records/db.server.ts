@@ -1,5 +1,5 @@
-import { db } from "$lib/features/db/client.server";
-import { userRecords } from "$lib/features/db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { userRecords } from "$lib/shared/db/schema.server";
 
 type InsertUserRecord = typeof userRecords.$inferInsert;
 export async function insertUserRecords(values: InsertUserRecord[]) {

@@ -1,5 +1,5 @@
-import { db } from "$lib/features/db/client.server";
-import { userRecords } from "$lib/features/db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { userRecords } from "$lib/shared/db/schema.server";
 import { and, desc, eq, SQL, sql } from "drizzle-orm";
 
 export type RecentMatches = Awaited<ReturnType<typeof selectRecentMatches>>;

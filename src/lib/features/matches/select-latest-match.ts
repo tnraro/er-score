@@ -1,7 +1,7 @@
 import { single } from "$lib/utils/array/single";
 import { desc } from "drizzle-orm";
-import { db } from "../db/client.server";
-import { userRecords } from "../db/schema.server";
+import { db } from "$lib/shared/db/client.server";
+import { userRecords } from "$lib/shared/db/schema.server";
 
 export async function selectLatestMatch() {
   const rows = await db
