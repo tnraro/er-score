@@ -1,10 +1,11 @@
-import { db } from "$lib/shared/db/client.server";
-import { filledMatches, userRecords } from "$lib/shared/db/schema.server";
 import { selectLatestMatch } from "$lib/features/matches/select-latest-match";
 import { getUserRecordsByMatchId } from "$lib/features/user-records/api.server";
 import { ApiQueuePriority } from "$lib/shared/api-queue/index.js";
+import { db } from "$lib/shared/db/client.server";
+import { filledMatches, userRecords } from "$lib/shared/db/schema.server";
 import { makeArray } from "$lib/utils/array/make-array.js";
 import { single } from "$lib/utils/array/single";
+import { formatTime } from "$lib/utils/time/format-time";
 import { error, text } from "@sveltejs/kit";
 import { and, asc, desc, eq, gt, lte, sql } from "drizzle-orm";
 
@@ -184,24 +185,4 @@ async function selectMatches(options?: {
     .from(scanPlan)
     .groupBy(scanPlan.matchId, scanPlan.size);
   return rows;
-}
-const cutoffs = [
-  1,
-  60,
-  3600,
-  86400,
-  7 * 86400,
-  30 * 86400,
-  365 * 86400,
-  Number.POSITIVE_INFINITY,
-].map((x) => x * 1000);
-const units = ["ms", "s", "m", "h", "d", "w", "M", "y"];
-function formatTime(time: number): string {
-  const ms = Math.trunc(time);
-  if (ms === 0) return "0s";
-
-  const unitIndex = cutoffs.findIndex((cutoff) => cutoff > Math.abs(ms));
-  const divider = unitIndex !== 0 ? cutoffs[unitIndex - 1] : 1;
-  const unit = units[unitIndex];
-  return `${Math.trunc(ms / divider)}${unit}`;
 }
