@@ -1270,6 +1270,10 @@ type RootTranslation = {
 			 */
 			'1032002': string
 			/**
+			 * 이​번​ ​마​운​드​는​ ​꽤​ ​거​칠​어​ ​보​이​는​군​.
+			 */
+			'1032003': string
+			/**
 			 * 그​럴​듯​한​ ​계​획​이​라​도​ ​있​는​ ​거​야​?​ ​덤​벼​ ​봐​!
 			 */
 			'1033001': string
@@ -2240,6 +2244,90 @@ type RootTranslation = {
 			 */
 			'7900803': string
 			/**
+			 * 공​격​력​ ​I
+			 */
+			'7910101': string
+			/**
+			 * 공​격​력​ ​I​I
+			 */
+			'7910111': string
+			/**
+			 * 공​격​력​ ​I​I​I
+			 */
+			'7910121': string
+			/**
+			 * 방​어​력​ ​I
+			 */
+			'7910201': string
+			/**
+			 * 방​어​력​ ​I​I
+			 */
+			'7910211': string
+			/**
+			 * 방​어​력​ ​I​I​I
+			 */
+			'7910221': string
+			/**
+			 * 공​격​ ​속​도​ ​I
+			 */
+			'7910301': string
+			/**
+			 * 공​격​ ​속​도​ ​I​I
+			 */
+			'7910311': string
+			/**
+			 * 공​격​ ​속​도​ ​I​I​l
+			 */
+			'7910321': string
+			/**
+			 * 이​동​ ​속​도​ ​I
+			 */
+			'7910401': string
+			/**
+			 * 이​동​ ​속​도​ ​I​I
+			 */
+			'7910411': string
+			/**
+			 * 이​동​ ​속​도​ ​I​l​l
+			 */
+			'7910421': string
+			/**
+			 * 쿨​다​운​ ​감​소​ ​I
+			 */
+			'7910501': string
+			/**
+			 * 쿨​다​운​ ​감​소​ ​I​l
+			 */
+			'7910511': string
+			/**
+			 * 쿨​다​운​ ​감​소​ ​I​l​l
+			 */
+			'7910521': string
+			/**
+			 * 치​명​타​ ​피​해​ ​I
+			 */
+			'7910601': string
+			/**
+			 * 치​명​타​ ​피​해​ ​I​l
+			 */
+			'7910611': string
+			/**
+			 * 치​명​타​ ​피​해​ ​I​l​l
+			 */
+			'7910621': string
+			/**
+			 * 스​킬​ ​증​폭​ ​I
+			 */
+			'7910701': string
+			/**
+			 * 스​킬​ ​증​폭​ ​I​l
+			 */
+			'7910711': string
+			/**
+			 * 스​킬​ ​증​폭​ ​I​l​I
+			 */
+			'7910721': string
+			/**
 			 * 철​벽​ ​I
 			 */
 			'7920101': string
@@ -2487,6 +2575,42 @@ type RootTranslation = {
 			 * 하​이​퍼​ ​크​리​티​컬
 			 */
 			'7923203': string
+			/**
+			 * 오​버​워​치
+			 */
+			'7923302': string
+			/**
+			 * 중​력​장
+			 */
+			'7923401': string
+			/**
+			 * 롤​링​썬​더
+			 */
+			'7923411': string
+			/**
+			 * 대​지​분​쇄
+			 */
+			'7923421': string
+			/**
+			 * 불​굴
+			 */
+			'7923502': string
+			/**
+			 * 진​통​제
+			 */
+			'7923602': string
+			/**
+			 * 최​후​통​첩
+			 */
+			'7923703': string
+			/**
+			 * 찰​나​의​ ​악​몽
+			 */
+			'7923803': string
+			/**
+			 * 카​트​로​즈
+			 */
+			'7923903': string
 		}
 		skinName: {
 			/**
@@ -3158,6 +3282,10 @@ type RootTranslation = {
 			 */
 			'1032002': string
 			/**
+			 * 아​포​칼​립​스​ ​윌​리​엄
+			 */
+			'1032003': string
+			/**
 			 * 니​키
 			 */
 			'1033000': string
@@ -3805,6 +3933,10 @@ type RootTranslation = {
 			 * 이​슈​트​반
 			 */
 			'1080000': string
+			/**
+			 * 니​아
+			 */
+			'1081000': string
 		}
 		characterName: {
 			/**
@@ -5448,6 +5580,10 @@ export type TranslationFunctions = {
 			 */
 			'1032002': () => LocalizedString
 			/**
+			 * 이번 마운드는 꽤 거칠어 보이는군.
+			 */
+			'1032003': () => LocalizedString
+			/**
 			 * 그럴듯한 계획이라도 있는 거야? 덤벼 봐!
 			 */
 			'1033001': () => LocalizedString
@@ -6418,6 +6554,90 @@ export type TranslationFunctions = {
 			 */
 			'7900803': () => LocalizedString
 			/**
+			 * 공격력 I
+			 */
+			'7910101': () => LocalizedString
+			/**
+			 * 공격력 II
+			 */
+			'7910111': () => LocalizedString
+			/**
+			 * 공격력 III
+			 */
+			'7910121': () => LocalizedString
+			/**
+			 * 방어력 I
+			 */
+			'7910201': () => LocalizedString
+			/**
+			 * 방어력 II
+			 */
+			'7910211': () => LocalizedString
+			/**
+			 * 방어력 III
+			 */
+			'7910221': () => LocalizedString
+			/**
+			 * 공격 속도 I
+			 */
+			'7910301': () => LocalizedString
+			/**
+			 * 공격 속도 II
+			 */
+			'7910311': () => LocalizedString
+			/**
+			 * 공격 속도 IIl
+			 */
+			'7910321': () => LocalizedString
+			/**
+			 * 이동 속도 I
+			 */
+			'7910401': () => LocalizedString
+			/**
+			 * 이동 속도 II
+			 */
+			'7910411': () => LocalizedString
+			/**
+			 * 이동 속도 Ill
+			 */
+			'7910421': () => LocalizedString
+			/**
+			 * 쿨다운 감소 I
+			 */
+			'7910501': () => LocalizedString
+			/**
+			 * 쿨다운 감소 Il
+			 */
+			'7910511': () => LocalizedString
+			/**
+			 * 쿨다운 감소 Ill
+			 */
+			'7910521': () => LocalizedString
+			/**
+			 * 치명타 피해 I
+			 */
+			'7910601': () => LocalizedString
+			/**
+			 * 치명타 피해 Il
+			 */
+			'7910611': () => LocalizedString
+			/**
+			 * 치명타 피해 Ill
+			 */
+			'7910621': () => LocalizedString
+			/**
+			 * 스킬 증폭 I
+			 */
+			'7910701': () => LocalizedString
+			/**
+			 * 스킬 증폭 Il
+			 */
+			'7910711': () => LocalizedString
+			/**
+			 * 스킬 증폭 IlI
+			 */
+			'7910721': () => LocalizedString
+			/**
 			 * 철벽 I
 			 */
 			'7920101': () => LocalizedString
@@ -6665,6 +6885,42 @@ export type TranslationFunctions = {
 			 * 하이퍼 크리티컬
 			 */
 			'7923203': () => LocalizedString
+			/**
+			 * 오버워치
+			 */
+			'7923302': () => LocalizedString
+			/**
+			 * 중력장
+			 */
+			'7923401': () => LocalizedString
+			/**
+			 * 롤링썬더
+			 */
+			'7923411': () => LocalizedString
+			/**
+			 * 대지분쇄
+			 */
+			'7923421': () => LocalizedString
+			/**
+			 * 불굴
+			 */
+			'7923502': () => LocalizedString
+			/**
+			 * 진통제
+			 */
+			'7923602': () => LocalizedString
+			/**
+			 * 최후통첩
+			 */
+			'7923703': () => LocalizedString
+			/**
+			 * 찰나의 악몽
+			 */
+			'7923803': () => LocalizedString
+			/**
+			 * 카트로즈
+			 */
+			'7923903': () => LocalizedString
 		}
 		skinName: {
 			/**
@@ -7336,6 +7592,10 @@ export type TranslationFunctions = {
 			 */
 			'1032002': () => LocalizedString
 			/**
+			 * 아포칼립스 윌리엄
+			 */
+			'1032003': () => LocalizedString
+			/**
 			 * 니키
 			 */
 			'1033000': () => LocalizedString
@@ -7983,6 +8243,10 @@ export type TranslationFunctions = {
 			 * 이슈트반
 			 */
 			'1080000': () => LocalizedString
+			/**
+			 * 니아
+			 */
+			'1081000': () => LocalizedString
 		}
 		characterName: {
 			/**
