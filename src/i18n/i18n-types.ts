@@ -1737,6 +1737,10 @@ type RootTranslation = {
 			 * 도​를​ ​추​구​하​는​ ​자​,​ ​얽​매​이​지​ ​말​지​어​다​.
 			 */
 			'1077001': string
+			/**
+			 * 어​이​,​ ​지​금​ ​밟​고​ ​있​는​ ​땅​이​ ​누​구​ ​구​역​인​지​ ​알​고​는​ ​있​는​ ​거​야​?
+			 */
+			'1078001': string
 		}
 		itemGrade: {
 			/**
@@ -3926,6 +3930,10 @@ type RootTranslation = {
 			 */
 			'1078000': string
 			/**
+			 * 뒷​골​목​ ​히​스​이
+			 */
+			'1078001': string
+			/**
 			 * 유​스​티​나
 			 */
 			'1079000': string
@@ -6047,6 +6055,10 @@ export type TranslationFunctions = {
 			 * 도를 추구하는 자, 얽매이지 말지어다.
 			 */
 			'1077001': () => LocalizedString
+			/**
+			 * 어이, 지금 밟고 있는 땅이 누구 구역인지 알고는 있는 거야?
+			 */
+			'1078001': () => LocalizedString
 		}
 		itemGrade: {
 			/**
@@ -8235,6 +8247,10 @@ export type TranslationFunctions = {
 			 * 히스이
 			 */
 			'1078000': () => LocalizedString
+			/**
+			 * 뒷골목 히스이
+			 */
+			'1078001': () => LocalizedString
 			/**
 			 * 유스티나
 			 */

@@ -456,6 +456,7 @@ const en = {
 			'1075001': "I'll play a beautiful melody perfect for this night.",
 			'1076001': "Ah, ah! It's finally my turn, right?",
 			'1077001': 'Those who seek the path should never be bound.',
+			'1078001': "Well, well, well... Look who's here. Didn't I tell you before? This is my turf.",
 		},
 		itemGrade: {
 			None: 'None',
@@ -1009,6 +1010,7 @@ const en = {
 			'1077000': 'Yumin',
 			'1077001': 'White Crane Yumin',
 			'1078000': 'Hisui',
+			'1078001': 'Street Fiend Hisui',
 			'1079000': 'Justyna',
 			'1080000': 'Istvan',
 			'1081000': 'NiaH',
