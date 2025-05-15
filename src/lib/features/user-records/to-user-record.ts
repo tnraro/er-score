@@ -4,7 +4,7 @@ import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";
 import { MatchingMode } from "../../shared/er-api/shapes";
 
-export function toUserRecord(game: UserGame): UserRecord {
+export function toUserRecord(game: UserGame): UserRecord & { data: UserRecordData } {
   return {
     matchId: game.gameId,
     userId: game.userNum,

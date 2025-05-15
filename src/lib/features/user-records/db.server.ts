@@ -1,8 +1,22 @@
 import { db } from "$lib/shared/db/client.server";
-import { userRecords } from "$lib/shared/db/schema.server";
+import { userRecordData, userRecords } from "$lib/shared/db/schema.server";
 
 type InsertUserRecord = typeof userRecords.$inferInsert;
-export async function insertUserRecords(values: InsertUserRecord[]) {
+type InsertUserRecordData = typeof userRecordData.$inferInsert;
+export async function insertUserRecords(values: (InsertUserRecord & InsertUserRecordData)[]) {
   if (values.length === 0) return;
-  await db.insert(userRecords).values(values).onConflictDoNothing();
+  const urs: InsertUserRecord[] = [];
+  const urd: InsertUserRecordData[] = [];
+  for (const { data, ...userRecord } of values) {
+    urs.push(userRecord);
+    urd.push({
+      matchId: userRecord.matchId,
+      userId: userRecord.userId,
+      data,
+    });
+  }
+  await Promise.allSettled([
+    db.insert(userRecords).values(urs).onConflictDoNothing(),
+    db.insert(userRecordData).values(urd).onConflictDoNothing(),
+  ]);
 }

@@ -119,6 +119,20 @@ export const userRecords = pgTable(
   ],
 );
 
+export const userRecordData = pgTable(
+  "user_record_data",
+  {
+    matchId: integer().notNull(),
+    userId: integer().notNull(),
+    data: jsonb().$type<UserRecordData>(),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.matchId, t.userId],
+    }),
+  ],
+);
+
 export const filledMatches = pgTable("filled_matches", {
   version: text().primaryKey(),
   latestMatchId: integer().notNull(),
