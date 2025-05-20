@@ -38,6 +38,7 @@ export async function synchronizeMatches(options: {
   const t0 = performance.now();
   const deferredTasks: Promise<void>[] = [];
   let count = 0;
+  let currentFailRatio = failRatioForEarlyStop;
   try {
     for (const chunk of chunks(start, end, chunkSize)) {
       count += 1;
@@ -46,9 +47,16 @@ export async function synchronizeMatches(options: {
       const [newUserRecords, errors] = await getNewUserRecordsByIdRange(start, end);
 
       deferredTasks.push(deferrableTask(newUserRecords, errors));
-      if (errors.length >= failRatioForEarlyStop * chunkSize) {
-        console.info(`early break: ${start}`);
-        break;
+      const failRatio = Math.min(currentFailRatio, 1);
+      console.log(errors.length, failRatio * chunkSize, currentFailRatio);
+      if (errors.length >= failRatio * chunkSize) {
+        currentFailRatio -= failRatio;
+        if (currentFailRatio <= 0) {
+          console.info(`early break: ${start}`);
+          break;
+        }
+      } else {
+        currentFailRatio = failRatioForEarlyStop;
       }
     }
     const [_, errors] = await parallel(deferredTasks);
