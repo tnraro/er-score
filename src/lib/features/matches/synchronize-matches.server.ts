@@ -48,7 +48,6 @@ export async function synchronizeMatches(options: {
 
       deferredTasks.push(deferrableTask(newUserRecords, errors));
       const failRatio = Math.min(currentFailRatio, 1);
-      console.log(errors.length, failRatio * chunkSize, currentFailRatio);
       if (errors.length >= failRatio * chunkSize) {
         currentFailRatio -= failRatio;
         if (currentFailRatio <= 0) {
