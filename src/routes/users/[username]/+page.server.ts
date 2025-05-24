@@ -1,5 +1,3 @@
-import type { UserRecord } from "$lib/shared/db/schema.server.js";
-import { MatchingMode } from "$lib/shared/er-api/shapes";
 import { selectMatchesCount } from "$lib/features/match-summary/select-matches-count.server";
 import {
   recentMatchesSize,
@@ -12,8 +10,9 @@ import {
 } from "$lib/features/user-records/api.server.js";
 import { insertUserRecords } from "$lib/features/user-records/db.server.js";
 import { selectUserStats } from "$lib/features/user-stats/select-user-stats.server.js";
-import { updateUser } from "$lib/features/user/db.server.js";
+import { updateUserByUserRecord } from "$lib/features/user/db.server.js";
 import { queryUser, type UserQueryResult } from "$lib/features/user/query-user.server.js";
+import { type UserRecord } from "$lib/shared/db/schema.server.js";
 import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
 import { error } from "@sveltejs/kit";
 
@@ -61,15 +60,7 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
       updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
     }
     const latestUserRecord = recentUserRecords.at(0);
-    await updateUser(user.id, {
-      updatedMatchId: latestUserRecord?.matchId,
-      name:
-        latestUserRecord != null && user.name !== latestUserRecord.nickname
-          ? latestUserRecord.nickname
-          : undefined,
-      level: latestUserRecord?.data?.accountLevel ?? undefined,
-      rp: latestUserRecord?.mode === MatchingMode.Rank ? latestUserRecord?.rp : undefined,
-    });
+    await updateUserByUserRecord(user, latestUserRecord);
   }
 
   {

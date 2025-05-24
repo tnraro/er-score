@@ -105,8 +105,6 @@ export const userRecords = pgTable(
     isOmegaKilled: boolean().notNull(),
     isGammaKilled: boolean().notNull(),
     clutchCount: integer().notNull(),
-
-    data: jsonb().$type<UserRecordData>(),
   },
   (t) => [
     primaryKey({
