@@ -9,6 +9,7 @@ import { groupBy } from "$lib/utils/map/group-by";
 import { formatTime } from "$lib/utils/time/format-time";
 import { and, desc, gte, lt, sql } from "drizzle-orm";
 import { getUserRecordsByMatchId } from "../user-records/api.server";
+import { insertUserRecords } from "../user-records/db.server";
 
 export const matchesSynchronizationState = {
   isSynchronizing: false,
@@ -73,7 +74,7 @@ export async function synchronizeMatches(options: {
 
   return;
   async function deferrableTask(newUserRecords: UserRecord[], errors: any[]) {
-    await insertNewUserRecords(newUserRecords);
+    await insertUserRecords(newUserRecords);
     await applyToFilledMatches(newUserRecords);
     handleErrors(errors);
   }
@@ -114,14 +115,6 @@ function handleErrors(errors: unknown[]) {
     } else {
       console.error(error);
     }
-  }
-}
-async function insertNewUserRecords(newRecords: UserRecord[]) {
-  if (newRecords.length > 0) {
-    await db
-      .insert(userRecords)
-      .values(newRecords)
-      .onConflictDoNothing({ target: [userRecords.matchId, userRecords.userId] });
   }
 }
 async function applyToFilledMatches(newUserRecords: UserRecord[]) {
