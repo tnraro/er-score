@@ -6,12 +6,8 @@ export async function GET({ params }) {
   const version = params.version;
   const mode = Number(params.mode);
 
-  const stats = getCharacterStats(version, mode);
-  return json({
-    version,
-    mode,
-    stats,
-  });
+  const characterStats = await getCharacterStats(version, mode);
+  return json(characterStats);
 }
 
 export async function POST({ params, locals }) {

@@ -1,5 +1,5 @@
 import { db } from "$lib/shared/db/client.server";
-import { cacheCharacterStats, userRecords } from "$lib/shared/db/schema.server";
+import { characterStats, userRecords } from "$lib/shared/db/schema.server";
 import { cast, percentileCont } from "$lib/shared/db/utils.server";
 import { single } from "$lib/utils/array/single";
 import { and, avg, count, eq, gte, lte, not, SQL, sql } from "drizzle-orm";
@@ -19,15 +19,11 @@ export async function synchronizeCharacterStats(version: string, mode: number) {
     playTimePercentile.p90,
   );
 
-  await upsertStats(
-    stats.map((stat) => ({
-      version,
-      mode,
-      characterId: stat.characterId,
-      weaponId: stat.weaponId,
-      data: stat,
-    })),
-  );
+  await updateCharacterStats({
+    version,
+    mode,
+    data: stats,
+  });
 
   return {
     stats,
@@ -109,19 +105,15 @@ async function groupUserRecordsByCharacterIdAndWeaponId(
   }
 }
 
-async function upsertStats(insertingStats: (typeof cacheCharacterStats.$inferInsert)[]) {
+async function updateCharacterStats(value: typeof characterStats.$inferInsert) {
   await db
-    .insert(cacheCharacterStats)
-    .values(insertingStats)
+    .insert(characterStats)
+    .values(value)
     .onConflictDoUpdate({
-      target: [
-        cacheCharacterStats.version,
-        cacheCharacterStats.mode,
-        cacheCharacterStats.characterId,
-        cacheCharacterStats.weaponId,
-      ],
+      target: [characterStats.version, characterStats.mode],
       set: {
-        data: sql.raw(`excluded.${cacheCharacterStats.data.name}`),
+        data: sql.raw(`excluded.${characterStats.data.name}`),
+        updatedAt: sql.raw(`current_timestamp`),
       },
     });
 }

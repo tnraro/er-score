@@ -1,3 +1,4 @@
+import type { CharacterStat } from "$lib/features/character-stats/synchronize-character-stats.server";
 import type { UserRecordData } from "$lib/features/user-records/to-user-record";
 import { sql } from "drizzle-orm";
 import {
@@ -137,14 +138,13 @@ export const filledMatches = pgTable("filled_matches", {
   createdAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
 });
 
-export const cacheCharacterStats = pgTable(
-  "cache_character_stats",
+export const characterStats = pgTable(
+  "character_stats",
   {
     version: text().notNull(),
     mode: smallint().notNull(),
-    characterId: smallint().notNull(),
-    weaponId: smallint().notNull(),
-    data: json().notNull(),
+    data: json().$type<CharacterStat[]>().notNull(),
+    updatedAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [primaryKey({ columns: [t.version, t.mode, t.characterId, t.weaponId] })],
+  (t) => [primaryKey({ columns: [t.version, t.mode] })],
 );
