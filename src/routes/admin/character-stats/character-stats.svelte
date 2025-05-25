@@ -248,8 +248,8 @@
   import LL from "$i18n/i18n-svelte";
 
   import type { TranslationFunctions } from "$i18n/i18n-types.js";
+  import type { CharacterStat } from "$lib/features/character-stats/synchronize-character-stats.server";
   import Chart from "$lib/features/chart/chart.svelte";
-  import type { CharacterStat } from "../../api/character-stats/versions/[version]/mode/[mode]/+server";
 
   interface Props {
     version: string;
