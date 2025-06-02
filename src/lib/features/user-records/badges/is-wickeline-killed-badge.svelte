@@ -4,4 +4,8 @@
   let { killed } = $props();
 </script>
 
-<PrimitiveBadge show={killed} class="bg-green-300" description={$LL.userRecords.isWickelineKilled()} />
+<PrimitiveBadge
+  show={killed}
+  class="bg-green-300"
+  description={$LL.userRecords.isWickelineKilled()}
+/>
