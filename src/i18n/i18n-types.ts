@@ -1173,6 +1173,10 @@ type RootTranslation = {
 			 */
 			'1026002': string
 			/**
+			 * 세​기​의​ ​발​명​은​ ​재​능​과​ ​노​력​,​ ​그​리​고​ ​카​페​인​에​서​ ​나​오​는​ ​법​이​야​.
+			 */
+			'1026003': string
+			/**
 			 * 미​션​ ​클​리​어​,​ ​다​음​으​로​ ​넘​어​갈​까​요​?
 			 */
 			'1027001': string
@@ -1664,6 +1668,11 @@ type RootTranslation = {
 		​<​c​o​l​o​r​=​#​F​7​8​1​8​1​>​방​해​만​ ​하​지​ ​마​.​<​/​c​o​l​o​r​>
 			 */
 			'1065002': string
+			/**
+			 * <​c​o​l​o​r​=​#​0​0​F​F​F​F​>​이​거​ ​내​가​ ​진​짜​ ​좋​아​하​는​ ​노​랜​데​,​ ​들​어​볼​래​?​<​/​c​o​l​o​r​>​ ​
+		​<​c​o​l​o​r​=​#​F​7​8​1​8​1​>​내​ ​건​ ​이​미​ ​들​려​줬​어​.​<​/​c​o​l​o​r​>
+			 */
+			'1065003': string
 			/**
 			 * 이​것​으​로​ ​역​사​가​ ​또​ ​한​ ​번​ ​뒤​집​어​지​겠​군​.
 			 */
@@ -2838,6 +2847,10 @@ type RootTranslation = {
 			 */
 			'1010005': string
 			/**
+			 * 사​관​후​보​생​ ​리​ ​다​이​린
+			 */
+			'1010006': string
+			/**
 			 * 유​키
 			 */
 			'1011000': string
@@ -3165,6 +3178,10 @@ type RootTranslation = {
 			 * 코​즈​믹​ ​엔​지​니​어​ ​바​바​라
 			 */
 			'1026002': string
+			/**
+			 * 연​구​원​ ​바​바​라
+			 */
+			'1026003': string
 			/**
 			 * 알​렉​스
 			 */
@@ -5491,6 +5508,10 @@ export type TranslationFunctions = {
 			 */
 			'1026002': () => LocalizedString
 			/**
+			 * 세기의 발명은 재능과 노력, 그리고 카페인에서 나오는 법이야.
+			 */
+			'1026003': () => LocalizedString
+			/**
 			 * 미션 클리어, 다음으로 넘어갈까요?
 			 */
 			'1027001': () => LocalizedString
@@ -5982,6 +6003,11 @@ export type TranslationFunctions = {
 		<color=#F78181>방해만 하지 마.</color>
 			 */
 			'1065002': () => LocalizedString
+			/**
+			 * <color=#00FFFF>이거 내가 진짜 좋아하는 노랜데, 들어볼래?</color> 
+		<color=#F78181>내 건 이미 들려줬어.</color>
+			 */
+			'1065003': () => LocalizedString
 			/**
 			 * 이것으로 역사가 또 한 번 뒤집어지겠군.
 			 */
@@ -7156,6 +7182,10 @@ export type TranslationFunctions = {
 			 */
 			'1010005': () => LocalizedString
 			/**
+			 * 사관후보생 리 다이린
+			 */
+			'1010006': () => LocalizedString
+			/**
 			 * 유키
 			 */
 			'1011000': () => LocalizedString
@@ -7483,6 +7513,10 @@ export type TranslationFunctions = {
 			 * 코즈믹 엔지니어 바바라
 			 */
 			'1026002': () => LocalizedString
+			/**
+			 * 연구원 바바라
+			 */
+			'1026003': () => LocalizedString
 			/**
 			 * 알렉스
 			 */
