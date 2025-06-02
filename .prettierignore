@@ -1,7 +1,11 @@
 # Package Managers
 package-lock.json
 pnpm-lock.yaml
+pnpm-workspace.yaml
 yarn.lock
+
+.vscode
 
 src/i18n/formatters.ts
 src/i18n/i18n-*.ts
+src/i18n/*/index.ts
