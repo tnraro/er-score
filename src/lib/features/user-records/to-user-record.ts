@@ -1,6 +1,6 @@
+import { calcScore } from "$lib/features/score/calc-score";
 import type { UserRecord } from "$lib/shared/db/schema.server";
 import type { UserGame } from "$lib/shared/er-api/types.gen";
-import { calcScore } from "$lib/features/score/calc-score";
 import { omit } from "$lib/utils/object/omit";
 import { MatchingMode } from "../../shared/er-api/shapes";
 
@@ -41,7 +41,7 @@ export function toUserRecord(game: UserGame): UserRecord & { data: UserRecordDat
     damageTakenFromPlayers: game.damageFromPlayer,
     damageDealtToMonsters: game.damageToMonster,
     healingAmount: game.teamRecover,
-    rpGain: rankOrNull(game.matchingMode, game.mmrGainInGame),
+    rpGain: rankOrNull(game.matchingMode, game.mmrGain),
     rp: rankOrNull(game.matchingMode, game.mmrAfter),
     matchingAverageRp: rankOrNull(game.matchingMode, game.mmrAvg),
     scoredPoints: game.scoredPoint.reduce((a, b) => a + b, 0),
@@ -170,5 +170,6 @@ function toData(game: UserGame) {
     "viewContribution",
     "mmrAfter",
     "mmrAvg",
+    "mmrGain",
   ]);
 }
