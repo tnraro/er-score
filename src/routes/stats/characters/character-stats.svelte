@@ -227,7 +227,8 @@
   const clusterNames = [...Object.keys(clusters)] as (keyof typeof clusters)[];
 
   const labels = {
-    score: "점수",
+    scoreAvg: "점수",
+    rpGainAvg: "RP 획득량",
     halfRateAvg: "반타작률",
     damageDealtToPlayersPerMinAvg: "가한 딜/분",
     damageTakenFromPlayersPerMinAvg: "받은 딜/분",
