@@ -3,6 +3,7 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import { gotoUsers, parseUsernames } from "$lib/components/ui/search-form/search-form-utils";
+  import { navItems } from "$lib/features/header/consts";
 
   let { children } = $props();
 </script>
@@ -15,7 +16,11 @@
 
     <nav>
       <ul>
-        <li><a href="/stats/characters">실험체 통계</a></li>
+        {#each navItems as item (item.url)}
+          <li>
+            <a href={item.url}>{item.content()}</a>
+          </li>
+        {/each}
       </ul>
     </nav>
 
