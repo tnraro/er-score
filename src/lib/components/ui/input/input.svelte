@@ -31,7 +31,7 @@
 </script>
 
 <script lang="ts">
-  type Props = InputVariants & HTMLInputAttributes;
+  type Props = InputVariants & Omit<HTMLInputAttributes, "size">;
   let { size, rounded, class: className, ...rest }: Props = $props();
 </script>
 
