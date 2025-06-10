@@ -8,7 +8,6 @@
   import NumericUpdown from "$lib/components/ui/numeric/numeric-updown.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
-  import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
@@ -260,9 +259,6 @@
 {/snippet}
 
 <div class="bg-yellow-50 text-center">WIP</div>
-<div class="grid place-items-center py-8">
-  <SearchForm username={myName} />
-</div>
 
 <main class="container mx-auto space-y-8 rounded-2xl bg-white p-4">
   <div class="flex items-baseline text-sm">

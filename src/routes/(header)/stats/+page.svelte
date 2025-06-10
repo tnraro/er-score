@@ -2,10 +2,9 @@
   import { page } from "$app/state";
   import LL from "$i18n/i18n-svelte.js";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
-  import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
   import { style } from "$lib/features/user-stats/stats-style.js";
   import Stats from "$lib/features/user-stats/stats.svelte";
+  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
 
   let { data } = $props();
 
@@ -39,10 +38,6 @@
 
   const c = style();
 </script>
-
-<div class="grid place-items-center py-8">
-  <SearchForm />
-</div>
 
 <div class="mx-auto mb-4 flex overflow-clip rounded-2xl bg-white lg:w-94">
   {#each modes as m (m.id)}

@@ -4,9 +4,8 @@
   import LL from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import { ls } from "$lib/components/ui/loading-progress/state.svelte";
-  import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import Stats from "$lib/features/user-stats/stats.svelte";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
   import { untrack } from "svelte";
   import Match from "./match.svelte";
@@ -33,10 +32,6 @@
     return ls.do(() => invalidate(`users:${page.params.username}`));
   }
 </script>
-
-<div class="grid place-items-center py-8">
-  <SearchForm username={data.user.name} />
-</div>
 
 <main
   class="container mx-auto flex flex-col gap-8 px-4 sm:w-105 lg:w-auto lg:flex-row-reverse lg:justify-center"
