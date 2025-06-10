@@ -46,6 +46,7 @@ const selectMatchPlan = db
     team: userRecords.team,
     score: userRecords.score,
     rank: userRecords.rank,
+    rpGain: userRecords.rpGain,
     damageDealtToPlayers: userRecords.damageDealtToPlayers,
     damageTakenFromPlayers: userRecords.damageTakenFromPlayers,
     healingAmount: userRecords.healingAmount,

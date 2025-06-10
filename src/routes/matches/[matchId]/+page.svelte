@@ -5,13 +5,14 @@
   import ErItem from "$lib/components/ui/er/er-item.svelte";
   import ErTrait from "$lib/components/ui/er/er-trait.svelte";
   import Icon from "$lib/components/ui/icon/icon.svelte";
+  import NumericUpdown from "$lib/components/ui/numeric/numeric-updown.svelte";
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import SearchForm from "$lib/components/ui/search-form/search-form.svelte";
-  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
+  import { MatchingMode } from "$lib/shared/er-api/shapes.js";
   import { formatNumber } from "$lib/utils/number/format-number.js";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time.js";
   import type { Snippet } from "svelte";
@@ -65,6 +66,11 @@
       heading: () => "",
       render: summary_badges,
     },
+    rpGain: {
+      heading: () => $LL.userRecords.heading.rpGain(),
+      render: summary_rpGain,
+      sortKey: (record) => record.rpGain ?? 0,
+    },
     score: {
       heading: () => $LL.userRecords.heading.score(),
       render: summary_score,
@@ -114,6 +120,11 @@
     ["score", "desc"],
     ["rank", "asc"],
   ]);
+  $effect(() => {
+    if (data.match.mode !== MatchingMode.Rank && data.match.mode !== MatchingMode.Union) {
+      visibleColumns.delete("rpGain");
+    }
+  });
   interface Column extends ColumnOptions {
     key: ColumnName;
     sortingMethod?: "asc" | "desc";
@@ -158,6 +169,11 @@
       <div class="self-center rounded-full bg-yellow-400 px-1 text-xs text-yellow-900">me</div>
     {/if}
   </a>
+{/snippet}
+{#snippet summary_rpGain(record: UserRecordType)}
+  {#if record.rpGain != null}
+    <NumericUpdown class="text-sm" value={record.rpGain} />
+  {/if}
 {/snippet}
 {#snippet summary_score(record: UserRecordType)}
   <Score score={record.score} />
