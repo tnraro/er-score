@@ -2,12 +2,13 @@
   import LL, { locale } from "$i18n/i18n-svelte";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import Delimiter from "$lib/components/ui/delimiter/delimiter.svelte";
+  import NumericUpdown from "$lib/components/ui/numeric/numeric-updown.svelte";
   import Numeric from "$lib/components/ui/numeric/numeric.svelte";
-  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import Score from "$lib/features/score/score.svelte";
   import Rank from "$lib/features/user-records/rank.svelte";
   import UserRecordBadges from "$lib/features/user-records/user-record-badges.svelte";
   import UserRecord from "$lib/features/user-records/user-record.svelte";
+  import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "./$types";
@@ -47,6 +48,9 @@
     <UserRecord class="text-sm font-bold select-none">
       <div class="w-8 flex-none"></div>
       <div class="min-w-0 flex-1 overflow-clip">{$LL.userRecords.heading.name()}</div>
+      {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}
+        <div class="w-10">{$LL.userRecords.heading.rpGain()}</div>
+      {/if}
       <div class="w-10">{$LL.userRecords.heading.score()}</div>
       <div class="flex gap-x-2 text-sm">
         <Numeric>{$LL.userRecords.heading.k()}</Numeric>
@@ -73,6 +77,13 @@
             isWickelineKilled={result.isWickelineKilled}
           />
         </div>
+        {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}
+          <div class="w-10 text-sm">
+            {#if result.rpGain != null}
+              <NumericUpdown value={result.rpGain} />
+            {/if}
+          </div>
+        {/if}
         <Score score={result.score} />
         <div class="flex gap-x-2 text-sm">
           <Numeric>{result.kills}</Numeric>

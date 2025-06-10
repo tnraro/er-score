@@ -24,6 +24,7 @@ const ko = {
 			damageTakenFromPlayers: '탱',
 			healingAmount: '힐',
 			trait: '특성',
+			rpGain: 'RP',
 		},
 		value: {
 			win: '승',

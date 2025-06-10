@@ -84,6 +84,10 @@ type RootTranslation = {
 			 * 특​성
 			 */
 			trait: string
+			/**
+			 * R​P
+			 */
+			rpGain: string
 		}
 		value: {
 			/**
@@ -4423,6 +4427,10 @@ export type TranslationFunctions = {
 			 * 특성
 			 */
 			trait: () => LocalizedString
+			/**
+			 * RP
+			 */
+			rpGain: () => LocalizedString
 		}
 		value: {
 			/**

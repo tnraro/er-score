@@ -24,6 +24,7 @@ const en = {
 			damageTakenFromPlayers: 'Damage Taken',
 			healingAmount: 'Healing',
 			trait: 'Trait',
+			rpGain: 'RP',
 		},
 		value: {
 			win: 'Win',
