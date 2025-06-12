@@ -335,3 +335,9 @@ export interface User {
   userNum: number;
   nickname: string;
 }
+
+export interface DataErResponse<Data> {
+  code: number;
+  message: string;
+  data: Data;
+}

@@ -1,11 +1,9 @@
-import { env } from "$env/dynamic/public";
-
 export interface Character {
   code: number;
   name: string;
 }
 export async function getCharacters(fetch: typeof window.fetch): Promise<Character[]> {
-  const res = await fetch(`${env.PUBLIC_STATIC_URL}/data/character.json`);
+  const res = await fetch(`/api/static-data/Character`);
   return await res.json();
 }
 
@@ -18,11 +16,11 @@ export interface Item {
 }
 
 export async function getItems(fetch: typeof window.fetch): Promise<Item[]> {
-  const res = await Promise.all([requestItems("item-weapon"), requestItems("item-armor")]);
+  const res = await Promise.all([requestItems("ItemWeapon"), requestItems("ItemArmor")]);
   return res.flat();
 
   async function requestItems(name: string) {
-    const res = await fetch(`${env.PUBLIC_STATIC_URL}/data/${name}.json`);
+    const res = await fetch(`/api/static-data/${name}`);
     return await res.json();
   }
 }

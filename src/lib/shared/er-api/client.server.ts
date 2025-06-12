@@ -1,5 +1,5 @@
 import { ApiQueue, ApiQueuePriority } from "$lib/shared/api-queue";
-import type { UserGamesErResponse, UserNicknameErResponse } from "./types.gen";
+import type { DataErResponse, UserGamesErResponse, UserNicknameErResponse } from "./types.gen";
 
 export interface ErApiOptions {
   host: string;
@@ -54,6 +54,9 @@ export class ErApiClient {
     const url = new URL(`/v1/user/games/${userNum}`, this.#host);
     if (next != null) url.searchParams.append("next", next.toString());
     return this.get<UserGamesErResponse>(url, options);
+  }
+  getData<Data>(key: string, options?: ErApiRequestOptions) {
+    return this.get<DataErResponse<Data>>(`/v2/data/${key}`, options);
   }
 }
 
