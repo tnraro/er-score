@@ -4,11 +4,11 @@
   import LL from "$i18n/i18n-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import { ls } from "$lib/components/ui/loading-progress/state.svelte";
+  import MatchSummaryView from "$lib/features/match-summary/match-summary-view.svelte";
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
   import { untrack } from "svelte";
-  import Match from "./match.svelte";
   import Pagination from "./pagination.svelte";
 
   let { data } = $props();
@@ -70,7 +70,7 @@
     <Pagination pathname={page.url.pathname} maxPages={data.maxPages} {mode} page={currentPage} />
     {#if data.matches.length > 0}
       {#each data.matches as match (match.matchId)}
-        <Match {...match} me={data.user} />
+        <MatchSummaryView {...match} me={data.user} />
       {/each}
     {:else}
       <div class="h-lvh">{$LL.recentMatches.noData()}</div>

@@ -11,7 +11,7 @@
   import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
-  import type { PageData } from "./$types";
+  import type { PageData } from "../../../routes/(header)/users/[username]/$types";
 
   type Props = { me: { id: number; name: string } } & PageData["matches"][0];
   let { me, records, mode, teamSize, matchId, startedAt }: Props = $props();
