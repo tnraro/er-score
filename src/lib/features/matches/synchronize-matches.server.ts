@@ -1,6 +1,7 @@
 import { ApiQueuePriority } from "$lib/shared/api-queue";
 import { db } from "$lib/shared/db/client.server";
 import { filledMatches, userRecords, type UserRecord } from "$lib/shared/db/schema.server";
+import { ExclusiveLock } from "$lib/shared/lock/exclusive-lock";
 import { parallel } from "$lib/shared/task/parallel";
 import { makeArray } from "$lib/utils/array/make-array";
 import { single } from "$lib/utils/array/single";
@@ -11,97 +12,98 @@ import { and, desc, gte, lt, sql } from "drizzle-orm";
 import { getUserRecordsByMatchId } from "../user-records/api.server";
 import { insertUserRecords } from "../user-records/db.server";
 
-export const matchesSynchronizationState = {
-  isSynchronizing: false,
-};
+export function getMatchesSynchronizationStatus() {
+  return { isSynchronizing: lock.locked };
+}
 
-export async function synchronizeMatches(options: {
-  targetMatchId?: number;
-  fetchCount?: number;
-  startFromMatchId?: number;
-  chunkSize?: number;
-  failRatioForEarlyStop?: number;
-}) {
-  if (matchesSynchronizationState.isSynchronizing) throw new Error("synchronizing");
-  matchesSynchronizationState.isSynchronizing = true;
-  const start = options.startFromMatchId ?? ((await selectLastUpdatedMatchId()) ?? -1) + 1;
-  const end = Math.max(options.targetMatchId ?? 0, start + (options.fetchCount ?? 0) - 1);
-  const chunkSize = options.chunkSize ?? 10;
-  const failRatioForEarlyStop = options.failRatioForEarlyStop ?? 2;
+const lock = new ExclusiveLock();
+export const synchronizeMatches = ExclusiveLock.withAsync(
+  async (options: {
+    targetMatchId?: number;
+    fetchCount?: number;
+    startFromMatchId?: number;
+    chunkSize?: number;
+    failRatioForEarlyStop?: number;
+  }) => {
+    const start = options.startFromMatchId ?? ((await selectLastUpdatedMatchId()) ?? -1) + 1;
+    const end = Math.max(options.targetMatchId ?? 0, start + (options.fetchCount ?? 0) - 1);
+    const chunkSize = options.chunkSize ?? 10;
+    const failRatioForEarlyStop = options.failRatioForEarlyStop ?? 2;
 
-  const matches = await selectMatchesByIdRange(start, end);
-  const perfectMatchIdSet = getPerfectMatchIdSet(matches);
-  const imperfectMatchMap = getImperfectMatchMap(matches);
-
-  console.info(
-    `A total of ${end - start + 1} matches will be synchronized from ${start} to ${end}. Estimated to take ${formatTime(30 * (end - start + 1))}`,
-  );
-  const t0 = performance.now();
-  const deferredTasks: Promise<void>[] = [];
-  let count = 0;
-  let currentFailRatio = failRatioForEarlyStop;
-  try {
-    for (const chunk of chunks(start, end, chunkSize)) {
-      count += 1;
-      const [start, end] = chunk;
-
-      const [newUserRecords, errors] = await getNewUserRecordsByIdRange(start, end);
-
-      deferredTasks.push(deferrableTask(newUserRecords, errors));
-      const failRatio = Math.min(currentFailRatio, 1);
-      if (errors.length >= failRatio * chunkSize) {
-        currentFailRatio -= failRatio;
-        if (currentFailRatio <= 0) {
-          console.info(`early break: ${start}`);
-          break;
-        }
-      } else {
-        currentFailRatio = failRatioForEarlyStop;
-      }
-    }
-    const [_, errors] = await parallel(deferredTasks);
-    if (errors.length > 0) throw errors;
-  } catch (error) {
-    throw error;
-  } finally {
-    const elapsedTime = performance.now() - t0;
+    const matches = await selectMatchesByIdRange(start, end);
+    const perfectMatchIdSet = getPerfectMatchIdSet(matches);
+    const imperfectMatchMap = getImperfectMatchMap(matches);
 
     console.info(
-      `A total of ${count * chunkSize} matches synchronized from ${start} to ${start + count * chunkSize}. It took ${formatTime(elapsedTime)} (${formatTime(elapsedTime / (count * chunkSize))} per match)`,
+      `A total of ${end - start + 1} matches will be synchronized from ${start} to ${end}. Estimated to take ${formatTime(30 * (end - start + 1))}`,
     );
-    matchesSynchronizationState.isSynchronizing = false;
-  }
+    const t0 = performance.now();
+    const deferredTasks: Promise<void>[] = [];
+    let count = 0;
+    let currentFailRatio = failRatioForEarlyStop;
+    try {
+      for (const chunk of chunks(start, end, chunkSize)) {
+        count += 1;
+        const [start, end] = chunk;
 
-  return;
-  async function deferrableTask(newUserRecords: UserRecord[], errors: any[]) {
-    await insertUserRecords(newUserRecords);
-    await applyToFilledMatches(newUserRecords);
-    handleErrors(errors);
-  }
-  async function getNewUserRecords(matchId: number): Promise<UserRecord[]> {
-    const records = await getUserRecordsByMatchId(matchId, {
-      priority: ApiQueuePriority.Sub,
-    });
-    const ignoreSet = getIgnoreSet(matchId);
-    return records.filter((ur) => !ignoreSet.has(ur.userId));
-  }
-  function getIgnoreSet(matchId: number) {
-    const match = imperfectMatchMap.get(matchId);
-    return new Set(match?.userIds);
-  }
-  async function getNewUserRecordsByIdRange(
-    start: number,
-    end: number,
-  ): Promise<[UserRecord[], any[]]> {
-    const [newUserRecordsList, errors] = await parallel(
-      makeArray(end - start + 1)
-        .map((_, i) => start + i)
-        .filter((matchId) => !perfectMatchIdSet.has(matchId))
-        .map((matchId) => getNewUserRecords(matchId)),
-    );
-    return [newUserRecordsList.flat(), errors];
-  }
-}
+        const [newUserRecords, errors] = await getNewUserRecordsByIdRange(start, end);
+
+        deferredTasks.push(deferrableTask(newUserRecords, errors));
+        const failRatio = Math.min(currentFailRatio, 1);
+        if (errors.length >= failRatio * chunkSize) {
+          currentFailRatio -= failRatio;
+          if (currentFailRatio <= 0) {
+            console.info(`early break: ${start}`);
+            break;
+          }
+        } else {
+          currentFailRatio = failRatioForEarlyStop;
+        }
+      }
+      const [_, errors] = await parallel(deferredTasks);
+      if (errors.length > 0) throw errors;
+    } catch (error) {
+      throw error;
+    } finally {
+      const elapsedTime = performance.now() - t0;
+
+      console.info(
+        `A total of ${count * chunkSize} matches synchronized from ${start} to ${start + count * chunkSize}. It took ${formatTime(elapsedTime)} (${formatTime(elapsedTime / (count * chunkSize))} per match)`,
+      );
+    }
+
+    return;
+    async function deferrableTask(newUserRecords: UserRecord[], errors: any[]) {
+      await insertUserRecords(newUserRecords);
+      await applyToFilledMatches(newUserRecords);
+      handleErrors(errors);
+    }
+    async function getNewUserRecords(matchId: number): Promise<UserRecord[]> {
+      const records = await getUserRecordsByMatchId(matchId, {
+        priority: ApiQueuePriority.Sub,
+      });
+      const ignoreSet = getIgnoreSet(matchId);
+      return records.filter((ur) => !ignoreSet.has(ur.userId));
+    }
+    function getIgnoreSet(matchId: number) {
+      const match = imperfectMatchMap.get(matchId);
+      return new Set(match?.userIds);
+    }
+    async function getNewUserRecordsByIdRange(
+      start: number,
+      end: number,
+    ): Promise<[UserRecord[], any[]]> {
+      const [newUserRecordsList, errors] = await parallel(
+        makeArray(end - start + 1)
+          .map((_, i) => start + i)
+          .filter((matchId) => !perfectMatchIdSet.has(matchId))
+          .map((matchId) => getNewUserRecords(matchId)),
+      );
+      return [newUserRecordsList.flat(), errors];
+    }
+  },
+  { lock },
+);
 
 function handleErrors(errors: unknown[]) {
   for (const error of errors) {

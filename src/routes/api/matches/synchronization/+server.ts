@@ -1,5 +1,5 @@
 import {
-  matchesSynchronizationState,
+  getMatchesSynchronizationStatus,
   synchronizeMatches,
 } from "$lib/features/matches/synchronize-matches.server";
 import { Type } from "@sinclair/typebox";
@@ -19,7 +19,8 @@ export async function POST({ locals, request }) {
 
   const options = await parseBody(request);
 
-  if (matchesSynchronizationState.isSynchronizing) throw error(409, { message: "Locked" });
+  if (getMatchesSynchronizationStatus().isSynchronizing)
+    throw error(503, { message: "synchronization already in progress" });
   synchronizeMatches(options);
 
   return json({ message: "Match synchronization has started" }, { status: 202 });
