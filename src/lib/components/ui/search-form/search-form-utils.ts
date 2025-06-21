@@ -7,7 +7,7 @@ export function gotoUsers(usernames: string[], locale: Locales) {
   } else {
     const sp = new URLSearchParams();
     usernames.forEach((username) => sp.append("u", username));
-    goto(`/${locale}/stats?${sp.toString()}`);
+    goto(`/${locale}/users?${sp.toString()}`);
   }
 }
 

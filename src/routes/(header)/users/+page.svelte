@@ -2,6 +2,7 @@
   import { page } from "$app/state";
   import LL from "$i18n/i18n-svelte.js";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
+  import MatchSummaryView from "$lib/features/match-summary/match-summary-view.svelte";
   import { style } from "$lib/features/user-stats/stats-style.js";
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { MatchingMode } from "$lib/shared/er-api/shapes.js";
@@ -62,8 +63,13 @@
             </div>
           </div>
         </div>
-      {:then { stats, user }}
-        <Stats level={user.level} name={user.name} rp={user.rp} {stats} mode={data.mode} />
+      {:then { user, stats, matches }}
+        <div class="space-y-4">
+          <Stats level={user.level} name={user.name} rp={user.rp} {stats} mode={data.mode} />
+          {#each matches as match (match.matchId)}
+          <MatchSummaryView {...match} me={user} />
+          {/each}
+        </div>
       {:catch e}
         <div class={c.container()}>
           <div class="font-black">
