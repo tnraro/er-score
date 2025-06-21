@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
   import LL from "$i18n/i18n-svelte.js";
   import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
@@ -6,6 +7,7 @@
   import { style } from "$lib/features/user-stats/stats-style.js";
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { MatchingMode } from "$lib/shared/er-api/shapes.js";
+  import { parallel } from "$lib/shared/task/parallel";
 
   let { data } = $props();
 
@@ -35,6 +37,21 @@
       });
     }
     return result;
+  });
+
+  $effect(() => {
+    let abort = false;
+    (async () => {
+      const [users] = await parallel(data.results.map((result) => result.promise));
+      if (abort) return;
+      const [isUpdateds] = await parallel(users.map((user) => user.isUpdatedPromise));
+      if (abort) return;
+      if (!isUpdateds.some((isUpdated) => isUpdated)) return;
+      invalidateAll();
+    })();
+    return () => {
+      abort = true;
+    };
   });
 
   const c = style();
@@ -67,7 +84,7 @@
         <div class="space-y-4">
           <Stats level={user.level} name={user.name} rp={user.rp} {stats} mode={data.mode} />
           {#each matches as match (match.matchId)}
-          <MatchSummaryView {...match} me={user} />
+            <MatchSummaryView {...match} me={user} />
           {/each}
         </div>
       {:catch e}
