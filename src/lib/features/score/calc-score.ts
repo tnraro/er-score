@@ -20,6 +20,7 @@ export function calcScore(game: UserGame) {
     case MatchingMode.Normal:
     case MatchingMode.Rank:
     case MatchingMode.Union:
+    case MatchingMode.LoneWolf:
       break;
     default:
       console.warn(`Unknown matching mode: ${game.matchingMode}`);

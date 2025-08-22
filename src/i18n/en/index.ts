@@ -43,6 +43,7 @@ const en = {
 		'3': 'Ranked',
 		'6': 'Cobalt',
 		'8': 'Union',
+		'9': 'Lone Wolf',
 		all: 'All',
 	},
 	stats: {

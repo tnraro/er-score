@@ -148,6 +148,10 @@ type RootTranslation = {
 		 */
 		'8': string
 		/**
+		 * 론​울​프
+		 */
+		'9': string
+		/**
 		 * 전​체
 		 */
 		all: string
@@ -4488,6 +4492,10 @@ export type TranslationFunctions = {
 		 * 유니온
 		 */
 		'8': () => LocalizedString
+		/**
+		 * 론울프
+		 */
+		'9': () => LocalizedString
 		/**
 		 * 전체
 		 */

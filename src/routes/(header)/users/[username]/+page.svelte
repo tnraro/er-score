@@ -57,7 +57,7 @@
           e.currentTarget.getAttribute("aria-disabled") === "true" && e.preventDefault()}
         href={page.url.pathname}>{$LL.matchingMode.all()}</a
       >
-      {#each [MatchingMode.Normal, MatchingMode.Rank, MatchingMode.Cobalt, MatchingMode.Union] as m}
+      {#each [MatchingMode.Normal, MatchingMode.Rank, MatchingMode.Cobalt, MatchingMode.Union, MatchingMode.LoneWolf] as m}
         <a
           class="flex h-12 items-center px-4 transition-colors hover:bg-gray-100 aria-disabled:bg-gray-200"
           aria-disabled={mode === m}
