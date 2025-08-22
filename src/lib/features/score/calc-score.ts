@@ -3,27 +3,6 @@ import type { UserGame } from "$lib/shared/er-api/types.gen";
 
 export function calcScore(game: UserGame) {
   switch (game.matchingMode) {
-    case MatchingMode.Normal:
-    case MatchingMode.Rank:
-    case MatchingMode.Union:
-      return score([
-        [game.clutchCount, 0.1501, 0, 0],
-        [game.ccTimeToPlayer, 0.2935, 2.6666667, 17.033335],
-        [game.useSecurityConsole, 0.3345, 2, 6],
-        [game.useEmpDrone, 0.4059, 0, 1],
-        [game.monsterKill, 0.4114, 24, 53],
-        [game.damageToMonster, 0.4821, 31518, 85952],
-        [game.damageFromPlayer, 0.5222, 8252, 17550],
-        [game.healAmount, 0.5244, 7907, 17943],
-        [game.characterLevel, 0.5871, 16, 20],
-        [game.bestWeaponLevel, 0.593, 16, 20],
-        [game.playerKill, 0.6165, 1, 4],
-        [game.damageToPlayer, 0.6432, 6495, 16934],
-        [game.playTime, 0.7243, 758, 1298],
-        [game.playerAssistant, 0.7491, 1, 5],
-        [game.terminateCount, 0.7708, 0, 1],
-        [game.totalUseVFCredit, 0.7751, 505, 1170],
-      ]);
     case MatchingMode.Cobalt:
       return score([
         [game.healAmount, 0.0757, 7396, 14343],
@@ -38,9 +17,31 @@ export function calcScore(game: UserGame) {
         [game.playerAssistant, 0.3796, 7, 14],
         [game.playerDeaths, -0.424, 5, 8],
       ]);
+    case MatchingMode.Normal:
+    case MatchingMode.Rank:
+    case MatchingMode.Union:
+      break;
     default:
-      throw new Error(`Unknown matching mode: ${game.matchingMode}`);
+      console.warn(`Unknown matching mode: ${game.matchingMode}`);
   }
+  return score([
+    [game.clutchCount, 0.1501, 0, 0],
+    [game.ccTimeToPlayer, 0.2935, 2.6666667, 17.033335],
+    [game.useSecurityConsole, 0.3345, 2, 6],
+    [game.useEmpDrone, 0.4059, 0, 1],
+    [game.monsterKill, 0.4114, 24, 53],
+    [game.damageToMonster, 0.4821, 31518, 85952],
+    [game.damageFromPlayer, 0.5222, 8252, 17550],
+    [game.healAmount, 0.5244, 7907, 17943],
+    [game.characterLevel, 0.5871, 16, 20],
+    [game.bestWeaponLevel, 0.593, 16, 20],
+    [game.playerKill, 0.6165, 1, 4],
+    [game.damageToPlayer, 0.6432, 6495, 16934],
+    [game.playTime, 0.7243, 758, 1298],
+    [game.playerAssistant, 0.7491, 1, 5],
+    [game.terminateCount, 0.7708, 0, 1],
+    [game.totalUseVFCredit, 0.7751, 505, 1170],
+  ]);
 }
 type Option = [number, number, number, number];
 function score(config: Option[]) {
