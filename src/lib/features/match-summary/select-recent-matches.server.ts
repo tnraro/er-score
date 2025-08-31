@@ -42,11 +42,12 @@ function preparePlan(name: string, filters: SQL[]) {
     .with(rm)
     .select({
       matchId: userRecords.matchId,
-      seasonId: userRecords.seasonId,
-      mode: userRecords.mode,
-      size: userRecords.size,
-      teamSize: userRecords.teamSize,
+      seasonId: sql<number>`min(${userRecords.seasonId})`.as("season_id"),
+      mode: sql<number>`min(${userRecords.mode})`.as("mode"),
+      size: sql<number>`min(${userRecords.size})`.as("size"),
+      teamSize: sql<number>`min(${userRecords.teamSize})`.as("team_size"),
       startedAt: userRecords.startedAt,
+      version: userRecords.version,
       records: sql<
         Pick<
           typeof userRecords.$inferSelect,
@@ -92,14 +93,7 @@ function preparePlan(name: string, filters: SQL[]) {
     })
     .from(userRecords)
     .innerJoin(rm, and(eq(rm.matchId, userRecords.matchId), eq(rm.team, userRecords.team)))
-    .groupBy(
-      userRecords.matchId,
-      userRecords.seasonId,
-      userRecords.mode,
-      userRecords.size,
-      userRecords.teamSize,
-      userRecords.startedAt,
-    )
+    .groupBy(userRecords.matchId, userRecords.startedAt, userRecords.version)
     .orderBy(desc(userRecords.startedAt))
     .prepare(name);
 }
