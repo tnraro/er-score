@@ -12,9 +12,10 @@
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "../../../routes/(header)/users/[username]/$types";
+  import TeamCompositionsWidget from "./team-compositions-widget.svelte";
 
   type Props = { me: { id: number; name: string } } & PageData["matches"][0];
-  let { me, records, mode, teamSize, matchId, startedAt }: Props = $props();
+  let { me, records, mode, teamSize, matchId, startedAt, version }: Props = $props();
 
   let sortedRecords = $derived(records.slice().sort((a, b) => b.score - a.score));
 
@@ -105,6 +106,7 @@
     {/if}
   </div>
   <div class="-mt-4 flex-1"></div>
+  <TeamCompositionsWidget {version} characters={records.map((record) => record.characterId)} />
   <a
     class="inline-flex h-8 items-center justify-center gap-x-1 rounded-md bg-gray-200 px-3 font-medium select-none active:bg-gray-200"
     href="/{$locale}/matches/{matchId}?me={encodeURIComponent(me.name)}"
