@@ -16,10 +16,15 @@
 </script>
 
 <script lang="ts">
-  type Props = SvelteHTMLElements["div"] & { value: number; children?: never };
-  let { value, class: className, ...rest }: Props = $props();
+  type Props = SvelteHTMLElements["div"] & {
+    value: number;
+    render?: (value: number) => string | number;
+    children?: never;
+  };
+  let { value, render, class: className, ...rest }: Props = $props();
+  let renderFn = $derived(render ?? Math.abs);
 </script>
 
 <div class={style({ sign: Math.sign(value) as 0 | 1 | -1, class: clsx(className) })} {...rest}>
-  {Math.abs(value)}
+  {renderFn(value)}
 </div>
