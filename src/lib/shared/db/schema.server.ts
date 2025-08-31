@@ -153,3 +153,22 @@ export const staticData = pgTable("static_data", {
   key: text().primaryKey(),
   value: json().notNull(),
 });
+
+export const teamCompositions = pgTable(
+  "team_compositions",
+  {
+    version: text().notNull(),
+    characters: smallint().array(3).notNull(),
+    score: real("score").notNull(),
+    rpGainRank: integer("rp_gain_rank").notNull(),
+    avgHalfRate: real("avg_half_rate").notNull(),
+    avgRpGain: real("avg_rp_gain").notNull(),
+    count: integer().notNull(),
+    updatedAt: timestamp({ mode: "date", withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.version, t.characters] }),
+    index("team_compositions__version").on(t.version),
+    index("team_compositions__characters").using("gin", t.characters),
+  ],
+);

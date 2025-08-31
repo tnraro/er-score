@@ -5,7 +5,8 @@
   let { children } = $props();
 
   const items = [
-    { title: "실험체 통계", href: "/stats/characters" }, //
+    { title: "실험체 통계", href: "/stats/characters" },
+    { title: "팀 조합", href: "/stats/team-compositions" },
   ];
 </script>
 
