@@ -144,3 +144,27 @@ export async function selectTeamCompositionsUpdatedAt(version: string) {
       .limit(1),
   )?.updatedAt;
 }
+
+const selectTeamCompositionForSummaryPlan = db
+  .select({
+    characters: teamCompositions.characters,
+    score: teamCompositions.score,
+    avgHalfRate: teamCompositions.avgHalfRate,
+  })
+  .from(teamCompositions)
+  .where(
+    and(
+      eq(teamCompositions.version, sql.placeholder("version")),
+      sql`${teamCompositions.characters} @> ${sql.placeholder("characters")}`,
+    ),
+  )
+  .limit(1)
+  .prepare("select_team_composition_for_summary_plan");
+export async function selectTeamCompositionForSummary(version: string, characters: number[]) {
+  return single(
+    await selectTeamCompositionForSummaryPlan.execute({
+      version,
+      characters,
+    }),
+  );
+}
