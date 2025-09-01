@@ -106,7 +106,9 @@
     {/if}
   </div>
   <div class="-mt-4 flex-1"></div>
-  <TeamCompositionsWidget {version} characters={records.map((record) => record.characterId)} />
+  {#if records.length === 3}
+    <TeamCompositionsWidget {version} characters={records.map((record) => record.characterId)} />
+  {/if}
   <a
     class="inline-flex h-8 items-center justify-center gap-x-1 rounded-md bg-gray-200 px-3 font-medium select-none active:bg-gray-200"
     href="/{$locale}/matches/{matchId}?me={encodeURIComponent(me.name)}"
