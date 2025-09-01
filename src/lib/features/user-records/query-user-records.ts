@@ -5,6 +5,7 @@ import {
   selectRecentMatches,
   type RecentMatches,
 } from "../match-summary/select-recent-matches.server";
+import { selectTeamCompositionForSummary } from "../team-compositions/db.server";
 import { selectUserStats } from "../user-stats/select-user-stats.server";
 import { updateUserByUserRecord } from "../user/db.server";
 import { queryUser, type UserQueryResult } from "../user/query-user.server";
@@ -23,7 +24,19 @@ export async function queryUserRecords(username: string, page?: number, mode?: n
   return {
     user,
     stats,
-    matches,
+    matches: await Promise.all(
+      matches.map(async (match) => {
+        const characters = match.records.map((record) => record.characterId);
+        const teamComposition =
+          characters.length === 3
+            ? await selectTeamCompositionForSummary(match.version, characters)
+            : null;
+        return {
+          ...match,
+          teamComposition,
+        };
+      }),
+    ),
     maxPages: Math.ceil(matchesCount / recentMatchesSize),
     isUpdatedPromise,
   };

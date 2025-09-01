@@ -12,10 +12,11 @@
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "../../../routes/(header)/users/[username]/$types";
-  import TeamCompositionsWidget from "./team-compositions-widget.svelte";
+  import TeamCompositionSummary from "./team-composition-summary.svelte";
 
   type Props = { me: { id: number; name: string } } & PageData["matches"][0];
-  let { me, records, mode, teamSize, matchId, startedAt, version }: Props = $props();
+  let { me, records, mode, teamSize, matchId, startedAt, version, teamComposition }: Props =
+    $props();
 
   let sortedRecords = $derived(records.slice().sort((a, b) => b.score - a.score));
 
@@ -106,8 +107,8 @@
     {/if}
   </div>
   <div class="-mt-4 flex-1"></div>
-  {#if records.length === 3}
-    <TeamCompositionsWidget {version} characters={records.map((record) => record.characterId)} />
+  {#if teamComposition != null}
+    <TeamCompositionSummary {...teamComposition} {version} />
   {/if}
   <a
     class="inline-flex h-8 items-center justify-center gap-x-1 rounded-md bg-gray-200 px-3 font-medium select-none active:bg-gray-200"
