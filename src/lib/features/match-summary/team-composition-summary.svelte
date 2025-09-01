@@ -18,7 +18,7 @@
     .map((characterId) => `character=${characterId}`)
     .join('&')}"
 >
-  <div class="font-bold">팀 조합</div>
+  <div class="font-bold">팀 조합 통계</div>
   <div class="flex gap-x-0.5">
     {#each characters as characterId}
       <CharacterAvatar {characterId} size="sm" rounded="md" />
