@@ -63,6 +63,7 @@ const selectMatchPlan = db
     isOmegaKilled: userRecords.isOmegaKilled,
     isGammaKilled: userRecords.isGammaKilled,
     isWickelineKilled: userRecords.isWickelineKilled,
+    hasQuit: userRecords.hasQuit,
     traits: userRecords.traits,
   })
   .from(userRecords)

@@ -126,6 +126,10 @@ type RootTranslation = {
 		 */
 		isWickelineKilled: string
 		/**
+		 * 조​기​종​료
+		 */
+		hasQuit: string
+		/**
 		 * 정​보​ ​없​음
 		 */
 		noData: string
@@ -4470,6 +4474,10 @@ export type TranslationFunctions = {
 		 * 위클라인 킬
 		 */
 		isWickelineKilled: () => LocalizedString
+		/**
+		 * 조기종료
+		 */
+		hasQuit: () => LocalizedString
 		/**
 		 * 정보 없음
 		 */

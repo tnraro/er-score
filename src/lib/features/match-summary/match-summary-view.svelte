@@ -77,6 +77,7 @@
             isOmegaKilled={result.isOmegaKilled}
             isGammaKilled={result.isGammaKilled}
             isWickelineKilled={result.isWickelineKilled}
+            hasQuit={result.hasQuit}
           />
         </div>
         {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}

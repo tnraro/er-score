@@ -36,6 +36,7 @@ const ko = {
 		isOmegaKilled: '오메가 킬',
 		isGammaKilled: '감마 킬',
 		isWickelineKilled: '위클라인 킬',
+		hasQuit: '조기종료',
 		noData: '정보 없음',
 	},
 	matchingMode: {

@@ -194,6 +194,7 @@
       isOmegaKilled={record.isOmegaKilled}
       isGammaKilled={record.isGammaKilled}
       isWickelineKilled={record.isWickelineKilled}
+      hasQuit={record.hasQuit}
     />
   </div>
 {/snippet}

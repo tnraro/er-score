@@ -1,4 +1,5 @@
 <script lang="ts">
+  import HasQuitBadge from "./badges/has-quit-badge.svelte";
   import IsAlphaKilledBadge from "./badges/is-alpha-killed-badge.svelte";
   import IsGammaKilledBadge from "./badges/is-gamma-killed-badge.svelte";
   import IsOmegaKilledBadge from "./badges/is-omega-killed-badge.svelte";
@@ -11,9 +12,16 @@
     isOmegaKilled: boolean;
     isGammaKilled: boolean;
     isWickelineKilled: boolean;
+    hasQuit: boolean;
   }
-  let { preMadeTeamSize, isAlphaKilled, isOmegaKilled, isGammaKilled, isWickelineKilled }: Props =
-    $props();
+  let {
+    preMadeTeamSize,
+    isAlphaKilled,
+    isOmegaKilled,
+    isGammaKilled,
+    isWickelineKilled,
+    hasQuit,
+  }: Props = $props();
 </script>
 
 <PreMadeTeamBadge preMadeTeam={preMadeTeamSize} />
@@ -21,3 +29,4 @@
 <IsGammaKilledBadge killed={isGammaKilled} />
 <IsOmegaKilledBadge killed={isOmegaKilled} />
 <IsAlphaKilledBadge killed={isAlphaKilled} />
+<HasQuitBadge quitted={hasQuit} />

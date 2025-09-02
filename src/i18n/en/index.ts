@@ -36,6 +36,7 @@ const en = {
 		isOmegaKilled: 'Killed Omega',
 		isGammaKilled: 'Killed Gamma',
 		isWickelineKilled: 'Killed Wickeline',
+		hasQuit: 'Has quit',
 		noData: 'No data available',
 	},
 	matchingMode: {
