@@ -44,8 +44,9 @@ export async function queryUserRecords(username: string, page?: number, mode?: n
 
 async function update(user: UserQueryResult, matches: RecentMatches, page: number | undefined) {
   const elapsedTime = Date.now() - (user.updatedAt?.getTime() ?? 0);
+  if (elapsedTime < 5000) return false;
   const updatedUserRecordMap = new Map<string, UserRecord>();
-  if (page === 0 && elapsedTime >= 5000) {
+  if (page === 0) {
     const recentUserRecords = await getRecentUserRecords(user.id, {
       maxPages: 10,
       beforeMatchId: user.updatedMatchId ?? undefined,
