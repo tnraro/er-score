@@ -11,6 +11,8 @@ import { formatTime } from "$lib/utils/time/format-time";
 import { and, desc, gte, lt, sql } from "drizzle-orm";
 import { getUserRecordsByMatchId } from "../user-records/api.server";
 import { insertUserRecords } from "../user-records/db.server";
+import { updateUserByUserRecords } from "../user/db.server";
+import { queryUser } from "../user/query-user.server";
 
 export function getMatchesSynchronizationStatus() {
   return { isSynchronizing: lock.locked };
@@ -62,8 +64,6 @@ export const synchronizeMatches = ExclusiveLock.withAsync(
       }
       const [_, errors] = await parallel(deferredTasks);
       if (errors.length > 0) throw errors;
-    } catch (error) {
-      throw error;
     } finally {
       const elapsedTime = performance.now() - t0;
 
@@ -73,9 +73,26 @@ export const synchronizeMatches = ExclusiveLock.withAsync(
     }
 
     return;
-    async function deferrableTask(newUserRecords: UserRecord[], errors: any[]) {
-      await insertUserRecords(newUserRecords);
-      await applyToFilledMatches(newUserRecords);
+    async function deferrableTask(newUserRecords: UserRecord[], errors: unknown[]) {
+      await parallel([
+        insertUserRecords(newUserRecords),
+        applyToFilledMatches(newUserRecords),
+        updateUser(newUserRecords),
+      ]);
+      handleErrors(errors);
+    }
+    async function updateUser(userRecords: UserRecord[]) {
+      const userRecordsByUserId = groupBy(userRecords, (ur) => ur.userId)
+        .values()
+        .map((urs) => urs.toSorted((a, b) => b.startedAt.getTime() - a.startedAt.getTime()))
+        .toArray();
+      const [_, errors] = await parallel(
+        userRecordsByUserId.map(async (urs) => {
+          const user = await queryUser(urs[0]!.nickname);
+          await updateUserByUserRecords(user, urs);
+          return user;
+        }),
+      );
       handleErrors(errors);
     }
     async function getNewUserRecords(matchId: number): Promise<UserRecord[]> {
