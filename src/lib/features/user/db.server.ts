@@ -23,11 +23,12 @@ export async function insertUsers(values: InsertUser[]) {
   return await db.insert(users).values(values).onConflictDoNothing();
 }
 
-export async function updateUserByUserRecord(
-  user: { id: number; name: string },
-  userRecord: UserRecord | undefined,
+export async function updateUserByUserRecords(
+  user: { id: number; name: string; updatedMatchId: number | null },
+  userRecords: UserRecord[],
 ) {
-  if (userRecord == null) return;
+  const latestUserRecord = userRecords.at(0);
+  if (latestUserRecord == null || (user.updatedMatchId ?? 0) >= latestUserRecord.matchId) return;
   const data = single(
     await db
       .select({
@@ -38,15 +39,17 @@ export async function updateUserByUserRecord(
       .from(userRecordData)
       .where(
         and(
-          eq(userRecordData.matchId, userRecord.matchId),
-          eq(userRecordData.userId, userRecord.userId),
+          eq(userRecordData.matchId, latestUserRecord.matchId),
+          eq(userRecordData.userId, latestUserRecord.userId),
         ),
       ),
   );
+  const latestRankRecord = userRecords.find((record) => record.mode === MatchingMode.Rank);
+
   await updateUser(user.id, {
-    updatedMatchId: userRecord.matchId,
-    name: user.name !== userRecord.nickname ? userRecord.nickname : undefined,
+    updatedMatchId: latestUserRecord.matchId,
+    name: user.name !== latestUserRecord.nickname ? latestUserRecord.nickname : undefined,
     level: data?.accountLevel ?? undefined,
-    rp: userRecord.mode === MatchingMode.Rank ? userRecord.rp : undefined,
+    rp: latestRankRecord?.rp ?? undefined,
   });
 }

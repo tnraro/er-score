@@ -7,7 +7,7 @@ import {
 } from "../match-summary/select-recent-matches.server";
 import { selectTeamCompositionForSummary } from "../team-compositions/db.server";
 import { selectUserStats } from "../user-stats/select-user-stats.server";
-import { updateUserByUserRecord } from "../user/db.server";
+import { updateUserByUserRecords } from "../user/db.server";
 import { queryUser, type UserQueryResult } from "../user/query-user.server";
 import { getRecentUserRecords, getUserRecordsByMatchId } from "./api.server";
 import { insertUserRecords } from "./db.server";
@@ -53,8 +53,7 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
     for (const ur of recentUserRecords) {
       updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
     }
-    const latestUserRecord = recentUserRecords.at(0);
-    await updateUserByUserRecord(user, latestUserRecord);
+    await updateUserByUserRecords(user, recentUserRecords);
   }
 
   {
