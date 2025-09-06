@@ -2,6 +2,7 @@ import type { CharacterStat } from "$lib/features/character-stats/synchronize-ch
 import type { UserRecordData } from "$lib/features/user-records/to-user-record";
 import { sql } from "drizzle-orm";
 import {
+  bigint,
   boolean,
   index,
   integer,
@@ -151,6 +152,7 @@ export const characterStats = pgTable(
 
 export const staticData = pgTable("static_data", {
   key: text().primaryKey(),
+  hash: bigint({ mode: "bigint" }).notNull(),
   value: json().notNull(),
 });
 

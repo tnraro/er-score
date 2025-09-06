@@ -14,7 +14,7 @@ const lock = new ExclusiveLock();
 export const synchronizeStaticData = ExclusiveLock.withAsync(
   async () => {
     console.info("Synchronizing static data...");
-    const oldHashes = await selectStaticData<Record<string, unknown>>("hash");
+    const oldHashes = (await selectStaticData<Record<string, unknown>>("hash"))?.value;
     const newHashes = await getStaticDataHash({ priority: ApiQueuePriority.Sub });
     const patches = diff(oldHashes, newHashes);
     console.log(patches);
