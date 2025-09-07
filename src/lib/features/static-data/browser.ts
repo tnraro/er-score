@@ -9,12 +9,11 @@ interface Kv {
 const db = new Dexie("static-data") as Dexie & {
   kv: EntityTable<Kv, "key">;
 };
+db.version(1).stores({
+  kv: "&key,hash",
+});
 
 export async function setupStaticData() {
-  db.version(1).stores({
-    kv: "&key,hash",
-  });
-
   const newHashes = await getStaticDataHashes();
   await db.kv.filter((x) => !newHashes.has(x.key)).delete();
   const kv = await db.kv.toArray();
