@@ -1,18 +1,9 @@
 import { loadLocaleAsync } from "$i18n/i18n-util.async.js";
-import { getCharacters, getItems } from "$lib/client/api/api";
-import { measureTime } from "$lib/utils/time/measure-time";
 
-export async function load({ fetch, data: { locale } }) {
-  const [characters, items] = await Promise.all([
-    measureTime("get-characters", () => getCharacters(fetch)),
-    measureTime("get-items", () => getItems(fetch)),
-    loadLocaleAsync(locale),
-  ]);
+export async function load({ data: { locale } }) {
+  await loadLocaleAsync(locale);
+
   return {
-    staticData: {
-      characters,
-      items,
-    },
     locale,
   };
 }

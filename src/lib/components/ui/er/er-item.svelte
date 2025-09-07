@@ -29,11 +29,34 @@
       size: "md",
     },
   });
+  interface Item {
+    code: number;
+    modeType: number;
+    itemType: string;
+    weaponType?: string;
+    itemGrade: "Common" | "Uncommon" | "Rare" | "Epic" | "Legend" | "Mythic";
+  }
+  const weaponDataObserver = staticData("ItemWeapon");
+  const armorDataObserver = staticData("ItemArmor");
+  let weapons = $state<Item[]>([]);
+  weaponDataObserver.subscribe((value) => {
+    weapons = (value as Item[]).map((x) =>
+      pick(x, ["code", "modeType", "itemType", "weaponType", "itemGrade"]),
+    );
+  });
+  let armors = $state<Item[]>([]);
+  armorDataObserver.subscribe((value) => {
+    armors = (value as Item[]).map((x) =>
+      pick(x, ["code", "modeType", "itemType", "weaponType", "itemGrade"]),
+    );
+  });
+  let items = $derived(new Map([...weapons, ...armors].map((x) => [x.code, x])));
 </script>
 
 <script lang="ts">
   import { env } from "$env/dynamic/public";
-  import { globalData } from "$lib/global-state.svelte";
+  import { staticData } from "$lib/features/static-data/browser";
+  import { pick } from "$lib/utils/object/pick";
   import { tv, type VariantProps } from "tailwind-variants";
 
   type Props = {
@@ -41,7 +64,6 @@
   } & Omit<VariantProps<typeof style>, "grade">;
   let { id, size }: Props = $props();
 
-  const { items } = globalData();
   let item = $derived(id != null ? items.get(id) : null);
 
   let { img, placeholder } = $derived(style({ size }));

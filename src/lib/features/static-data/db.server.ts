@@ -3,6 +3,14 @@ import { staticData } from "$lib/shared/db/schema.server";
 import { single } from "$lib/utils/array/single";
 import { and, eq, sql } from "drizzle-orm";
 
+export async function selectStaticDataHashes() {
+  return (await db.select({ key: staticData.key, hash: staticData.hash }).from(staticData)).map(
+    (x) => ({
+      key: x.key,
+      hash: x.hash + 9223372036854775808n,
+    }),
+  );
+}
 export async function selectStaticData<Data>(key: string, hash?: bigint) {
   const filters = [eq(staticData.key, key)];
   if (hash != null) {
