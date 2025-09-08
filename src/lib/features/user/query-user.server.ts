@@ -11,15 +11,13 @@ export async function queryUser(username: string) {
     const user = await selectUserByName(username);
     if (user != null) return user;
   }
-  const user = await getUser(username);
-  await insertUsers([user]);
-  return {
-    ...user,
-    updatedAt: null,
-    updatedMatchId: null,
-    level: null,
-    rp: null,
-  };
+  {
+    const user = await getUser(username);
+    await insertUsers([user]);
+  }
+  const user = await selectUserByName(username);
+  if (user == null) throw new Error(`${username} is not exists`);
+  return user;
 }
 
 export async function selectUserByName(name: string) {

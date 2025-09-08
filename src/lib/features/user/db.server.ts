@@ -20,7 +20,15 @@ export async function updateUser(
 type InsertUser = Pick<typeof users.$inferInsert, "id" | "name">;
 export async function insertUsers(values: InsertUser[]) {
   if (values.length === 0) return;
-  return await db.insert(users).values(values).onConflictDoNothing();
+  return await db
+    .insert(users)
+    .values(values)
+    .onConflictDoUpdate({
+      target: users.id,
+      set: {
+        name: sql.raw(`excluded.${users.name.name}`),
+      },
+    });
 }
 
 export async function updateUserByUserRecords(
