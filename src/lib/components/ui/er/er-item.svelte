@@ -29,34 +29,11 @@
       size: "md",
     },
   });
-  interface Item {
-    code: number;
-    modeType: number;
-    itemType: string;
-    weaponType?: string;
-    itemGrade: "Common" | "Uncommon" | "Rare" | "Epic" | "Legend" | "Mythic";
-  }
-  const weaponDataObserver = staticData("ItemWeapon");
-  const armorDataObserver = staticData("ItemArmor");
-  let weapons = $state<Item[]>([]);
-  weaponDataObserver.subscribe((value) => {
-    weapons = (value as Item[]).map((x) =>
-      pick(x, ["code", "modeType", "itemType", "weaponType", "itemGrade"]),
-    );
-  });
-  let armors = $state<Item[]>([]);
-  armorDataObserver.subscribe((value) => {
-    armors = (value as Item[]).map((x) =>
-      pick(x, ["code", "modeType", "itemType", "weaponType", "itemGrade"]),
-    );
-  });
-  let items = $derived(new Map([...weapons, ...armors].map((x) => [x.code, x])));
 </script>
 
 <script lang="ts">
   import { env } from "$env/dynamic/public";
-  import { staticData } from "$lib/features/static-data/browser";
-  import { pick } from "$lib/utils/object/pick";
+  import { StaticData } from "$lib/features/static-data/reactivity.svelte";
   import { tv, type VariantProps } from "tailwind-variants";
 
   type Props = {
@@ -64,14 +41,14 @@
   } & Omit<VariantProps<typeof style>, "grade">;
   let { id, size }: Props = $props();
 
-  let item = $derived(id != null ? items.get(id) : null);
+  let item = $derived(id != null ? StaticData.instance.items.get(id) : null);
 
   let { img, placeholder } = $derived(style({ size }));
 </script>
 
 {#if item != null}
   <img
-    class={img({ grade: item.itemGrade })}
+    class={img({ grade: item.grade })}
     draggable="false"
     alt=""
     src="{env.PUBLIC_STATIC_URL}/image/item/{id}.webp"

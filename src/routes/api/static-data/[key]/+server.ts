@@ -1,4 +1,4 @@
-import { selectStaticData } from "$lib/features/static-data/db.server.js";
+import { selectStaticData } from "$lib/features/static-data/db.server";
 import { error, json } from "@sveltejs/kit";
 
 export async function GET({ params, request, setHeaders }) {
@@ -6,16 +6,15 @@ export async function GET({ params, request, setHeaders }) {
   if (data == null) error(404);
 
   const etag = request.headers.get("If-None-Match");
-  const hash = data.hash?.toString(36);
-  if (etag != null && etag === hash) {
+  if (etag != null && etag === data.hash) {
     return new Response(null, {
       status: 304,
     });
   }
 
-  if (hash != null)
+  if (data.hash != null)
     setHeaders({
-      ETag: hash,
+      ETag: data.hash,
     });
 
   return json(data.value);

@@ -4,12 +4,8 @@ import { single } from "$lib/utils/array/single";
 import { and, eq, sql } from "drizzle-orm";
 
 export async function selectStaticDataHashes() {
-  return (await db.select({ key: staticData.key, hash: staticData.hash }).from(staticData)).map(
-    (x) => ({
-      key: x.key,
-      hash: x.hash + 9223372036854775808n,
-    }),
-  );
+  const rows = await db.select({ key: staticData.key, hash: staticData.hash }).from(staticData);
+  return Object.fromEntries(rows.map((x) => [x.key, fromPgHash(x.hash)]));
 }
 export async function selectStaticData<Data>(key: string, hash?: bigint) {
   const filters = [eq(staticData.key, key)];
@@ -29,11 +25,11 @@ export async function selectStaticData<Data>(key: string, hash?: bigint) {
   if (row == null) return null;
   return {
     value: row.value as Data,
-    hash: row.hash + 9223372036854775808n,
+    hash: fromPgHash(row.hash),
   };
 }
 export async function insertStaticData(key: string, value: unknown) {
-  const hash = Bun.hash.wyhash(JSON.stringify(value)) - 9223372036854775808n;
+  const hash = toPgHash(value);
 
   return await db
     .insert(staticData)
@@ -48,4 +44,11 @@ export async function insertStaticData(key: string, value: unknown) {
 }
 export async function deleteStaticData(key: string) {
   return await db.delete(staticData).where(eq(staticData.key, key));
+}
+
+function toPgHash(value: unknown) {
+  return Bun.hash.wyhash(JSON.stringify(value)) - 9223372036854775808n;
+}
+function fromPgHash(value: bigint) {
+  return (value + 9223372036854775808n).toString(36);
 }

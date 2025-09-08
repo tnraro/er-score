@@ -1,3 +1,5 @@
+import { parallel } from "$lib/shared/task/parallel";
+import { diff } from "$lib/utils/object/diff";
 import Dexie, { liveQuery, type EntityTable } from "dexie";
 
 interface Kv {
@@ -14,39 +16,50 @@ db.version(1).stores({
 });
 
 export async function setupStaticData() {
-  const newHashes = await getStaticDataHashes();
-  await db.kv.filter((x) => !newHashes.has(x.key)).delete();
   const kv = await db.kv.toArray();
-  const updatePromises = Promise.allSettled(
-    kv
-      .filter((x) => {
-        const y = newHashes.get(x.key);
-        return x.hash !== y?.hash;
-      })
-      .map(async (x) => {
-        const fetchedData = await getStaticData(x.key);
-        if (fetchedData == null) return;
-        await db.kv.put({
-          key: x.key,
-          hash: fetchedData.hash,
-          value: fetchedData.value,
-        });
-      }),
-  );
-  const addPromises = Promise.allSettled(
-    [...newHashes.values()]
-      .filter((y) => !kv.some((x) => x.key === y.key))
-      .map(async (y) => {
-        const fetchedData = await getStaticData(y.key);
-        if (fetchedData == null) return;
-        await db.kv.add({
-          key: y.key,
-          hash: fetchedData.hash,
-          value: fetchedData.value,
-        });
-      }),
-  );
-  await Promise.allSettled([updatePromises, addPromises]);
+  const oldHashes = Object.fromEntries(kv.map((x) => [x.key, x.hash]));
+  const newHashes = await getStaticDataHashes();
+
+  const patches = diff(oldHashes, newHashes);
+  const tasks = patches.map(async (patch) => {
+    switch (patch.type) {
+      case "add":
+        return add(patch.key);
+      case "update":
+        return update(patch.key);
+      case "remove":
+        return remove(patch.key);
+    }
+  });
+  const [, errors] = await parallel(tasks);
+  if (errors.length > 0) {
+    console.error(errors);
+    return;
+  }
+}
+
+async function remove(key: string) {
+  await db.kv.delete(key);
+}
+
+async function add(key: string) {
+  const fetchedData = await getStaticData(key);
+  if (fetchedData == null) return;
+  await db.kv.add({
+    key: key,
+    hash: fetchedData.hash,
+    value: fetchedData.value,
+  });
+}
+
+async function update(key: string) {
+  const fetchedData = await getStaticData(key);
+  if (fetchedData == null) return;
+  await db.kv.put({
+    key: key,
+    hash: fetchedData.hash,
+    value: fetchedData.value,
+  });
 }
 
 async function getStaticData(key: string) {
@@ -61,8 +74,7 @@ async function getStaticData(key: string) {
 
 async function getStaticDataHashes() {
   const res = await fetch("/api/static-data");
-  const data = (await res.json()) as { key: string; hash: string }[];
-  return new Map(data.map((x) => [x.key, x]));
+  return (await res.json()) as Record<string, string>;
 }
 
 export function staticData<T>(key: string) {

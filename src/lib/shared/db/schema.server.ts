@@ -150,6 +150,11 @@ export const characterStats = pgTable(
   (t) => [primaryKey({ columns: [t.version, t.mode] })],
 );
 
+export const rawStaticData = pgTable("raw_static_data", {
+  key: text().primaryKey(),
+  value: json().notNull(),
+});
+
 export const staticData = pgTable("static_data", {
   key: text().primaryKey(),
   hash: bigint({ mode: "bigint" }).notNull(),
