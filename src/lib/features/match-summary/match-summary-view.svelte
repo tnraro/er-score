@@ -12,6 +12,7 @@
   import { makeArray } from "$lib/utils/array/make-array";
   import { formatRelativeTime } from "$lib/utils/time/format-relative-time";
   import type { PageData } from "../../../routes/(header)/users/[username]/$types";
+  import Tier from "../tier/tier.svelte";
   import TeamCompositionSummary from "./team-composition-summary.svelte";
 
   type Props = { me: { id: number; name: string } } & PageData["matches"][0];
@@ -51,7 +52,8 @@
       <div class="w-8 flex-none"></div>
       <div class="min-w-0 flex-1 overflow-clip">{$LL.userRecords.heading.name()}</div>
       {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}
-        <div class="w-10">{$LL.userRecords.heading.rpGain()}</div>
+        <div class="w-7">{$LL.userRecords.heading.tier()}</div>
+        <div class="w-8">{$LL.userRecords.heading.rpGain()}</div>
       {/if}
       <div class="w-10">{$LL.userRecords.heading.score()}</div>
       <div class="flex gap-x-2 text-sm">
@@ -81,9 +83,13 @@
           />
         </div>
         {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}
-          <div class="w-10 text-xs">
+          <div class="w-7 text-xs">
+            {#if result.rp != null}
+              <Tier rp={result.rp} />
+            {/if}
+          </div>
+          <div class="w-8 text-xs">
             {#if result.rpGain != null}
-              {result.rp}
               <NumericUpdown value={result.rpGain} />
             {/if}
           </div>
