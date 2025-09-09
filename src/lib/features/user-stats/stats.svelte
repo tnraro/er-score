@@ -159,7 +159,7 @@
           <td><CharacterAvatar characterId={stat.characterId} size="sm" rounded="md" /></td>
           <td><Score score={stat.scoreAvg} /></td>
           <td class="text-center text-sm"
-            >{stat.halfRateAvg.toFixed(1)}
+            >{Math.round(stat.halfRateAvg * 100)}%
             <Progress class="overflow-hidden rounded-full" value={stat.halfRateAvg} max={1}>
               <ProgressRange color="yellow" />
             </Progress></td
