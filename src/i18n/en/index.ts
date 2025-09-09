@@ -24,6 +24,7 @@ const en = {
 			damageTakenFromPlayers: 'Damage Taken',
 			healingAmount: 'Healing',
 			trait: 'Trait',
+			tier: 'Tier',
 			rpGain: 'RP',
 		},
 		value: {
@@ -56,6 +57,18 @@ const en = {
 		},
 		recentNDays: 'Last {n} days',
 		limitHint: '(Up to {limit} matches)',
+	},
+	tier: {
+		"Iron": "Iron",
+		"Bronze": "Bronze",
+		"Silver": "Silver",
+		"Gold": "Gold",
+		"Platinum": "Platinum",
+		"Diamond": "Diamond",
+		"Meteorite": "Meteorite",
+		"Mythril": "Mythril",
+		"Demigod": "Demigod",
+		"Eternity": "Eternity",
 	},
 	button: {
 		open: 'Open',

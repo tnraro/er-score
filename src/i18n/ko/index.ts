@@ -24,6 +24,7 @@ const ko = {
 			damageTakenFromPlayers: '탱',
 			healingAmount: '힐',
 			trait: '특성',
+			tier: '티어',
 			rpGain: 'RP',
 		},
 		value: {
@@ -56,6 +57,18 @@ const ko = {
 		},
 		recentNDays: '최근 {n:number}일간',
 		limitHint: '(최대 {limit:number}경기)',
+	},
+	tier: {
+		"Iron": "아이언",
+		"Bronze": "브론즈",
+		"Silver": "실버",
+		"Gold": "골드",
+		"Platinum": "플래티넘",
+		"Diamond": "다이아몬드",
+		"Meteorite": "메테오라이트",
+		"Mythril": "미스릴",
+		"Demigod": "데미갓",
+		"Eternity": "이터니티",
 	},
 	button: {
 		open: '열기',

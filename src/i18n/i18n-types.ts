@@ -85,6 +85,10 @@ type RootTranslation = {
 			 */
 			trait: string
 			/**
+			 * 티​어
+			 */
+			tier: string
+			/**
 			 * R​P
 			 */
 			rpGain: string
@@ -189,6 +193,48 @@ type RootTranslation = {
 		 * @param {number} limit
 		 */
 		limitHint: RequiredParams<'limit'>
+	}
+	tier: {
+		/**
+		 * 아​이​언
+		 */
+		Iron: string
+		/**
+		 * 브​론​즈
+		 */
+		Bronze: string
+		/**
+		 * 실​버
+		 */
+		Silver: string
+		/**
+		 * 골​드
+		 */
+		Gold: string
+		/**
+		 * 플​래​티​넘
+		 */
+		Platinum: string
+		/**
+		 * 다​이​아​몬​드
+		 */
+		Diamond: string
+		/**
+		 * 메​테​오​라​이​트
+		 */
+		Meteorite: string
+		/**
+		 * 미​스​릴
+		 */
+		Mythril: string
+		/**
+		 * 데​미​갓
+		 */
+		Demigod: string
+		/**
+		 * 이​터​니​티
+		 */
+		Eternity: string
 	}
 	button: {
 		/**
@@ -4436,6 +4482,10 @@ export type TranslationFunctions = {
 			 */
 			trait: () => LocalizedString
 			/**
+			 * 티어
+			 */
+			tier: () => LocalizedString
+			/**
 			 * RP
 			 */
 			rpGain: () => LocalizedString
@@ -4536,6 +4586,48 @@ export type TranslationFunctions = {
 		 * (최대 {limit}경기)
 		 */
 		limitHint: (arg: { limit: number }) => LocalizedString
+	}
+	tier: {
+		/**
+		 * 아이언
+		 */
+		Iron: () => LocalizedString
+		/**
+		 * 브론즈
+		 */
+		Bronze: () => LocalizedString
+		/**
+		 * 실버
+		 */
+		Silver: () => LocalizedString
+		/**
+		 * 골드
+		 */
+		Gold: () => LocalizedString
+		/**
+		 * 플래티넘
+		 */
+		Platinum: () => LocalizedString
+		/**
+		 * 다이아몬드
+		 */
+		Diamond: () => LocalizedString
+		/**
+		 * 메테오라이트
+		 */
+		Meteorite: () => LocalizedString
+		/**
+		 * 미스릴
+		 */
+		Mythril: () => LocalizedString
+		/**
+		 * 데미갓
+		 */
+		Demigod: () => LocalizedString
+		/**
+		 * 이터니티
+		 */
+		Eternity: () => LocalizedString
 	}
 	button: {
 		/**
