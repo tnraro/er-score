@@ -56,7 +56,7 @@
         <div class="w-8">{$LL.userRecords.heading.rpGain()}</div>
       {/if}
       <div class="w-10">{$LL.userRecords.heading.score()}</div>
-      <div class="flex gap-x-2 text-sm">
+      <div class="flex gap-x-1 text-sm">
         <Numeric>{$LL.userRecords.heading.k()}</Numeric>
         <Delimiter />
         <Numeric>{$LL.userRecords.heading.d()}</Numeric>
@@ -95,7 +95,7 @@
           </div>
         {/if}
         <Score score={result.score} />
-        <div class="flex gap-x-2 text-sm">
+        <div class="flex gap-x-1 text-sm">
           <Numeric>{result.kills}</Numeric>
           <Delimiter />
           <Numeric>{result.deaths}</Numeric>
