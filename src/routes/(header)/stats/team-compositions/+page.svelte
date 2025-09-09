@@ -105,7 +105,6 @@
                   >
                   <td class="text-right">
                     <NumericUpdown
-                      class="justify-end"
                       value={teamComposition.avgRpGain}
                       render={(x) => `${x.toFixed(1)}RP`}
                     />
