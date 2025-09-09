@@ -4,7 +4,7 @@
   import { tv } from "tailwind-variants";
 
   const style = tv({
-    base: "flex items-center gap-1",
+    base: "flex items-center gap-1 justify-end",
     variants: {
       sign: {
         [1]: "text-green-600 before:content-['▲'] before:text-[0.75em]",
