@@ -5,6 +5,7 @@
   import ProgressRange from "$lib/components/ui/progress/progress-range.svelte";
   import Progress from "$lib/components/ui/progress/progress.svelte";
   import Score from "$lib/features/score/score.svelte";
+  import Tier from "$lib/features/tier/tier.svelte";
   import { formatNumber } from "$lib/utils/number/format-number";
   import { MatchingMode } from "../../shared/er-api/shapes";
   import type { UserStats } from "./select-user-stats.server";
@@ -90,14 +91,16 @@
       {#if level != null}
         <div class="text-xs leading-none">Lv {level}</div>
       {/if}
-      <a class={c.headerName()} href="/users/{encodeURIComponent(name)}">{name}</a>
+      <div class="flex items-center gap-x-2">
+        <a class={c.headerName()} href="/users/{encodeURIComponent(name)}">{name}</a>
+        {#if rp != null}
+          <div class="flex gap-x-1 text-sm">
+            <Tier {rp} />
+          </div>
+        {/if}
+      </div>
     </div>
   </div>
-  {#if rp != null && (mode == null || mode === MatchingMode.Rank)}
-    <div>
-      {$LL.matchingMode[MatchingMode.Rank]()}: {rp} RP
-    </div>
-  {/if}
   <div>
     <div class={c.tableLabel()}>
       {#if mode == null}
