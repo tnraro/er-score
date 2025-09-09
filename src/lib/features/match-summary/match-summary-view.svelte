@@ -81,8 +81,9 @@
           />
         </div>
         {#if mode === MatchingMode.Rank || mode === MatchingMode.Union}
-          <div class="w-10 text-sm">
+          <div class="w-10 text-xs">
             {#if result.rpGain != null}
+              {result.rp}
               <NumericUpdown value={result.rpGain} />
             {/if}
           </div>

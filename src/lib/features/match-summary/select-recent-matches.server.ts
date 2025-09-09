@@ -55,6 +55,7 @@ function preparePlan(name: string, filters: SQL[]) {
           | "score"
           | "team"
           | "rank"
+          | "rp"
           | "rpGain"
           | "damageDealtToPlayers"
           | "nickname"
@@ -76,6 +77,7 @@ function preparePlan(name: string, filters: SQL[]) {
           , 'score', ${userRecords.score}
           , 'team', ${userRecords.team}
           , 'rank', ${userRecords.rank}
+          , 'rp', ${userRecords.rp}
           , 'rpGain', ${userRecords.rpGain}
           , 'damageDealtToPlayers', ${userRecords.damageDealtToPlayers}
           , 'nickname', ${userRecords.nickname}
