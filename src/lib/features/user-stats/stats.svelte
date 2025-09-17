@@ -40,37 +40,48 @@
   let statSummary = $derived.by(() => {
     const goodStats = [];
     const badStats = [];
+    const grayStats = [];
     for (const stat of stats) {
-      const size = 1 / (stat.count + 1);
-      const demo = stat.count * size;
       const scoreE = e(stat.scoreAvg, 0.5);
       const halfRateE = e(stat.halfRateAvg, 0.5);
       const scale = (scoreE + halfRateE) * 0.5;
-      if (e(stat.scoreAvg, 0) >= 0.5 && e(stat.halfRateAvg, 0) >= 0.5) {
+      if (scoreE >= 0.5 && halfRateE >= 0.5) {
         goodStats.push({
           characterId: stat.characterId,
           scale,
           scoreE,
           halfRateE,
+          count: stat.count,
         });
-      } else if (e(stat.scoreAvg, 1) < 0.5 && e(stat.halfRateAvg, 1) < 0.5) {
+      } else if (scoreE < 0.5 && halfRateE < 0.5) {
         badStats.push({
           characterId: stat.characterId,
           scale,
           scoreE,
           halfRateE,
+          count: stat.count,
+        });
+      } else {
+        grayStats.push({
+          characterId: stat.characterId,
+          scale,
+          scoreE,
+          halfRateE,
+          count: stat.count,
         });
       }
       function e(x: number, e: number) {
-        return x * demo + e * size;
+        return (x * stat.count + e * 10) / (stat.count + 10);
       }
     }
 
     goodStats.sort((a, b) => b.scale - a.scale);
     badStats.sort((a, b) => a.scale - b.scale);
+    grayStats.sort((a, b) => a.scale - b.scale);
     return {
       goodStats,
       badStats,
+      grayStats,
     };
   });
 
@@ -124,7 +135,9 @@
             style:--b="oklch(0.5 0.12 var(--hue))"
             style:--bg="oklch({0.75 + (1 - stat.scale) * 0.2}
             {0.25 - (1 - stat.scale) * 0.2} var(--hue))"
-            title="score: {stat.scoreE.toFixed(1)} / half rate: {stat.halfRateE.toFixed(1)}"
+            title="score: {stat.scoreE.toFixed(1)} / half rate: {Math.round(
+              stat.halfRateE * 100,
+            )}% / count: {stat.count}"
           >
             <CharacterAvatar
               characterId={stat.characterId}
@@ -144,7 +157,29 @@
             style:--b="oklch(0.5 0.12 var(--hue))"
             style:--bg="oklch({0.75 + stat.scale * 0.2}
             {0.25 - stat.scale * 0.2} var(--hue))"
-            title="score: {stat.scoreE.toFixed(1)} / half rate: {stat.halfRateE.toFixed(1)}"
+            title="score: {stat.scoreE.toFixed(1)} / half rate: {Math.round(
+              stat.halfRateE * 100,
+            )}% / count: {stat.count}"
+          >
+            <CharacterAvatar
+              characterId={stat.characterId}
+              size="sm"
+              class="border-2 border-transparent bg-(--bg)"
+            />
+          </div>
+        {/each}
+      </div>
+      <div class="flex">
+        {#each statSummary.grayStats as stat, i (stat.characterId)}
+          {@const size = statSummary.grayStats.length}
+          <div
+            class="z-(--z) -ml-2 rounded-full border border-(--b)"
+            style:--z={size - i}
+            style:--b="oklch(0.5 0 0)"
+            style:--bg="oklch({0.75 + stat.scale * 0.2} 0 0)"
+            title="score: {stat.scoreE.toFixed(1)} / half rate: {Math.round(
+              stat.halfRateE * 100,
+            )}% / count: {stat.count}"
           >
             <CharacterAvatar
               characterId={stat.characterId}
