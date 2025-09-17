@@ -230,14 +230,14 @@
     scoreAvg: "점수",
     rpGainAvg: "RP 획득량",
     halfRateAvg: "반타작률",
-    damageDealtToPlayersPerMinAvg: "가한 딜/분",
-    damageTakenFromPlayersPerMinAvg: "받은 딜/분",
-    healingAmountPerMinAvg: "회복/분",
-    killsPerMinAvg: "킬/분",
-    deathsPerMinAvg: "데스/분",
-    assistsPerMinAvg: "어시/분",
-    monsterKillsPerMinAvg: "동물 킬/분",
-    visionScorePerMinAvg: "시야점수/분",
+    damageDealtToPlayersAvg: "가한 딜",
+    damageTakenFromPlayersAvg: "받은 딜",
+    healingAmountAvg: "회복",
+    killsAvg: "킬",
+    deathsAvg: "데스",
+    assistsAvg: "어시",
+    monsterKillsAvg: "동물 킬",
+    visionScoreAvg: "시야점수",
     count: "경기 수",
   } satisfies Partial<Record<keyof CharacterStat, string>>;
 
@@ -260,8 +260,8 @@
   let clusterName = $state<keyof typeof clusters>("포지션");
   let cluster = $derived<Cluster>(clusters[clusterName]);
 
-  let columnX = $state<Column>("damageDealtToPlayersPerMinAvg");
-  let columnY = $state<Column>("killsPerMinAvg");
+  let columnX = $state<Column>("damageDealtToPlayersAvg");
+  let columnY = $state<Column>("killsAvg");
   let search = $state<string>("");
 
   let transformPosition = $derived((item: CharacterStat) => [item[columnX], item[columnY]]);
