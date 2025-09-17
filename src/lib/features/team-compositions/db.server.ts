@@ -34,10 +34,10 @@ export async function analyzeTeamCompositions(version: string) {
     db
       .select({
         characters: step0.characters,
-        avgHalfRate: sql<number>`(avg(${step0.halfRate})*count(*)+0.5)/(count(*)+2.0)`
+        avgHalfRate: sql<number>`(avg(${step0.halfRate})*count(*)+0.5*10.0)/(count(*)+10.0)`
           .mapWith(Number)
           .as("avg_half_rate"),
-        avgRpGain: sql<number>`(avg(${step0.avgRpGain})*count(*))/(count(*)+2.0)`
+        avgRpGain: sql<number>`(avg(${step0.avgRpGain})*count(*))/(count(*)+10.0)`
           .mapWith(Number)
           .as("avg_rp_gain"),
         count: count().as("count"),
@@ -69,7 +69,7 @@ export async function analyzeTeamCompositions(version: string) {
       characters: step2.characters,
       rpGainRank: step2.rpGainRank,
       score:
-        sql<number>`(${step2.rpGainPercentRank}-0.5+${step2.avgHalfRate}-0.5+${step2.avgRpGain}/50.0)/3.0*2.0`
+        sql<number>`(${step2.rpGainPercentRank}-0.5+(${step2.avgHalfRate}-0.5)*4.0+${step2.avgRpGain}/50.0)/3.0*2.0`
           .mapWith(Number)
           .as("score"),
       avgHalfRate: step2.avgHalfRate,
