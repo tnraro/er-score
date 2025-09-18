@@ -29,7 +29,7 @@ export interface UserGame {
   masteryLevel: { [key: string]: number };
   equipment: { [key: string]: number };
   equipmentGrade: { [key: string]: number };
-  versionSeason: number;
+  versionSeason?: number;
   versionMajor: number;
   versionMinor: number;
   language: string;
