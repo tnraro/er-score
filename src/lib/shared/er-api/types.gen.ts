@@ -28,12 +28,14 @@ export interface UserGame {
   bestWeaponLevel: number;
   masteryLevel: { [key: string]: number };
   equipment: { [key: string]: number };
+  equipmentGrade: { [key: string]: number };
+  versionSeason: number;
   versionMajor: number;
   versionMinor: number;
-  language: Language;
+  language: string;
   skillLevelInfo: { [key: string]: number };
   skillOrderInfo: { [key: string]: number };
-  serverName: "Asia";
+  serverName: string;
   maxHp: number;
   maxSp: number;
   attackPower: number;
@@ -59,6 +61,9 @@ export interface UserGame {
   bonusExp: number;
   startDtm: string;
   duration: number;
+  mmrBefore?: number;
+  mmrGain?: number;
+  mmrAfter?: number;
   playTime: number;
   watchTime: number;
   totalTime: number;
@@ -116,18 +121,25 @@ export interface UserGame {
   routeIdOfStart: number;
   routeSlotId: number;
   placeOfStart: string;
+  mmrAvg?: number;
   matchSize: number;
   teamKill: number;
   totalFieldKill: number;
   accountLevel: number;
   killerUserNum: number;
-  killer: Killer;
+  killer: string;
   killDetail?: string;
   causeOfDeath?: string;
   placeOfDeath?: string;
   killerCharacter?: string;
   killerWeapon?: string;
   killerUserNum2: number;
+  killer2?: string;
+  killDetail2?: string;
+  causeOfDeath2?: string;
+  placeOfDeath2?: string;
+  killerCharacter2?: string;
+  killerWeapon2?: string;
   killerUserNum3: number;
   fishingCount: number;
   useEmoticonCount: number;
@@ -163,7 +175,7 @@ export interface UserGame {
   usedPairLoop: number;
   ccTimeToPlayer: number;
   creditSource: { [key: string]: number };
-  boughtInfusion: "{}";
+  boughtInfusion: string;
   itemTransferredConsole: number[];
   itemTransferredDrone: number[];
   escapeState: number;
@@ -211,9 +223,9 @@ export interface UserGame {
   totalUseVFCredit: number;
   remoteDroneUseVFCreditMySelf: number;
   remoteDroneUseVFCreditAlly: number;
-  transferConsoleFromMaterialUseVFCredit: number;
-  transferConsoleFromEscapeKeyUseVFCredit: number;
-  transferConsoleFromRevivalUseVFCredit: number;
+  kioskFromMaterialUseVFCredit: number;
+  kioskFromEscapeKeyUseVFCredit: number;
+  kioskFromRevivalUseVFCredit: number;
   tacticalSkillUpgradeUseVFCredit: number;
   infusionReRollUseVFCredit: number;
   infusionTraitUseVFCredit: number;
@@ -254,9 +266,6 @@ export interface UserGame {
   crUseActivationModule: number;
   crUseRootkit: number;
   mmrGainInGame: number;
-  mmrGain?: number;
-  mmrAvg?: number;
-  mmrAfter?: number;
   mmrLossEntryCost: number;
   premadeMatchingType: number;
   viewContribution: number;
@@ -281,41 +290,30 @@ export interface UserGame {
   getBuffCubeGold: number;
   getBuffCubeSkyBlue: number;
   sumGetBuffCube: number;
-  hackAttemptLog: HackAttemptLog;
+  squadRumbleRank: number;
+  teamDownCanNotEliminate: number;
+  teamDownCanEliminate: number;
+  teamRepeatDownCanNotEliminate: number;
+  teamRepeatDownCanEliminate: number;
+  terminateCountCanNotEliminate: number;
+  breakCount: number;
+  enterDimensionRift: number;
+  enterDimensionEmpoweredRift: number;
+  winFromDimensionRift: number;
+  winFromDimensionEmpoweredRift: number;
+  enterTurbulentRift: number;
+  totalTKPerMin: number[];
+  resurrectionKitUsageCount: number;
+  resurrectionKitToCredit: number;
+  usingDefaultGameOption: boolean;
+  reunitedCount: number;
   isLeavingBeforeCreditRevivalTerminate: boolean;
-  killer2?: Killer2;
-  killDetail2?: string;
-  causeOfDeath2?: string;
-  placeOfDeath2?: string;
-  killerCharacter2?: string;
-  killerWeapon2?: string;
-  killer3?: Killer;
+  killer3?: string;
   killDetail3?: string;
   causeOfDeath3?: string;
   placeOfDeath3?: string;
   killerCharacter3?: string;
   killerWeapon3?: string;
-}
-
-export interface HackAttemptLog {
-  TARGET_OUT_OF_SIGHT?: number;
-  PING_TARGET?: number;
-}
-
-export enum Killer {
-  Empty = "",
-  Player = "player",
-}
-
-export enum Killer2 {
-  Player = "player",
-  RestrictedArea = "restrictedArea",
-}
-
-export enum Language {
-  ChineseSimplified = "ChineseSimplified",
-  ChineseTraditional = "ChineseTraditional",
-  Korean = "Korean",
 }
 
 export interface UserGamesErResponse {
