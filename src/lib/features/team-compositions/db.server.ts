@@ -44,7 +44,7 @@ export async function analyzeTeamCompositions(version: string) {
       })
       .from(step0)
       .groupBy(step0.characters)
-      .having(gte(count(), 5)),
+      .having(gte(count(), 3)),
   );
   const step2 = db.$with("step2").as(
     db
