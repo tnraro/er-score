@@ -71,8 +71,8 @@ async function groupUserRecordsByCharacterIdAndWeaponId(
         and(
           eq(userRecords.version, version),
           eq(userRecords.mode, mode),
-          gte(userRecords.playTime, p10),
-          lte(userRecords.playTime, p90),
+          gte(userRecords.playTime, Math.round(p10)),
+          lte(userRecords.playTime, Math.round(p90)),
           not(userRecords.hasQuit),
         ),
       ),

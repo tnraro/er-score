@@ -85,6 +85,7 @@ export async function analyzeTeamCompositions(version: string) {
 
 export async function insertTeamCompositions(values: TeamComposition[]) {
   const chunkSize = 1000;
+  if (values.length === 0) return;
   await db.transaction(async () => {
     await Promise.all(
       chunks(0, values.length, chunkSize)
