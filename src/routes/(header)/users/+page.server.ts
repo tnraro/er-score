@@ -9,9 +9,11 @@ export async function load({ url }) {
 
   return {
     mode,
-    results: usernames.map((username) => ({
-      username,
-      promise: queryUserRecords(username, 0, mode),
-    })),
+    results: await Promise.all(
+      usernames.map(async (username) => ({
+        username,
+        ...(await queryUserRecords(username, 0, mode)),
+      })),
+    ),
   };
 }

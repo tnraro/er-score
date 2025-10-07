@@ -13,51 +13,95 @@ import { getRecentUserRecords, getUserRecordsByMatchId } from "./api.server";
 import { insertUserRecords } from "./db.server";
 
 export async function queryUserRecords(username: string, page?: number, mode?: number) {
-  const user = await queryUser(username);
-  const [stats, matches, matchesCount] = await Promise.all([
-    selectUserStats(user.id, mode),
-    selectRecentMatches(user.id, page, mode),
-    selectMatchesCount(user.id, mode),
-  ]);
-  const isUpdatedPromise = update(user, matches, page);
+  const { user, stats, matches, matchesCount } = await getData();
+  if (await update(user, matches, page)) {
+    const { user, stats, matches, matchesCount } = await getData();
+    return {
+      user,
+      stats,
+      matches: await wrapMatches(matches),
+      maxPages: Math.ceil(matchesCount / recentMatchesSize),
+    };
+  }
 
   return {
     user,
     stats,
-    matches: await Promise.all(
-      matches.map(async (match) => {
-        const characters = match.records.map((record) => record.characterId);
-        const teamComposition =
-          characters.length === 3
-            ? await selectTeamCompositionForSummary(match.version, characters)
-            : null;
-        return {
-          ...match,
-          teamComposition,
-        };
-      }),
-    ),
+    matches: await wrapMatches(matches),
     maxPages: Math.ceil(matchesCount / recentMatchesSize),
-    isUpdatedPromise,
+  };
+
+  async function getData() {
+    const user = await queryUser(username);
+    const [stats, matches, matchesCount] = await Promise.all([
+      selectUserStats(user.id, mode),
+      selectRecentMatches(user.id, page, mode),
+      selectMatchesCount(user.id, mode),
+    ]);
+    return {
+      user,
+      stats,
+      matches,
+      matchesCount,
+    };
+  }
+}
+
+async function wrapMatches(matches: RecentMatches) {
+  return await Promise.all(matches.map(toMatch));
+}
+
+async function toMatch(match: RecentMatches[number]) {
+  const characters = match.records.map((record) => record.characterId);
+  const teamComposition =
+    characters.length === 3
+      ? await selectTeamCompositionForSummary(match.version, characters)
+      : null;
+  return {
+    ...match,
+    teamComposition,
   };
 }
 
 async function update(user: UserQueryResult, matches: RecentMatches, page: number | undefined) {
   const elapsedTime = Date.now() - (user.updatedAt?.getTime() ?? 0);
-  const updatedUserRecordMap = new Map<string, UserRecord>();
+  const userRecordsToUpdate: UserRecord[] = [];
+  const ignoreSet = new Set<string>();
+  const matchesToUpdate: Pick<
+    RecentMatches[number],
+    "matchId" | "size" | "teamSize" | "records"
+  >[] = matches;
   if (page === 0 && elapsedTime >= 5000) {
     const recentUserRecords = await getRecentUserRecords(user.id, {
       maxPages: 10,
       beforeMatchId: user.updatedMatchId ?? undefined,
     });
     for (const ur of recentUserRecords) {
-      updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
+      matchesToUpdate.push({
+        matchId: ur.matchId,
+        size: ur.size,
+        teamSize: ur.teamSize,
+        records: [ur],
+      });
     }
     await updateUserByUserRecords(user, recentUserRecords);
   }
 
   {
     for (const match of matches) {
+      for (const record of match.records) {
+        ignoreSet.add(
+          key({
+            matchId: match.matchId,
+            userId: record.userId,
+          }),
+        );
+      }
+    }
+  }
+
+  {
+    for (const match of matchesToUpdate) {
       const hasQuit = match.records.find((record) => record.userId === user.id)?.hasQuit;
       /**
        * 각 팀에 필요한 최소한의 플레이어 수
@@ -72,13 +116,17 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
       if (match.records.length >= minimumRequiredTeamSize) continue;
       const userRecords = await getUserRecordsByMatchId(match.matchId);
       for (const ur of userRecords) {
-        updatedUserRecordMap.set(`${ur.matchId}-${ur.userId}`, ur);
+        if (ignoreSet.has(key(ur))) continue;
+        userRecordsToUpdate.push(ur);
       }
     }
   }
 
-  const updatedUserRecords = updatedUserRecordMap.values().toArray();
-  await insertUserRecords(updatedUserRecords);
-  const updated = updatedUserRecords.length > 0;
+  await insertUserRecords(userRecordsToUpdate);
+  const updated = userRecordsToUpdate.length > 0;
   return updated;
+
+  function key(ur: Pick<UserRecord, "matchId" | "userId">) {
+    return `${ur.matchId}-${ur.userId}`;
+  }
 }

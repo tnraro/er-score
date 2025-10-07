@@ -8,20 +8,9 @@
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { MatchingMode } from "$lib/shared/er-api/shapes";
   import { numberOrNullable } from "$lib/utils/number/number-or-nullable";
-  import { untrack } from "svelte";
   import Pagination from "./pagination.svelte";
 
   let { data } = $props();
-
-  $effect(() => {
-    untrack(() => ls.increase(0.5));
-    data.isUpdatedPromise.then((isUpdated) => {
-      untrack(() => ls.done());
-      if (isUpdated) {
-        invalidate(`users:${untrack(() => page.params.username)}`);
-      }
-    });
-  });
 
   let mode = $derived(numberOrNullable(page.url.searchParams.get("mode")) ?? undefined);
   let currentPage = $derived(numberOrNullable(page.url.searchParams.get("page")) ?? 0);

@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
   import LL from "$i18n/i18n-svelte.js";
-  import CharacterAvatar from "$lib/components/ui/character-avatar/character-avatar.svelte";
   import MatchSummaryView from "$lib/features/match-summary/match-summary-view.svelte";
   import { style } from "$lib/features/user-stats/stats-style.js";
   import Stats from "$lib/features/user-stats/stats.svelte";
   import { MatchingMode } from "$lib/shared/er-api/shapes.js";
-  import { parallel } from "$lib/shared/task/parallel";
 
   let { data } = $props();
 
@@ -39,21 +36,6 @@
     return result;
   });
 
-  $effect(() => {
-    let abort = false;
-    (async () => {
-      const [users] = await parallel(data.results.map((result) => result.promise));
-      if (abort) return;
-      const [isUpdateds] = await parallel(users.map((user) => user.isUpdatedPromise));
-      if (abort) return;
-      if (!isUpdateds.some((isUpdated) => isUpdated)) return;
-      invalidateAll();
-    })();
-    return () => {
-      abort = true;
-    };
-  });
-
   const c = style();
 </script>
 
@@ -70,34 +52,14 @@
 </div>
 <div class="flex flex-wrap justify-center gap-4">
   {#each data.results as result}
+    {@const { user, stats, matches } = result}
     <div class="lg:w-94">
-      {#await result.promise}
-        <div class={c.container()}>
-          <div class={c.header()}>
-            <CharacterAvatar characterId={0} />
-            <div class="flex flex-col">
-              <div class={c.headerName()}>{result.username}</div>
-            </div>
-          </div>
-        </div>
-      {:then { user, stats, matches }}
-        <div class="space-y-4">
-          <Stats level={user.level} name={user.name} rp={user.rp} {stats} mode={data.mode} />
-          {#each matches as match (match.matchId)}
-            <MatchSummaryView {...match} me={user} />
-          {/each}
-        </div>
-      {:catch e}
-        <div class={c.container()}>
-          <div class="font-black">
-            {#if e instanceof Response}
-              {e.statusText}
-            {:else}
-              Error
-            {/if}
-          </div>
-        </div>
-      {/await}
+      <div class="space-y-4">
+        <Stats level={user.level} name={user.name} rp={user.rp} {stats} mode={data.mode} />
+        {#each matches as match (match.matchId)}
+          <MatchSummaryView {...match} me={user} />
+        {/each}
+      </div>
     </div>
   {/each}
 </div>
