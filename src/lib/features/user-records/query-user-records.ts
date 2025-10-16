@@ -70,7 +70,7 @@ async function update(user: UserQueryResult, matches: RecentMatches, page: numbe
   const matchesToUpdate: Pick<
     RecentMatches[number],
     "matchId" | "size" | "teamSize" | "records"
-  >[] = matches;
+  >[] = matches.slice();
   if (page === 0 && elapsedTime >= 5000) {
     const recentUserRecords = await getRecentUserRecords(user.id, {
       maxPages: 10,
