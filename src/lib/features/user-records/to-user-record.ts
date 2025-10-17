@@ -12,7 +12,7 @@ export function toUserRecord(game: UserGame): UserRecord & { data: UserRecordDat
     mode: game.matchingMode,
     teamSize: game.matchingTeamMode,
     botSize: game.botAdded,
-    version: `${game.versionSeason ?? 8}.${game.versionMajor}.${game.versionMinor}`,
+    version: `${game.versionSeason ?? 9}.${game.versionMajor}.${game.versionMinor}`,
     serverName: game.serverName,
     startedAt: new Date(game.startDtm),
     size: game.matchSize,
