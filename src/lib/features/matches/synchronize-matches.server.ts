@@ -18,6 +18,8 @@ export function getMatchesSynchronizationStatus() {
   return { isSynchronizing: lock.locked };
 }
 
+let lastStartMatchId: number | undefined;
+
 const lock = new ExclusiveLock();
 export const synchronizeMatches = ExclusiveLock.withAsync(
   async (options: {
@@ -43,6 +45,11 @@ export const synchronizeMatches = ExclusiveLock.withAsync(
     const deferredTasks: Promise<void>[] = [];
     let count = 0;
     let currentFailRatio = failRatioForEarlyStop;
+    // 직전 시작 경기 ID와 동일하면 빠른 탈출을 하지 않음
+    if (start === lastStartMatchId) {
+      currentFailRatio = end - start;
+    }
+    lastStartMatchId = start;
     try {
       for (const chunk of chunks(start, end, chunkSize)) {
         count += 1;
