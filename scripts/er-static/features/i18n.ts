@@ -1,29 +1,38 @@
-import { file } from "bun";
-import { readdir } from "node:fs/promises";
-import { basename, resolve } from "node:path";
 import { readTranslationFromDisk } from "typesafe-i18n/exporter";
 import { storeTranslationToDisk } from "typesafe-i18n/importer";
 import type { BaseTranslation, Locales } from "../../../src/i18n/i18n-types";
-import { parallel } from "../utils";
-import { rootPath } from "./consts";
+import { ErApiClient } from "../../../src/lib/shared/er-api/client.server";
+
+const client = new ErApiClient({
+  host: Bun.env.API_HOST!,
+  key: Bun.env.API_KEY!,
+  delay: Number(Bun.env.API_DELAY),
+});
 
 export async function getI18n(lang: string) {
-  const i18nPath = resolve(rootPath, "i18n", lang);
-  const filenames = await readdir(i18nPath).then((filenames) =>
-    filenames.filter((filename) => filename.endsWith(".json")),
-  );
+  const rawString = await client.getL10n(lang);
+
+  const rules = [
+    { key: "characterName", pattern: /^Character\/Name\/(?<key>\d+)┃(?<value>.+)$/gm },
+    { key: "itemType", pattern: /^ItemType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "weaponType", pattern: /^WeaponType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "armorType", pattern: /^ArmorType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "specialItemType", pattern: /^SpecialItemType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "miscItemType", pattern: /^MiscItemType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "consumableItemType", pattern: /^ItemConsumableType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "masteryType", pattern: /^MasteryType\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "itemGrade", pattern: /^ItemGrade\/(?<key>[^┃/]+)┃(?<value>.+)$/gm },
+    { key: "skinName", pattern: /^Skin\/Name\/(?<key>\d+)┃(?<value>.+)$/gm },
+    { key: "traitName", pattern: /^Trait\/Name\/(?<key>\d+)┃(?<value>.+)$/gm },
+  ];
+
   return Object.fromEntries(
-    await parallel(
-      filenames.map(async (filename) => {
-        const filePath = resolve(i18nPath, filename);
-        const data = await file(filePath).json();
-        const name = basename(filename, ".json");
-        return [name.replaceAll(/-([a-z])/g, (_, $1: string) => $1.toUpperCase()), data] as [
-          string,
-          Record<string, string>,
-        ];
-      }),
-    ),
+    rules.map((rule) => [
+      rule.key,
+      Object.fromEntries(
+        rawString.matchAll(rule.pattern).map((match) => [match.groups!.key, match.groups!.value]),
+      ),
+    ]),
   );
 }
 
