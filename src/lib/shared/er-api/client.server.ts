@@ -58,6 +58,14 @@ export class ErApiClient {
   getData<Data>(key: string, options?: ErApiRequestOptions) {
     return this.get<DataErResponse<Data>>(`/v2/data/${key}`, options);
   }
+  async getL10n(language: string, options?: ErApiRequestOptions) {
+    const {
+      data: { l10Path },
+    } = await this.get<DataErResponse<{ l10Path: string }>>(`/v1/l10n/${language}`, options);
+    const res = await fetch(l10Path);
+    if (!res.ok) throw res;
+    return await res.text();
+  }
 }
 
 export interface ErResponse {
